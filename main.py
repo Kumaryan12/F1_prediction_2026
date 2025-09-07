@@ -6,14 +6,21 @@ import numpy as np
 import pandas as pd
 import joblib
 import fastf1
-
+from argparse import Namespace
+from . import model as mdl
 from .config import HIST_YEARS
 from .data import build_training_until as build_until_data, get_target_drivers
 from .features import (
-    add_circuit_context_df, add_driver_team_form, merge_latest_forms, add_quali_proxy
+    add_circuit_context_df, add_driver_team_form, merge_latest_forms, add_quali_proxy,
 )
 from .model import train_model, predict_event_with_uncertainty, oob_errors
 
+
+from .model import (
+    train_model, predict_event_with_uncertainty, oob_errors,
+    _prep_fe_matrix, _make_target,            # for permutation importance
+    tree_importance_series, permutation_importance_series
+)
 
 def build_training_frame(target_year: int, target_gp: str) -> pd.DataFrame:
     """Pull history + season-to-date, then add forms + circuit context."""
@@ -22,19 +29,11 @@ def build_training_frame(target_year: int, target_gp: str) -> pd.DataFrame:
     train_df = add_circuit_context_df(train_df)
     return train_df
 
-
 def build_predict_frame(target_year: int, target_gp: str, train_df_with_forms: pd.DataFrame) -> pd.DataFrame:
     """Get target drivers (Q if available; else FP1/fallback), add context + latest forms."""
     pred_df = get_target_drivers(target_year, target_gp)
     pred_df = add_circuit_context_df(pred_df)
     pred_df = merge_latest_forms(pred_df, train_df_with_forms)
-
-    # If grid is unknown (pre-Q), use quali proxy from recent races
-    if pred_df["grid_pos"].isna().any():
-        print("Qualifying data missing, using proxy...")
-        proxy_base = train_df_with_forms[["driver", "date", "grid_pos"]].dropna()
-        pred_df = add_quali_proxy(pred_df, proxy_base, window=3)
-
     return pred_df
 
     
@@ -104,6 +103,22 @@ def main():
                         help="Add split-conformal PIs (reserved; not wired yet)")
     parser.add_argument("--alpha", type=float, default=0.20,
                         help="Conformal alpha (default 0.20 ~ 80% PI).")
+    # Target choice for training
+    parser.add_argument("--delta_target", action="store_true",
+                    help="Train on finish-grid delta (positions gained/lost)")
+    parser.add_argument("--absolute_target", action="store_true",
+                    help="Train on absolute finish_pos (overrides --delta_target)")
+
+# Recency weighting
+    parser.add_argument("--half_life", type=int, default=None,
+                    help="Override recency half-life in days (exponential decay)")
+
+# Feature importance
+    parser.add_argument("--show_importance", action="store_true",
+                    help="Print top-20 tree-based feature importances after training")
+    parser.add_argument("--perm_importance", type=int, default=0,
+                    help="If >0, compute permutation importance with N repeats (slower)")
+
 
     args = parser.parse_args()
     target_year, target_gp = args.year, args.gp
@@ -122,7 +137,7 @@ def main():
             model, loaded_meta = _safe_load_model(args.load_model)
             print(f"[INFO] Loaded model from {Path(args.load_model).resolve()}")
 
-            # Optional: feature compatibility + staleness check (only if artifact had meta)
+            
             try:
                 from .model import _prep_fe_matrix  # type: ignore
                 X_now, feat_list_now = _prep_fe_matrix(train_df.dropna(subset=["finish_pos"]).copy())
@@ -163,6 +178,26 @@ def main():
             print(f"[OOB] R2={errs['oob_r2']:.3f} | MAE={errs['oob_mae']:.2f} | RMSE={errs['oob_rmse']:.2f}")
         else:
             print("[OOB] Not available")
+        
+        # === Feature importance (tree-based) ===
+        if args.show_importance:
+            try:
+                imp = tree_importance_series(model)
+                print("\n[FEATURE IMPORTANCE] (tree-based, top 20)")
+                print(imp.head(20).to_string())
+            except Exception as e:
+              print(f"[WARN] Could not compute tree-based importance: {e}")
+
+        if args.perm_importance and args.perm_importance > 0:
+            try:
+                train_clean = train_df.dropna(subset=["finish_pos"]).copy()
+                X_imp, _ = _prep_fe_matrix(train_clean)
+                y_imp, _ = _make_target(train_clean)
+                p = permutation_importance_series(model, X_imp, y_imp, n_repeats=args.perm_importance)
+                print("\n[PERMUTATION IMPORTANCE] (neg MAE impact, top 20)")
+                print(p.head(20).to_string())
+            except Exception as e:print(f"[WARN] Permutation importance failed: {e}")
+
 
         if args.save_model:
             # Build metadata for artifact

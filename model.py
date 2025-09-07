@@ -11,14 +11,22 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
-
-FEATS: List[str] = [
+FEATS = [
+    # grid / circuit priors
     "grid_pos",
     "sc_prob", "vsc_prob", "pit_loss",
+    "expected_stops", "overtake_index", "tow_importance", "is_low_df",
+    "deg_index", "stint_len_typical",
+    # form
     "drv_form3", "team_form3",
+    "lowdf_driver_form3", "lowdf_team_form3",
+    "monza_form_driver", "monza_form_team",
+    # categoricals
     "team", "driver"
 ]
 
+
+USE_DELTA_TARGET = True 
 
 def _prep_fe_matrix(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
     """Coerce dtypes, add any missing FEATS as NaN, and return (X, feat_list)."""
@@ -63,7 +71,7 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
 
     rf = RandomForestRegressor(
         n_estimators=600,
-        min_samples_leaf=5,
+        min_samples_leaf=12,
         max_depth=None,
         random_state=42,
         n_jobs=-1,
@@ -170,3 +178,42 @@ def predict_event_with_uncertainty(
         out["p_rank_pm1"] = ((ranks >= (pr - 1)) & (ranks <= (pr + 1))).mean(axis=1)
 
     return out
+
+def permutation_importance_series(model: Pipeline, X_df: pd.DataFrame, y: pd.Series, n_repeats: int = 10):
+    """Convenience wrapper to compute permutation importance against a provided set."""
+    from sklearn.inspection import permutation_importance
+    r = permutation_importance(model, X_df, y, n_repeats=n_repeats,
+                               random_state=42, scoring="neg_mean_absolute_error")
+    return pd.Series(r.importances_mean, index=X_df.columns).sort_values(ascending=False)
+
+
+def model_feature_names(model: Pipeline) -> List[str]:
+    """Get post-preprocessing feature names (for mapping importances)."""
+    pre: ColumnTransformer = model.named_steps["prep"]
+    # Prefer ColumnTransformer to build names for both num and cat transformers
+    try:
+        in_feats = getattr(model, "feature_list_", None)
+        names = pre.get_feature_names_out(in_feats if in_feats is not None else None)
+        return list(names)
+    except Exception:
+        return []
+
+
+def tree_importance_series(model: Pipeline) -> pd.Series:
+    """Map rf.feature_importances_ onto post-preprocessing feature names."""
+    rf: RandomForestRegressor = model.named_steps["rf"]
+    names = model_feature_names(model)
+    imp = pd.Series(rf.feature_importances_, index=names if names else None)
+    if names:
+        # strip transformer prefixes like 'num__'/'cat__' for readability
+        imp.index = [n.split("__", 1)[-1] for n in imp.index]
+    return imp.sort_values(ascending=False)
+
+def _make_target(df: pd.DataFrame) -> Tuple[pd.Series, pd.Series | None]:
+    """Return (y_target, anchor) where anchor is grid_pos if using delta target."""
+    if USE_DELTA_TARGET:
+        y = (df["finish_pos"] - df["grid_pos"]).astype(float)  # positions gained/lost
+        anchor = df["grid_pos"].astype(float)
+        return y, anchor
+    else:
+        return df["finish_pos"].astype(float), None

@@ -40,6 +40,7 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
 "Hungarian Grand Prix",
 "Belgian Grand Prix",
 "Dutch Grand Prix",
+"Italian Grand Prix"
 ],
 }
 
@@ -47,3 +48,36 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
 EXCLUDE_EVENTS = {
     2025: {"Hungarian Grand Prix"},   # add others here if needed
 }
+
+# --- Monza / low-downforce helpers ---
+
+# Circuits that behave similarly to Monza (long straights, low drag reward)
+LOW_DF_GPS = {
+    "Italian Grand Prix",     # Monza
+    "Azerbaijan Grand Prix",  # Baku
+    "Canadian Grand Prix",    # Montreal
+    "Saudi Arabian Grand Prix" # Jeddah
+}
+
+# Extra per-circuit priors. You can tune these over time.
+# (_default is used when a GP isn't listed explicitly.)
+CIRCUIT_EXTRAS = {
+    "Italian Grand Prix": {
+        "expected_stops": 1,   # Monza is typically one-stop
+        "overtake_index": 0.7, # 0..1; higher = easier passing
+        "tow_importance": 0.8, # 0..1; quali tow matters at Monza
+        "is_low_df": 1,
+        "deg_index": 0.3,
+        "stint_len_typical": 22,        # mark Monza as low-downforce
+    },
+    "_default": {
+        "expected_stops": 2,
+        "overtake_index": 0.5,
+        "tow_importance": 0.3,
+        "is_low_df": 0,           
+        "deg_index": 0.5,          # 0..1 tyre degradation severity
+        "stint_len_typical": 18,
+    }
+}
+
+
