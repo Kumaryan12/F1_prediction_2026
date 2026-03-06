@@ -1,24 +1,23 @@
-# F1_prediction_system/data.py
 from __future__ import annotations
 import pandas as pd
 import fastf1
 from typing import List, Dict, Tuple, Optional
-from .config import CACHE_DIR, FALLBACK_EVENTS, EXCLUDE_EVENTS
+from .config import CACHE_DIR, FALLBACK_EVENTS
 
 fastf1.Cache.enable_cache(CACHE_DIR)
 
-# ---------------- Hardcoded grids (optional, per-event) ----------------
-# Keys are (year, gp_name) and values map DRIVER ABBREVIATION -> starting grid position (1..20)
+#Hardcoded grids
+
 HARDCODED_GRID: Dict[Tuple[int, str], Dict[str, int]] = {
-    (2025, "Italian Grand Prix"): {
-        "PIA": 3, "NOR": 2, "VER": 1, "HAD": 16, "RUS": 5, "LEC": 4, "HAM": 10,
-        "LAW": 20, "SAI": 13, "ALO": 8, "ANT": 6, "TSU": 9, "BOR": 7, "GAS": 19,
-        "ALB": 14, "COL": 18, "HUL": 12, "OCO": 15, "BEA": 11, "STR": 17
+    (2025, "Abu Dhabi Grand Prix"): {
+        "PIA": 3, "NOR": 2, "VER": 1, "HAD": 9, "RUS": 4, "LEC": 5, "HAM": 16,
+        "LAW": 13, "SAI": 12, "ALO": 6, "ANT": 14, "TSU": 10, "BOR": 7, "GAS": 19,
+        "ALB": 17, "COL": 20, "HUL": 18, "OCO": 8, "BEA": 11, "STR": 15
     },
-    # Example (fill when you have the final quali): (2025, "Italian Grand Prix"): {...}
+    
 }
 
-# ---------------- Schedule / helpers ----------------
+#Schedule / helpers
 
 def _event_schedule(year: int) -> pd.DataFrame:
     try:
@@ -135,9 +134,7 @@ def _canonicalize_pred_entrylist(pred_df: pd.DataFrame, year: int, target_gp: st
     return out
 
 def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
-    """
-    If a hardcoded grid exists for (year, gp_name), filter to those drivers and set grid_pos.
-    """
+    # If a hardcoded grid exists for (year, gp_name), filter to those drivers and set grid_pos.
     mapping = HARDCODED_GRID.get((year, gp_name))
     if not mapping:
         return df
@@ -165,7 +162,7 @@ def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataF
 
     return out
 
-# ---------------- Build event rows for training ----------------
+# Build event rows for training 
 
 def extract_event_qr(year: int, gp_name: str) -> pd.DataFrame:
     """
@@ -310,7 +307,7 @@ def build_training_until(target_year: int, target_gp: str, hist_years=range(2023
         full = full.sort_values(["date", "year", "gp", "DriverNumber"]).reset_index(drop=True)
     return full
 
-# ---------------- Target drivers for prediction ----------------
+#Target drivers for prediction
 
 def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
     """
@@ -343,6 +340,7 @@ def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
         df = None  # fall through
 
     # 2) Try FP1 if Q missing
+    '''
     if df is None:
         try:
             fp_res = _load_results_only(year, gp_name, "FP1").copy()
@@ -357,7 +355,7 @@ def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
                 df = df[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]]
         except Exception:
             df = None  # fall through
-
+'''
     # 3) Fallback: latest completed race before target
     if df is None:
         ref = None
@@ -391,13 +389,15 @@ def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
         ref.loc[:, "date"] = _event_date(year, gp_name)
         df = ref[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]]
 
-    # ---- Canonicalize to roster (removes placeholders from FP) ----
+    # Canonicalize to roster (removes placeholders from FP)
     try:
         df = _canonicalize_pred_entrylist(df, year, gp_name)
     except Exception as e:
         print(f"[WARN] Could not canonicalize roster for {gp_name} {year}: {e}")
 
-    # ---- Apply hardcoded grid for this event if provided ----
+    #Apply hardcoded grid for this event if provided
     df = _apply_hardcoded_grid(df, year, gp_name)
 
     return df
+
+

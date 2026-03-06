@@ -18,19 +18,19 @@ from .model import train_model, predict_event_with_uncertainty, oob_errors
 
 from .model import (
     train_model, predict_event_with_uncertainty, oob_errors,
-    _prep_fe_matrix, _make_target,            # for permutation importance
+    _prep_fe_matrix, _make_target,            
     tree_importance_series, permutation_importance_series
 )
 
 def build_training_frame(target_year: int, target_gp: str) -> pd.DataFrame:
-    """Pull history + season-to-date, then add forms + circuit context."""
+    
     train_df = build_until_data(target_year, target_gp, hist_years=HIST_YEARS)
     train_df = add_driver_team_form(train_df)
     train_df = add_circuit_context_df(train_df)
     return train_df
 
 def build_predict_frame(target_year: int, target_gp: str, train_df_with_forms: pd.DataFrame) -> pd.DataFrame:
-    """Get target drivers (Q if available; else FP1/fallback), add context + latest forms."""
+    
     pred_df = get_target_drivers(target_year, target_gp)
     pred_df = add_circuit_context_df(pred_df)
     pred_df = merge_latest_forms(pred_df, train_df_with_forms)
@@ -40,17 +40,16 @@ def build_predict_frame(target_year: int, target_gp: str, train_df_with_forms: p
 
 
 def _safe_load_model(path: str):
-    """Try loading rich artifact; fall back to plain joblib pipeline."""
+    
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(f"Model file not found: {p}")
     try:
-        # Prefer artifact (model + meta) if available
-        from .model import load_model_artifact  # type: ignore
+        
+        from .model import load_model_artifact 
         model, meta = load_model_artifact(str(p))
         return model, meta
     except Exception:
-        # Fallback: a plain joblib Pipeline without meta
         model = joblib.load(p)
         return model, {}
 
@@ -60,7 +59,7 @@ def _safe_save_model(model, path: str, meta: dict | None = None):
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     try:
-        from .model import save_model_artifact  # type: ignore
+        from .model import save_model_artifact 
         save_model_artifact(model, str(p), meta or {})
     except Exception:
         joblib.dump(model, p)
@@ -70,7 +69,7 @@ def _safe_save_model(model, path: str, meta: dict | None = None):
 def main():
     parser = argparse.ArgumentParser(description="F1 Race Predictor (RF + engineered features)")
     parser.add_argument("--year", type=int, default=2025)
-    parser.add_argument("--gp", type=str, default="Dutch Grand Prix")
+    parser.add_argument("--gp", type=str)
 
     # Quali proxy controls
     parser.add_argument("--preq", action="store_true",
@@ -83,10 +82,6 @@ def main():
                         help="Monte-Carlo samples for rank probabilities (0 disables)")
     parser.add_argument("--interval", type=int, choices=(68, 95), default=68,
                         help="Confidence interval width to display in console (68 or 95)")
-
-    # Optional data/features (reserved)
-    parser.add_argument("--weather_csv", type=str, default=None,
-                        help="CSV with gp,year,date,rain_prob,track_temp_c (optional; not wired yet)")
 
     # Model persistence / reuse
     parser.add_argument("--load_model", type=str, default=None,
@@ -123,10 +118,11 @@ def main():
     args = parser.parse_args()
     target_year, target_gp = args.year, args.gp
 
-    # 1) Build training data (needed for forms/context & feature checks)
     print(f"[INFO] Building training frame up to {target_gp} {target_year}…")
     train_df = build_training_frame(target_year, target_gp)
     print(f"[INFO] Training rows: {train_df.shape[0]}")
+    print(train_df.sort_values('date')[['year','gp','date']].drop_duplicates('gp', keep='last').tail(5))
+    print('Latest event in training:', train_df['gp'].iloc[train_df['date'].idxmax()])
 
     # 2) Load or train
     model = None
@@ -163,7 +159,6 @@ def main():
                     print("[INFO] Newer training data exists. Retraining due to --auto_retrain.")
                     model = None
             except Exception:
-                # If helper not available, just proceed with the loaded pipeline
                 pass
 
         except Exception as e:
@@ -179,7 +174,6 @@ def main():
         else:
             print("[OOB] Not available")
         
-        # === Feature importance (tree-based) ===
         if args.show_importance:
             try:
                 imp = tree_importance_series(model)
@@ -200,15 +194,15 @@ def main():
 
 
         if args.save_model:
-            # Build metadata for artifact
+        
             try:
-                from .model import _prep_fe_matrix  # type: ignore
+                from .model import _prep_fe_matrix 
                 _, feat_list_now = _prep_fe_matrix(train_df.dropna(subset=["finish_pos"]).copy())
             except Exception:
                 feat_list_now = []
             
             if isinstance(HIST_YEARS, (list, tuple)):
-               hist_years_meta = list(HIST_YEARS)          # store the actual years, e.g. [2023, 2024, 2025]
+               hist_years_meta = list(HIST_YEARS)          
             else:
               hist_years_meta = int(HIST_YEARS) if isinstance(HIST_YEARS, (int, float)) else str(HIST_YEARS)
 
@@ -231,40 +225,39 @@ def main():
         if errs:
             print(f"[OOB] R2={errs['oob_r2']:.3f} | MAE={errs['oob_mae']:.2f} | RMSE={errs['oob_rmse']:.2f}")
 
-    # 3) Build prediction frame
+   
     print(f"[INFO] Building prediction frame for {target_gp} {target_year}…")
     pred_df = build_predict_frame(target_year, target_gp, train_df)
 
     
-    # Optional: Pre-Q behavior 
+    
     if args.preq:
         try:
             session = fastf1.get_session(args.year, args.gp, 'Q')
-            session.load()  # Loads the session data
+            session.load()  
 
-        # Check if qualifying data is available
+        
             if session.laps.empty:
              raise ValueError(f"No qualifying data available for {args.gp} {args.year}.")
 
-        # Map the actual grid positions to the DataFrame
+        
             pred_df = pred_df.copy()
             pred_df["grid_pos"] = pred_df["driver"].map(dict(zip(session.laps['Driver'], session.laps['GridPosition'])))
 
         except Exception as e:
          print(f"[WARNING] Failed to load qualifying data for {args.gp} {args.year}. Error: {e}")
-         # If qualifying data is not available, fallback to proxy
          print(f"Using qualifying proxy for {args.gp} {args.year}.")
          proxy_base = train_df[["driver", "date", "grid_pos"]].dropna()
          pred_df = add_quali_proxy(pred_df, proxy_base, window=args.proxy_window)
 
-    # Sanity checks
+    
     if pred_df.empty:
         raise RuntimeError("Prediction frame is empty; no driver list available.")
     for col in ("driver", "team", "grid_pos"):
         if col not in pred_df.columns:
             raise RuntimeError(f"Prediction frame missing required column: {col}")
 
-    # 4) Predict with uncertainty (adds std, 68/95% intervals; MC adds rank probabilities)
+    
     print("[INFO] Predicting order…")
     out = predict_event_with_uncertainty(
         model,
@@ -273,7 +266,7 @@ def main():
         mc_samples=args.mc
     )
 
-    # 5) Print Top-10 with chosen interval
+    
     lo_col, hi_col = ("pi95_low", "pi95_high") if args.interval == 95 else ("pi68_low", "pi68_high")
     cols_to_print = [c for c in (
         "driver", "team", "grid_pos",
@@ -289,11 +282,6 @@ def main():
     out.to_csv("predicted_order.csv", index=False)
     print("\n[INFO] Saved full predictions to predicted_order.csv")
 
-    # Reserved flags
-    if args.weather_csv:
-        print("[NOTE] --weather_csv provided, but automatic merge is not wired yet.")
-    if args.use_conformal:
-        print("[NOTE] --use_conformal requested, but conformal intervals are not wired yet.")
 
 
 if __name__ == "__main__":

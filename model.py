@@ -1,4 +1,3 @@
-# F1_prediction_system/model.py
 from __future__ import annotations
 from typing import Dict, List, Tuple
 import numpy as np
@@ -12,24 +11,39 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
 FEATS = [
-    # grid / circuit priors
     "grid_pos",
     "sc_prob", "vsc_prob", "pit_loss",
-    "expected_stops", "overtake_index", "tow_importance", "is_low_df",
-    "deg_index", "stint_len_typical",
-    # form
+    "expected_stops", "overtake_index", "tow_importance",
+    "is_low_df", "is_street", "long_straight_index",
+    "braking_intensity", "warmup_penalty", "deg_rate", "stint_len_typical",
+
+    # Track-shape / Abu Dhabi-oriented extras
+    "surface_bumpiness", "wind_sensitivity", "track_limits_risk",
+    "elevation_change_index", "mechanical_failure_risk",
+    "corner_count", "avg_speed_kph",
+
+    
+    "rain_prob_race", "wet_lap_fraction", "wet_start_prob", "mixed_conditions_risk",
+
+    
     "drv_form3", "team_form3",
-    "lowdf_driver_form3", "lowdf_team_form3",
-    "monza_form_driver", "monza_form_team",
-    # categoricals
-    "team", "driver"
+    "driver_skill_prior",
+    "street_driver_form3", "street_team_form3",
+    "longstraight_driver_form3", "longstraight_team_form3",
+
+    "team", "driver",
 ]
+
+
+
+
+
+
 
 
 USE_DELTA_TARGET = True 
 
 def _prep_fe_matrix(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
-    """Coerce dtypes, add any missing FEATS as NaN, and return (X, feat_list)."""
     df = df.copy()
 
     num_maybe = [
@@ -53,7 +67,6 @@ def _prep_fe_matrix(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
 
 
 def train_model(train_df: pd.DataFrame) -> Pipeline:
-    """Fit a RandomForest pipeline with imputation + one-hot for categoricals."""
     df = train_df.copy().dropna(subset=["finish_pos"])
 
     X, feat_list = _prep_fe_matrix(df)
@@ -70,8 +83,8 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     )
 
     rf = RandomForestRegressor(
-        n_estimators=600,
-        min_samples_leaf=12,
+        n_estimators=8000,
+        min_samples_leaf=16,
         max_depth=None,
         random_state=42,
         n_jobs=-1,
@@ -86,9 +99,7 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     model.fit(X, y)
     return model
 
-
 def oob_errors(model, train_df: pd.DataFrame) -> Dict[str, float]:
-    """Return OOB R², MAE, RMSE computed from rf.oob_prediction_."""
     if "rf" not in model.named_steps:
         return {}
 
@@ -105,7 +116,6 @@ def oob_errors(model, train_df: pd.DataFrame) -> Dict[str, float]:
 
     oob_r2  = float(r2_score(y_true, y_oob))
     oob_mae = float(mean_absolute_error(y_true, y_oob))
-    # Compute RMSE manually for broad sklearn compatibility
     mse = float(mean_squared_error(y_true, y_oob))  
     oob_rmse = float(np.sqrt(mse))
     return {"oob_r2": oob_r2, "oob_mae": oob_mae, "oob_rmse": oob_rmse}
@@ -124,11 +134,10 @@ def predict_event_with_uncertainty(
     prep = model.named_steps["prep"]
     rf = model.named_steps["rf"]
 
-    # Mean prediction through the pipeline
     pred_mean = model.predict(X_raw)
 
-    # Per-tree predictions -> std across trees
-    Xp = prep.transform(X_raw)  # transformed features fed to trees
+    
+    Xp = prep.transform(X_raw)  
     tree_preds = np.column_stack([est.predict(Xp) for est in rf.estimators_])  # (n, n_trees)
     pred_std = tree_preds.std(axis=1, ddof=1)
 
@@ -141,7 +150,6 @@ def predict_event_with_uncertainty(
     out = out.sort_values("pred_finish", ascending=True).reset_index(drop=True)
     out["pred_rank"] = np.arange(1, len(out) + 1)
 
-    # Intervals (assuming approximate normality of tree dispersion)
     if add_intervals:
         lo68 = np.clip(out["pred_finish"] - 1.00 * out["pred_std"], 1, 20)
         hi68 = np.clip(out["pred_finish"] + 1.00 * out["pred_std"], 1, 20)
@@ -180,7 +188,6 @@ def predict_event_with_uncertainty(
     return out
 
 def permutation_importance_series(model: Pipeline, X_df: pd.DataFrame, y: pd.Series, n_repeats: int = 10):
-    """Convenience wrapper to compute permutation importance against a provided set."""
     from sklearn.inspection import permutation_importance
     r = permutation_importance(model, X_df, y, n_repeats=n_repeats,
                                random_state=42, scoring="neg_mean_absolute_error")
@@ -188,9 +195,7 @@ def permutation_importance_series(model: Pipeline, X_df: pd.DataFrame, y: pd.Ser
 
 
 def model_feature_names(model: Pipeline) -> List[str]:
-    """Get post-preprocessing feature names (for mapping importances)."""
     pre: ColumnTransformer = model.named_steps["prep"]
-    # Prefer ColumnTransformer to build names for both num and cat transformers
     try:
         in_feats = getattr(model, "feature_list_", None)
         names = pre.get_feature_names_out(in_feats if in_feats is not None else None)
@@ -200,7 +205,6 @@ def model_feature_names(model: Pipeline) -> List[str]:
 
 
 def tree_importance_series(model: Pipeline) -> pd.Series:
-    """Map rf.feature_importances_ onto post-preprocessing feature names."""
     rf: RandomForestRegressor = model.named_steps["rf"]
     names = model_feature_names(model)
     imp = pd.Series(rf.feature_importances_, index=names if names else None)
@@ -210,7 +214,6 @@ def tree_importance_series(model: Pipeline) -> pd.Series:
     return imp.sort_values(ascending=False)
 
 def _make_target(df: pd.DataFrame) -> Tuple[pd.Series, pd.Series | None]:
-    """Return (y_target, anchor) where anchor is grid_pos if using delta target."""
     if USE_DELTA_TARGET:
         y = (df["finish_pos"] - df["grid_pos"]).astype(float)  # positions gained/lost
         anchor = df["grid_pos"].astype(float)
