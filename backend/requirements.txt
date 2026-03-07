@@ -1,4 +1,7 @@
+pydantic
 fastapi
 uvicorn[standard]
 pandas
-pydantic
+numpy
+scikit-learn
+python-multipart

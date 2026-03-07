@@ -56,10 +56,7 @@ export default async function HomePage() {
               {summary.race}
             </h1>
 
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
-              AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the Australian Grand Prix.
-            </p>
+            
 
             <div className="mt-6 flex flex-wrap gap-4">
               
@@ -114,13 +111,13 @@ export default async function HomePage() {
             {/* NEW: OOB Accuracy Score */}
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              <span className="text-track-green font-bold drop-shadow-[0_0_5px_rgba(0,165,81,0.4)]">0.842</span>
+              <span className="text-track-green font-bold drop-shadow-[0_0_5px_rgba(0,165,81,0.4)]">0.624</span>
             </div>
 
             {/* NEW: Error Metric */}
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              <span className="text-f1-red font-bold">± 1.24 Pos</span>
+              <span className="text-f1-red font-bold">± 2.36 Pos</span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -129,8 +126,8 @@ export default async function HomePage() {
             </div>
             
             <div className="flex justify-between items-end pt-0.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Uncertainty CI</span>
-              <span className="text-white text-right">68% & 95%</span>
+              <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
+              <span className="text-white text-right"> 3.22</span>
             </div>
           </div>
         </div>
