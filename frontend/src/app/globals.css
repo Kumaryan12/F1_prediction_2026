@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* The F1 / Australian GP Palette */
+  --color-f1-red: #e10600;
+  --color-tarmac: #15151e;       /* Deep dark blue-grey for the background */
+  --color-tarmac-light: #1f1f2d; /* Slightly lighter for the glassmorphism cards */
+  --color-track-green: #00a551;  /* Albert park kerb/grass green */
+  --color-telemetry: #00ff00;    /* Classic neon green for live data/intervals */
+  --color-accent-blue: #00a0d6;  /* Melbourne sky accent */
+
+  /* Fonts - keeping it clean and readable */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* NEW: Ticker Animation Variable */
+  --animate-ticker: ticker 40s linear infinite;
+}
+
+/* NEW: Ticker Keyframes */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+:root {
+  --background: var(--color-tarmac);
+  --foreground: #f3f4f6;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  /* Adds a subtle radial spotlight effect to mimic a garage environment */
+  background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 60%);
+  background-attachment: fixed;
+  font-family: var(--font-sans);
+}
+
+/* Optional: A custom utility for our glass panels that we'll use in the components */
+@layer utilities {
+  .f1-glass-panel {
+    @apply bg-tarmac-light/60 backdrop-blur-md border border-white/10 shadow-xl rounded-xl;
+  }
+}
