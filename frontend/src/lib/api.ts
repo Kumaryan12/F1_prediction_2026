@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export async function fetchSummary() {
   const res = await fetch(`${API_BASE}/summary`, { cache: "no-store" });
