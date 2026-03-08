@@ -21,20 +21,9 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      {/* The Live Telemetry Ticker Tape */}
-      <div className="mb-6 -mx-4 sm:-mx-6 lg:-mx-8">
-        <TelemetryTicker rows={top10.rows} />
-      </div>
+      
 
-      {/* Top Header - Cleaned up to just the Live Indicator */}
-      <header className="mb-8 flex items-center border-b border-white/10 pb-6">
-        <div className="flex items-center gap-4">
-          <div className="h-2 w-2 rounded-full bg-f1-red animate-pulse shadow-[0_0_8px_rgba(225,6,0,0.8)]" />
-          <p className="text-xs font-bold uppercase tracking-[0.4em] text-white">
-            Albert Park <span className="text-zinc-500 ml-2">/// Live Prediction System</span>
-          </p>
-        </div>
-      </header>
+      
 
       {/* Hero Section - The Melbourne Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -68,10 +57,7 @@ export default async function HomePage() {
           </div>
           
           <div className="relative z-10">
-            <div className="mb-3 inline-flex items-center gap-2 rounded border border-track-green/30 bg-track-green/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-track-green backdrop-blur-md shadow-[0_0_15px_rgba(0,165,81,0.2)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-track-green animate-ping" />
-              Race Intelligence Active
-            </div>
+            
 
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
               {summary.race}
@@ -82,16 +68,7 @@ export default async function HomePage() {
               confidence intervals, and team-level race outlook for the Australian Grand Prix.
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-4">
-              <span className="flex items-center gap-2 border-l-2 border-f1-red bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
-                <span className="text-zinc-400 uppercase text-xs tracking-wider">P1 Predict:</span> 
-                {summary.predicted_winner}
-              </span>
-              <span className="flex items-center gap-2 border-l-2 border-track-green bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
-                <span className="text-zinc-400 uppercase text-xs tracking-wider">Top Constructor:</span> 
-                {summary.best_team}
-              </span>
-            </div>
+            
           </div>
         </div>
 
@@ -113,13 +90,10 @@ export default async function HomePage() {
           {/* Header */}
           <div className="relative z-10 border-b border-white/10 bg-black/40 px-5 py-4 flex justify-between items-center">
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-2">
-              <svg className="w-4 h-4 text-accent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              
               Model Specs
             </h3>
-            <span className="flex h-2 w-2 rounded-full bg-accent-blue animate-pulse shadow-[0_0_8px_rgba(0,160,214,0.8)]" />
+            
           </div>
 
           {/* Specs List */}
