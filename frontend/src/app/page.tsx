@@ -2,6 +2,7 @@ import Link from "next/link";
 import MetricCard from "@/components/MetricCard";
 import PodiumCard from "@/components/PodiumCard";
 import PredictionTable from "@/components/PredictionTable";
+import HeadToHead from "@/components/HeadToHead";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import TelemetryTicker from "@/components/TelemetryTicker";
 import { fetchSummary, fetchTop10, fetchFeatureImportance } from "@/lib/api";
@@ -21,10 +22,6 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      
-
-      
-
       {/* Hero Section - The Melbourne Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
@@ -57,8 +54,6 @@ export default async function HomePage() {
           </div>
           
           <div className="relative z-10">
-            
-
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
               {summary.race}
             </h1>
@@ -67,8 +62,6 @@ export default async function HomePage() {
               AI-powered telemetry dashboard featuring podium probabilities, 
               confidence intervals, and team-level race outlook for the Australian Grand Prix.
             </p>
-
-            
           </div>
         </div>
 
@@ -90,10 +83,8 @@ export default async function HomePage() {
           {/* Header */}
           <div className="relative z-10 border-b border-white/10 bg-black/40 px-5 py-4 flex justify-between items-center">
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-2">
-              
               Model Specs
             </h3>
-            
           </div>
 
           {/* Specs List */}
@@ -176,7 +167,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Pass the cleaned 'validFeatures' array to the chart component */}
+      {/* NEW: Head-to-Head Combat Terminal */}
+      <section className="mb-16">
+        <HeadToHead predictions={top10.rows} />
+      </section>
+
+      {/* Feature Importance Chart */}
       <section className="mb-16">
         <FeatureImportanceChart features={validFeatures} />
       </section>
