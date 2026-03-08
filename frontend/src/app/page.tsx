@@ -3,20 +3,38 @@ import MetricCard from "@/components/MetricCard";
 import PodiumCard from "@/components/PodiumCard";
 import PredictionTable from "@/components/PredictionTable";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
-import TelemetryTicker from "@/components/TelemetryTicker"; // <-- NEW Import
+import TelemetryTicker from "@/components/TelemetryTicker";
 import { fetchSummary, fetchTop10, fetchFeatureImportance } from "@/lib/api";
 
 export default async function HomePage() {
   const summary = await fetchSummary();
   const top10 = await fetchTop10();
-  const features = await fetchFeatureImportance();
+  
+  // 1. Fetch the raw data
+  const rawFeatures = await fetchFeatureImportance();
+
+  // 2. Filter out any 'null' values so TypeScript knows it's 100% safe
+  const validFeatures = rawFeatures.filter(
+    (feature): feature is { name: string; value: number } => feature !== null
+  );
 
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      
+      {/* The Live Telemetry Ticker Tape */}
+      <div className="mb-6 -mx-4 sm:-mx-6 lg:-mx-8">
+        <TelemetryTicker rows={top10.rows} />
+      </div>
 
-      
+      {/* Top Header - Cleaned up to just the Live Indicator */}
+      <header className="mb-8 flex items-center border-b border-white/10 pb-6">
+        <div className="flex items-center gap-4">
+          <div className="h-2 w-2 rounded-full bg-f1-red animate-pulse shadow-[0_0_8px_rgba(225,6,0,0.8)]" />
+          <p className="text-xs font-bold uppercase tracking-[0.4em] text-white">
+            Albert Park <span className="text-zinc-500 ml-2">/// Live Prediction System</span>
+          </p>
+        </div>
+      </header>
 
       {/* Hero Section - The Melbourne Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -50,16 +68,29 @@ export default async function HomePage() {
           </div>
           
           <div className="relative z-10">
-            
+            <div className="mb-3 inline-flex items-center gap-2 rounded border border-track-green/30 bg-track-green/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-track-green backdrop-blur-md shadow-[0_0_15px_rgba(0,165,81,0.2)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-track-green animate-ping" />
+              Race Intelligence Active
+            </div>
 
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
               {summary.race}
             </h1>
 
-            
+            <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
+              AI-powered telemetry dashboard featuring podium probabilities, 
+              confidence intervals, and team-level race outlook for the Australian Grand Prix.
+            </p>
 
             <div className="mt-6 flex flex-wrap gap-4">
-              
+              <span className="flex items-center gap-2 border-l-2 border-f1-red bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
+                <span className="text-zinc-400 uppercase text-xs tracking-wider">P1 Predict:</span> 
+                {summary.predicted_winner}
+              </span>
+              <span className="flex items-center gap-2 border-l-2 border-track-green bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
+                <span className="text-zinc-400 uppercase text-xs tracking-wider">Top Constructor:</span> 
+                {summary.best_team}
+              </span>
             </div>
           </div>
         </div>
@@ -108,13 +139,11 @@ export default async function HomePage() {
               <span className="text-white text-right">41 <span className="text-zinc-500">(39 Num / 2 Cat)</span></span>
             </div>
             
-            {/* NEW: OOB Accuracy Score */}
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
               <span className="text-track-green font-bold drop-shadow-[0_0_5px_rgba(0,165,81,0.4)]">0.624</span>
             </div>
 
-            {/* NEW: Error Metric */}
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
               <span className="text-f1-red font-bold">± 2.36 Pos</span>
@@ -127,7 +156,7 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end pt-0.5">
               <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right"> 3.22</span>
+              <span className="text-white text-right">3.22</span>
             </div>
           </div>
         </div>
@@ -173,9 +202,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Feature Importance Diagnostics */}
+      {/* 3. Pass the cleaned 'validFeatures' array to the chart component */}
       <section className="mb-16">
-        <FeatureImportanceChart features={features} />
+        <FeatureImportanceChart features={validFeatures} />
       </section>
       
     </div>
