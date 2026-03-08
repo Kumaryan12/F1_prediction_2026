@@ -3,9 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Optional
+import joblib  # <-- NEW: Required to load your ML model
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel # <-- NEW: Required for POST requests
 from fastapi.middleware.cors import CORSMiddleware
 
 from .schemas import (
@@ -35,7 +37,25 @@ TREE_IMPORTANCE_PATH = DATA_DIR / "feature_importance_tree.csv"
 PERM_IMPORTANCE_PATH = DATA_DIR / "feature_importance_permutation.csv"
 METRICS_PATH = DATA_DIR / "model_metrics.json"
 
+# NEW: Paths for the live simulator
+MODEL_PATH = DATA_DIR / "random_forest_model.pkl"  # TODO: Update to your exact model filename
+FEATURES_PATH = DATA_DIR / "current_race_features.csv" # TODO: Update to the CSV containing your 41 features
+
 DEFAULT_RACE_NAME = "Australian Grand Prix 2026"
+
+
+# -------------------------------------------------------------------
+# NEW: Simulator Schemas
+# -------------------------------------------------------------------
+class SimulationRequest(BaseModel):
+    driver: str
+    grid_pos: int
+
+class SimulationResponse(BaseModel):
+    driver: str
+    simulated_grid: int
+    new_predicted_finish: float
+    new_predicted_rank: int
 
 
 # -------------------------------------------------------------------
@@ -61,9 +81,6 @@ def load_importance_csv(path: Path, label: str) -> pd.DataFrame:
 
     df = pd.read_csv(path)
 
-    # Handle either:
-    # 1) index column unnamed + importance column
-    # 2) explicit feature/importance columns
     if "feature" not in df.columns:
         unnamed_cols = [c for c in df.columns if str(c).startswith("Unnamed:")]
         if unnamed_cols:
@@ -86,10 +103,6 @@ def load_importance_csv(path: Path, label: str) -> pd.DataFrame:
 
 
 def load_metrics() -> dict:
-    """
-    Preferred source: model_metrics.json
-    Fallback: minimal metrics derived from predictions.
-    """
     if METRICS_PATH.exists():
         try:
             with open(METRICS_PATH, "r", encoding="utf-8") as f:
@@ -98,7 +111,6 @@ def load_metrics() -> dict:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to parse metrics JSON: {e}")
 
-    # Fallback if no JSON exists yet
     df = load_predictions()
     avg_pred_std = float(pd.to_numeric(df["pred_std"], errors="coerce").mean()) if "pred_std" in df.columns else None
 
@@ -126,7 +138,6 @@ def root():
         "race": DEFAULT_RACE_NAME,
     }
 
-
 @app.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     return HealthResponse()
@@ -146,7 +157,6 @@ def get_latest_predictions() -> PredictionsResponse:
         rows=rows,
     )
 
-
 @app.get("/predictions/top10", response_model=PredictionsResponse)
 def get_top10_predictions() -> PredictionsResponse:
     df = load_predictions().head(10)
@@ -156,7 +166,6 @@ def get_top10_predictions() -> PredictionsResponse:
         total_rows=len(rows),
         rows=rows,
     )
-
 
 @app.get("/drivers/{driver_code}", response_model=DriverResponse)
 def get_driver_prediction(driver_code: str) -> DriverResponse:
@@ -169,7 +178,6 @@ def get_driver_prediction(driver_code: str) -> DriverResponse:
 
     row = match.iloc[0].to_dict()
     return DriverResponse(row=PredictionRow(**row))
-
 
 @app.get("/summary", response_model=SummaryResponse)
 def get_summary() -> SummaryResponse:
@@ -198,7 +206,6 @@ def get_summary() -> SummaryResponse:
         best_team=best_team,
         avg_pred_std=avg_pred_std,
     )
-
 
 @app.get("/predictions/search", response_model=PredictionsResponse)
 def search_predictions(
@@ -229,7 +236,6 @@ def search_predictions(
 def get_metrics():
     return load_metrics()
 
-
 @app.get("/feature-importance/tree")
 def get_tree_importance(top_n: int = Query(default=20, ge=1, le=200)):
     df = load_importance_csv(TREE_IMPORTANCE_PATH, "tree feature importance")
@@ -242,7 +248,6 @@ def get_tree_importance(top_n: int = Query(default=20, ge=1, le=200)):
         "rows": df.to_dict(orient="records"),
     }
 
-
 @app.get("/feature-importance/permutation")
 def get_permutation_importance(top_n: int = Query(default=20, ge=1, le=200)):
     df = load_importance_csv(PERM_IMPORTANCE_PATH, "permutation feature importance")
@@ -254,3 +259,92 @@ def get_permutation_importance(top_n: int = Query(default=20, ge=1, le=200)):
         "total_rows": int(len(df)),
         "rows": df.to_dict(orient="records"),
     }
+
+
+# -------------------------------------------------------------------
+# NEW: Simulator Endpoint (The "God Mode")
+# -------------------------------------------------------------------
+
+@app.post("/simulate", response_model=SimulationResponse)
+def run_simulation(req: SimulationRequest) -> SimulationResponse:
+    import traceback # <-- Added this to trace the exact error
+    
+    # 1. Verify files exist
+    if not MODEL_PATH.exists() or not FEATURES_PATH.exists():
+        raise HTTPException(
+            status_code=500, 
+            detail="Model file or Features file missing from data directory."
+        )
+
+    try:
+        # 2. Load the actual trained model
+        model = joblib.load(MODEL_PATH)
+        
+        # 3. Load the raw features dataframe
+        features_df = pd.read_csv(FEATURES_PATH)
+        
+        # 4. Find the requested driver
+        driver_code = req.driver.upper().strip()
+        driver_data = features_df[features_df["driver"].str.upper() == driver_code].copy()
+        
+        if driver_data.empty:
+            raise HTTPException(status_code=404, detail=f"Driver '{driver_code}' not found in features dataset.")
+            
+        # 5. OVERRIDE the grid position
+        driver_data["grid_pos"] = req.grid_pos
+        
+        # 6. Prepare the data exactly how the model expects it!
+        # Grab the exact list of 41 features the model was trained on
+        expected_cols = getattr(model, "feature_list_", None)
+        
+        if expected_cols:
+            # If any features (like wind_sensitivity) are missing, safely add them as NaN
+            for col in expected_cols:
+                if col not in driver_data.columns:
+                    driver_data[col] = float('nan')
+            
+            # Keep ONLY the columns the model wants, in the exact right order
+            X_sim = driver_data[expected_cols]
+        else:
+            # Fallback just in case
+            X_sim = driver_data
+
+        # 7. Run the raw prediction!
+        raw_pred = float(model.predict(X_sim)[0])
+        
+        # 8. Re-apply the Delta (If model predicts positions gained/lost instead of absolute finish)
+        if getattr(model, "use_delta_target_", False):
+            new_prediction = req.grid_pos + raw_pred
+        else:
+            new_prediction = raw_pred
+            
+        # 8.5 APPLY THE LIVE SESSION BOOST!
+        # The main dashboard adjusts raw RF outputs based on live FP1/FP2 pace.
+        # We must apply that exact same boost here so the simulator matches the dashboard.
+        try:
+            preds_df = pd.read_csv(PREDICTIONS_PATH)
+            driver_pred_row = preds_df[preds_df["driver"].str.upper() == driver_code]
+            if not driver_pred_row.empty and "session_boost" in driver_pred_row.columns:
+                boost = float(driver_pred_row.iloc[0]["session_boost"])
+                # Subtract the boost (lower position is better in F1)
+                new_prediction -= boost
+        except Exception as e:
+            print(f"Notice: Could not apply session boost: {e}")
+            
+        # 9. Enforce F1 Reality (Clip the result between P1 and P20)
+        new_prediction = max(1.0, min(20.0, new_prediction))
+        
+        return SimulationResponse(
+            driver=driver_code,
+            simulated_grid=req.grid_pos,
+            new_predicted_finish=new_prediction,
+            new_predicted_rank=int(round(new_prediction))
+        )
+        
+    except Exception as e:
+        # 🔥 THIS WILL PRINT THE EXACT ERROR IN YOUR TERMINAL 🔥
+        print("\n" + "="*50)
+        print("🚨 SIMULATOR ENGINE CRASH 🚨")
+        traceback.print_exc()
+        print("="*50 + "\n")
+        raise HTTPException(status_code=500, detail=f"Simulation failed: {str(e)}")

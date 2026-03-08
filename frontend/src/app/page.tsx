@@ -5,12 +5,13 @@ import PredictionTable from "@/components/PredictionTable";
 import HeadToHead from "@/components/HeadToHead";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import TelemetryTicker from "@/components/TelemetryTicker";
-import { fetchSummary, fetchTop10, fetchFeatureImportance } from "@/lib/api";
+import Simulator from "@/components/Simulator";
+import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
 
 export default async function HomePage() {
   const summary = await fetchSummary();
   const top10 = await fetchTop10();
-  
+  const fullGrid = await fetchLatestPredictions();
   // 1. Fetch the raw data
   const rawFeatures = await fetchFeatureImportance();
 
@@ -170,6 +171,11 @@ export default async function HomePage() {
       {/* NEW: Head-to-Head Combat Terminal */}
       <section className="mb-16">
         <HeadToHead predictions={top10.rows} />
+      </section>
+
+      {/* NEW: The What-If Simulator */}
+      <section className="mb-16">
+        <Simulator predictions={fullGrid.rows} />
       </section>
 
       {/* Feature Importance Chart */}

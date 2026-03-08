@@ -15,9 +15,15 @@ export async function fetchTop10() {
   return res.json();
 }
 
+// Add this right next to your other fetch functions
 export async function fetchLatestPredictions() {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
   const res = await fetch(`${API_BASE}/predictions/latest`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch latest predictions");
+  
+  if (!res.ok) {
+    throw new Error("Failed to fetch full grid predictions");
+  }
+  
   return res.json();
 }
 
@@ -49,3 +55,4 @@ export async function fetchFeatureImportance() {
     return []; 
   }
 }
+

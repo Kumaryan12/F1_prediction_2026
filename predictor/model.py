@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Tuple
+from pathlib import Path
+import joblib  # <-- NEW: Required for saving the model
 
 import numpy as np
 import pandas as pd
@@ -10,6 +12,12 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+
+
+# -------------------------------------------------------------------
+# NEW: Define the absolute save path
+# -------------------------------------------------------------------
+DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\backend\app\data")
 
 
 # -------------------------------------------------------------------
@@ -70,7 +78,7 @@ FEATS = [
     "driver_strength_blend_2026",
     "team_strength_blend_2026",
 
-   
+    
 
     # Categoricals
     "team",
@@ -171,6 +179,14 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     model.use_delta_target_ = USE_DELTA_TARGET
     model.target_name_ = "finish_minus_grid" if USE_DELTA_TARGET else "finish_pos"
 
+    # ---------------------------------------------------------------
+    # NEW: Automatically save the trained model to your specific folder
+    # ---------------------------------------------------------------
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    model_path = DATA_DIR / "random_forest_model.pkl"
+    joblib.dump(model, model_path)
+    print(f"✅ Model successfully saved to: {model_path}")
+
     return model
 
 
@@ -228,6 +244,14 @@ def predict_event_with_uncertainty(
     """
     Predict finish positions and uncertainty bands.
     """
+    # ---------------------------------------------------------------
+    # NEW: Automatically save the current race features for the simulator
+    # ---------------------------------------------------------------
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    features_path = DATA_DIR / "current_race_features.csv"
+    features_df.to_csv(features_path, index=False)
+    print(f"✅ Features successfully saved to: {features_path}")
+
     X_raw, _ = _prep_fe_matrix(features_df.copy())
     prep = model.named_steps["prep"]
     rf = model.named_steps["rf"]

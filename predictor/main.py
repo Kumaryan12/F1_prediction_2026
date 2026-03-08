@@ -35,6 +35,13 @@ except Exception:
 
 
 # -------------------------------------------------------------------
+# NEW: Define absolute paths for output files
+# -------------------------------------------------------------------
+BACKEND_DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\backend\app\data")
+FRONTEND_DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\frontend\data")
+
+
+# -------------------------------------------------------------------
 # Helpers
 # -------------------------------------------------------------------
 
@@ -495,8 +502,14 @@ def main():
                 imp = tree_importance_series(model)
                 print("\n[FEATURE IMPORTANCE] (tree-based, top 20)")
                 print(imp.head(20).to_string())
-                imp.to_csv("feature_importance_tree.csv", header=["importance"])
-                print("[INFO] Saved tree feature importance to feature_importance_tree.csv")
+                
+                # ---------------------------------------------------------------
+                # NEW: Save Tree Importance to absolute Frontend Path
+                # ---------------------------------------------------------------
+                FRONTEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+                tree_path = FRONTEND_DATA_DIR / "feature_importance_tree.csv"
+                imp.to_csv(tree_path, header=["importance"])
+                print(f"[INFO] Saved tree feature importance to {tree_path}")
             except Exception as e:
                 print(f"[WARN] Could not compute tree-based importance: {e}")
 
@@ -513,6 +526,8 @@ def main():
                 )
                 print("\n[PERMUTATION IMPORTANCE] (neg MAE impact, top 20)")
                 print(p.head(20).to_string())
+                
+                # Leaving this one relative as it wasn't requested, but we could make it absolute if needed
                 p.to_csv("feature_importance_permutation.csv", header=["importance"])
                 print("[INFO] Saved permutation feature importance to feature_importance_permutation.csv")
             except Exception as e:
@@ -628,10 +643,12 @@ def main():
     print(out[cols_to_print].head(10).to_string(index=False))
 
     # ---------------------------------------------------------------
-    # Save output
+    # NEW: Save output to absolute Backend Path
     # ---------------------------------------------------------------
-    out.to_csv("predicted_order.csv", index=False)
-    print("\n[INFO] Saved full predictions to predicted_order.csv")
+    BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    predictions_path = BACKEND_DATA_DIR / "predicted_order.csv"
+    out.to_csv(predictions_path, index=False)
+    print(f"\n[INFO] Saved full predictions to {predictions_path}")
 
 
 if __name__ == "__main__":
