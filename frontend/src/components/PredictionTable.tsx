@@ -48,6 +48,7 @@ const driverNames: Record<string, string> = {
   "DOO": "Jack Doohan",
   "LAW": "Liam Lawson",
   "COL": "Franco Colapinto",
+  "HAD": "Isack Hadjar",
   "BOR": "Gabriel Bortoleto"
 };
 
