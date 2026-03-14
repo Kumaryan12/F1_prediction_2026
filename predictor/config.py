@@ -1,41 +1,33 @@
 from pathlib import Path
 from typing import Dict, Tuple
 
-# Where FastF1 stores/cache data (inside this package folder)
+# Where FastF1 stores/cache data
 CACHE_DIR: Path = Path(__file__).resolve().parent / "f1cache"
-CACHE_DIR.mkdir(parents=True, exist_ok=True)  # ensure it exists
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-# Historical seasons to use for training
-# For 2026 opener, include 2023–2025 history.
+# Historical seasons used for training
 HIST_YEARS = list(range(2023, 2026))
 
-# Defaults used when a circuit isn't in CIRCUIT_VOL
+# Default circuit values
 DEFAULT_SC = 0.5
 DEFAULT_VSC = 0.5
 DEFAULT_PIT_LOSS = 21.0
 
-# Circuit parameters: (SC probability, VSC probability, pit loss seconds)
+# (SC probability, VSC probability, pit loss seconds)
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
     "Bahrain Grand Prix": (0.63, 0.50, 22.9),
     "Saudi Arabian Grand Prix": (1.00, 0.50, 19.2),
-
-    # Australia 2026 official guide values
-    "Australian Grand Prix": (0.67, 0.67, 19.30),
-
+    "Australian Grand Prix": (0.67, 0.67, 19.3),
+    "Chinese Grand Prix": (0.62, 0.42, 22.5),
     "Japanese Grand Prix": (0.67, 0.50, 22.2),
     "Dutch Grand Prix": (0.60, 0.60, 21.5),
     "Singapore Grand Prix": (0.90, 0.40, 27.0),
-
-    # Las Vegas Grand Prix
     "Las Vegas Grand Prix": (0.45, 0.35, 22.0),
-
-    # Qatar Grand Prix (Lusail)
     "Qatar Grand Prix": (0.55, 0.40, 21.0),
-
-    # Abu Dhabi Grand Prix (Yas Marina)
     "Abu Dhabi Grand Prix": (0.60, 0.35, 22.0),
 }
 
+# Fallback calendar
 FALLBACK_EVENTS: Dict[int, list[str]] = {
     2025: [
         "Bahrain Grand Prix",
@@ -62,7 +54,6 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Abu Dhabi Grand Prix",
     ],
 
-    # Early 2026 schedule entries confirmed in the official schedule page
     2026: [
         "Australian Grand Prix",
         "Chinese Grand Prix",
@@ -70,18 +61,15 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
     ],
 }
 
-# Races to exclude from training by year (tune as needed)
-EXCLUDE_EVENTS: Dict[int, set[str]] = {
-    # e.g. 2025: {"Hungarian Grand Prix"}
-}
+# Events to exclude if needed
+EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 
-# Circuits that behave similarly to Monza (long straights, low drag reward)
+# Low downforce circuits
 LOW_DF_GPS = {
     "Italian Grand Prix",
     "Azerbaijan Grand Prix",
     "Canadian Grand Prix",
     "Saudi Arabian Grand Prix",
-    # Australia is NOT low-DF in setup terms
 }
 
 # Street circuits
@@ -92,10 +80,9 @@ STREET_GPS = {
     "Saudi Arabian Grand Prix",
     "Miami Grand Prix",
     "Las Vegas Grand Prix",
-    # Australia is better modeled as a temporary circuit, not a true street circuit
 }
 
-# Long-straight bias circuits
+# Circuits with long straight performance bias
 LONG_STRAIGHT_GPS = {
     "Italian Grand Prix",
     "Azerbaijan Grand Prix",
@@ -106,43 +93,37 @@ LONG_STRAIGHT_GPS = {
     "Las Vegas Grand Prix",
     "Qatar Grand Prix",
     "Abu Dhabi Grand Prix",
-    # Australia has decent straight effect, but it's more rhythm/evolution than long-straight dominated
+    "Chinese Grand Prix",
 }
 
-# Extra per-circuit priors
+# Circuit characteristics used by the ML model
 CIRCUIT_EXTRAS = {
-    # --- Australian Grand Prix (Albert Park) ---
-    "Australian Grand Prix": {
-        # Strategy / race shape
-        "expected_stops": 1.8,
-        "overtake_index": 0.62,
-        "tow_importance": 0.58,
+
+    # --- Chinese Grand Prix (Shanghai) ---
+    "Chinese Grand Prix": {
+        "expected_stops": 2.1,
+        "overtake_index": 0.66,
+        "tow_importance": 0.72,
         "is_low_df": 0,
         "is_street": 0,
-        "temporary_circuit_flag": 1.0,
-        "long_straight_index": 0.56,
-        "braking_intensity": 0.60,
-        "warmup_penalty": 0.18,
-        "deg_rate": 0.48,
-        "stint_len_typical": 19,
+        "long_straight_index": 0.84,
+        "braking_intensity": 0.72,
+        "warmup_penalty": 0.10,
+        "deg_rate": 0.56,
+        "stint_len_typical": 17,
 
-        # Australia-specific handling / layout traits
-        "surface_bumpiness": 0.72,
-        "weekend_track_evolution": 0.88,
-        "reactive_front_end_demand": 0.80,
-
-        # Generic shape / risk
-        "track_limits_risk": 0.35,
+        "surface_bumpiness": 0.42,
+        "wind_sensitivity": 0.46,
+        "track_limits_risk": 0.38,
         "elevation_change_index": 0.18,
-        "mechanical_failure_risk": 0.45,
-        "corner_count": 14,
-        "avg_speed_kph": 250,
+        "mechanical_failure_risk": 0.48,
+        "corner_count": 16,
+        "avg_speed_kph": 205,
 
-        # Weather placeholders (can be overwritten race-week)
-        "rain_prob_race": 0.20,
+        "rain_prob_race": 0.18,
         "wet_lap_fraction": 0.08,
-        "wet_start_prob": 0.08,
-        "mixed_conditions_risk": 0.18,
+        "wet_start_prob": 0.05,
+        "mixed_conditions_risk": 0.12,
     },
 
     # --- Las Vegas Grand Prix ---
@@ -152,7 +133,6 @@ CIRCUIT_EXTRAS = {
         "tow_importance": 0.75,
         "is_low_df": 0,
         "is_street": 1,
-        "temporary_circuit_flag": 1.0,
         "long_straight_index": 0.80,
         "braking_intensity": 0.55,
         "warmup_penalty": 0.05,
@@ -166,8 +146,6 @@ CIRCUIT_EXTRAS = {
         "mechanical_failure_risk": 0.60,
         "corner_count": 16,
         "avg_speed_kph": 210,
-        "weekend_track_evolution": 0.70,
-        "reactive_front_end_demand": 0.55,
 
         "rain_prob_race": 0.60,
         "wet_lap_fraction": 0.30,
@@ -182,7 +160,6 @@ CIRCUIT_EXTRAS = {
         "tow_importance": 0.65,
         "is_low_df": 0,
         "is_street": 0,
-        "temporary_circuit_flag": 0.0,
         "long_straight_index": 0.78,
         "braking_intensity": 0.58,
         "warmup_penalty": 0.04,
@@ -196,8 +173,6 @@ CIRCUIT_EXTRAS = {
         "mechanical_failure_risk": 0.50,
         "corner_count": 16,
         "avg_speed_kph": 215,
-        "weekend_track_evolution": 0.55,
-        "reactive_front_end_demand": 0.60,
 
         "rain_prob_race": 0.05,
         "wet_lap_fraction": 0.05,
@@ -212,7 +187,6 @@ CIRCUIT_EXTRAS = {
         "tow_importance": 0.68,
         "is_low_df": 0,
         "is_street": 0,
-        "temporary_circuit_flag": 0.0,
         "long_straight_index": 0.72,
         "braking_intensity": 0.60,
         "warmup_penalty": 0.05,
@@ -226,8 +200,6 @@ CIRCUIT_EXTRAS = {
         "mechanical_failure_risk": 0.50,
         "corner_count": 16,
         "avg_speed_kph": 200,
-        "weekend_track_evolution": 0.45,
-        "reactive_front_end_demand": 0.52,
 
         "rain_prob_race": 0.03,
         "wet_lap_fraction": 0.03,
@@ -235,14 +207,13 @@ CIRCUIT_EXTRAS = {
         "mixed_conditions_risk": 0.03,
     },
 
-    # Generic defaults for any missing GP
+    # Default circuit values
     "_default": {
         "expected_stops": 2.0,
         "overtake_index": 0.50,
         "tow_importance": 0.50,
         "is_low_df": 0.0,
         "is_street": 0.0,
-        "temporary_circuit_flag": 0.0,
         "long_straight_index": 0.50,
         "braking_intensity": 0.50,
         "warmup_penalty": 0.05,
@@ -256,8 +227,6 @@ CIRCUIT_EXTRAS = {
         "mechanical_failure_risk": 0.50,
         "corner_count": 16,
         "avg_speed_kph": 210,
-        "weekend_track_evolution": 0.50,
-        "reactive_front_end_demand": 0.50,
 
         "rain_prob_race": 0.10,
         "wet_lap_fraction": 0.05,

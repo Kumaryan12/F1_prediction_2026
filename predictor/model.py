@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Tuple
 from pathlib import Path
-import joblib  # <-- NEW: Required for saving the model
+import joblib
 
 import numpy as np
 import pandas as pd
@@ -15,15 +15,14 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
 
 # -------------------------------------------------------------------
-# NEW: Define the absolute save path
+# Save path
 # -------------------------------------------------------------------
 DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\backend\app\data")
 
 
 # -------------------------------------------------------------------
-# Feature list
+# Feature list (China-ready, Australia-specific features removed)
 # -------------------------------------------------------------------
-
 FEATS = [
     # Sunday starting order
     "grid_pos",
@@ -33,11 +32,6 @@ FEATS = [
     "expected_stops", "overtake_index", "tow_importance",
     "is_low_df", "is_street", "long_straight_index",
     "braking_intensity", "warmup_penalty", "deg_rate", "stint_len_typical",
-
-    # Australia / temporary-circuit features
-    "temporary_circuit_flag",
-    "weekend_track_evolution",
-    "reactive_front_end_demand",
 
     # Track / layout extras
     "surface_bumpiness",
@@ -64,21 +58,14 @@ FEATS = [
     "team_form3",
     "longstraight_driver_form3",
     "longstraight_team_form3",
-    "australia_form_driver",
-    "australia_form_team",
 
     # Historical-strength helper columns
     "driver_hist_strength",
     "team_hist_strength",
 
-    # Live 2026 session strength
-
-
     # Blended 2026-adjusted strength
     "driver_strength_blend_2026",
     "team_strength_blend_2026",
-
-    
 
     # Categoricals
     "team",
@@ -179,9 +166,6 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     model.use_delta_target_ = USE_DELTA_TARGET
     model.target_name_ = "finish_minus_grid" if USE_DELTA_TARGET else "finish_pos"
 
-    # ---------------------------------------------------------------
-    # NEW: Automatically save the trained model to your specific folder
-    # ---------------------------------------------------------------
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     model_path = DATA_DIR / "random_forest_model.pkl"
     joblib.dump(model, model_path)
@@ -244,9 +228,6 @@ def predict_event_with_uncertainty(
     """
     Predict finish positions and uncertainty bands.
     """
-    # ---------------------------------------------------------------
-    # NEW: Automatically save the current race features for the simulator
-    # ---------------------------------------------------------------
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     features_path = DATA_DIR / "current_race_features.csv"
     features_df.to_csv(features_path, index=False)

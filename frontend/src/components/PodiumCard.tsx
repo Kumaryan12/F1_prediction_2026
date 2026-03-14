@@ -5,23 +5,24 @@ type PodiumCardProps = {
 
 const podiumStyle = {
   1: {
-    glow: "shadow-[0_0_40px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/10 border-b-white/10",
-    badge: "bg-[#FFD700] text-black",
+    // Upgraded to a massive Imperial Gold glow with a Shanghai Red bottom border reflection
+    glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
+    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#EE1C25]/50",
+    badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
     text: "text-white",
-    bgNumber: "text-[#FFD700]/10",
+    bgNumber: "text-[#FFD700]/15",
   },
   2: {
     glow: "shadow-[0_0_20px_rgba(192,192,192,0.05)]",
-    border: "border-t-4 border-t-[#C0C0C0] border-x-white/10 border-b-white/10",
-    badge: "bg-[#C0C0C0] text-black",
+    border: "border-t-4 border-t-[#C0C0C0] border-x-white/5 border-b-white/5",
+    badge: "bg-gradient-to-r from-[#C0C0C0] to-gray-300 text-black",
     text: "text-zinc-200",
     bgNumber: "text-[#C0C0C0]/10",
   },
   3: {
     glow: "shadow-[0_0_20px_rgba(205,127,50,0.05)]",
-    border: "border-t-4 border-t-[#CD7F32] border-x-white/10 border-b-white/10",
-    badge: "bg-[#CD7F32] text-black",
+    border: "border-t-4 border-t-[#CD7F32] border-x-white/5 border-b-white/5",
+    badge: "bg-gradient-to-r from-[#CD7F32] to-orange-400 text-black",
     text: "text-zinc-300",
     bgNumber: "text-[#CD7F32]/10",
   },
@@ -61,11 +62,11 @@ export default function PodiumCard({ position, driver }: PodiumCardProps) {
 
   return (
     <div
-      className={`relative h-full w-full flex flex-col justify-between overflow-hidden rounded-xl bg-tarmac-light/80 backdrop-blur-md p-6 transition-transform duration-300 hover:-translate-y-1 ${style.border} ${style.glow}`}
+      className={`relative h-full w-full flex flex-col justify-between overflow-hidden rounded-xl bg-tarmac-light/90 backdrop-blur-xl p-6 transition-transform duration-300 hover:-translate-y-2 ${style.border} ${style.glow}`}
     >
-      {/* Pure CSS Carbon Fiber Weave */}
+      {/* Pure CSS Carbon Fiber Weave - Darkened slightly for higher contrast */}
       <div 
-        className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply"
+        className="absolute inset-0 opacity-[0.15] pointer-events-none mix-blend-multiply"
         style={{
           backgroundImage: `
             linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
@@ -99,12 +100,12 @@ export default function PodiumCard({ position, driver }: PodiumCardProps) {
             Predicted Finisher
           </p>
           {/* Telemetry Tag for the 3-letter initial */}
-          <span className="rounded bg-white/10 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/5">
+          <span className="rounded bg-black/50 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/10 shadow-inner">
             {driver}
           </span>
         </div>
         <h3 
-          className={`text-3xl md:text-4xl font-black uppercase italic tracking-tighter drop-shadow-md leading-none mt-1 ${style.text}`}
+          className={`text-3xl md:text-4xl font-black uppercase italic tracking-tighter drop-shadow-lg leading-none mt-1 ${style.text}`}
         >
           {fullName}
         </h3>

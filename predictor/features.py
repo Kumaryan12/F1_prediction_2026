@@ -29,31 +29,30 @@ except Exception:
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
-    "VER": 1.00,
-    "NOR": 0.98,
+    "VER": 0.99,
+    "NOR": 0.96,
     "PIA": 0.95,
     "LEC": 0.92,
-    "RUS": 0.91,
+    "RUS": 0.96,
     "SAI": 0.89,
-    "ALO": 0.88,
-    "ANT": 0.86,
+    "ALO": 0.87,
+    "ANT": 0.94,
     "HUL": 0.85,
-    "GAS": 0.84,
+    "GAS": 0.87,
     "OCO": 0.84,
-    "TSU": 0.83,   # harmless to keep, even if not on 2026 race grid
-    "ALB": 0.82,
-    "HAM": 0.81,
-    "LAW": 0.80,
+    "ALB": 0.78,
+    "HAM": 0.96,
+    "LAW": 0.83,
     "BEA": 0.78,
     "COL": 0.75,
-    "HAD": 0.75,
+    "HAD": 0.77,
     "STR": 0.70,
 
     # 2026 additions / returns
-    "PER": 0.84,   # returning, still strong racecraft
-    "BOT": 0.80,   # returning veteran
-    "BOR": 0.79,   # now Audi race driver
-    "LIN": 0.72,   # rookie, keep conservative initially
+    "PER": 0.83,
+    "BOT": 0.79,
+    "BOR": 0.79,
+    "LIN": 0.72,
 }
 
 DEFAULT_DRIVER_PRIOR = 0.75
@@ -79,8 +78,8 @@ TEAM_BASELINE_PRIOR = {
     "Williams": 0.79,
     "Racing Bulls": 0.78,
     "Haas F1 Team": 0.77,
-    "Kick Sauber": 0.72,  # Audi aliases map here for now
-    "Cadillac": 0.65,     # brand-new team baseline
+    "Kick Sauber": 0.72,
+    "Cadillac": 0.65,
 }
 DEFAULT_TEAM_PRIOR = 0.75
 
@@ -164,7 +163,6 @@ def add_live_strength_adjustments(
     """
     out = _normalize_team_names(df.copy())
 
-    # Historical strength from rolling average finish positions
     if "drv_form3" in out.columns:
         out["driver_hist_strength"] = _inverse_minmax_strength(out["drv_form3"])
     else:
@@ -175,7 +173,6 @@ def add_live_strength_adjustments(
     else:
         out["team_hist_strength"] = np.nan
 
-    # Blend driver historical + live
     if "driver_2026_session_strength" in out.columns:
         hist = pd.to_numeric(out["driver_hist_strength"], errors="coerce")
         live = pd.to_numeric(out["driver_2026_session_strength"], errors="coerce")
@@ -187,7 +184,6 @@ def add_live_strength_adjustments(
     else:
         out["driver_strength_blend_2026"] = out["driver_hist_strength"]
 
-    # Blend team historical + live
     if "team_2026_strength" in out.columns:
         hist = pd.to_numeric(out["team_hist_strength"], errors="coerce")
         live = pd.to_numeric(out["team_2026_strength"], errors="coerce")
@@ -226,10 +222,6 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
         extras.setdefault("deg_rate", 0.50)
         extras.setdefault("stint_len_typical", extras.get("stint_len_typical", np.nan))
 
-        extras.setdefault("temporary_circuit_flag", 0.0)
-        extras.setdefault("weekend_track_evolution", 0.50)
-        extras.setdefault("reactive_front_end_demand", 0.50)
-
         return pd.Series({"sc_prob": sc, "vsc_prob": vsc, "pit_loss": pit, **extras})
 
     ctx = df["gp"].apply(_lookup)
@@ -244,8 +236,6 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
         "surface_bumpiness", "wind_sensitivity", "track_limits_risk",
         "elevation_change_index", "mechanical_failure_risk",
         "corner_count", "avg_speed_kph",
-
-        "temporary_circuit_flag", "weekend_track_evolution", "reactive_front_end_demand",
 
         "rain_prob_race", "wet_lap_fraction", "wet_start_prob", "mixed_conditions_risk",
 
@@ -348,11 +338,6 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["longstraight_driver_form3"] = df["longstraight_driver_form3"].fillna(df["drv_form3"])
     df["longstraight_team_form3"] = df["longstraight_team_form3"].fillna(df["team_form3"])
 
-    aus_mask = df["gp"].str.contains("Australian Grand Prix", case=False, na=False)
-    _subset_forms(aus_mask, "australia_form_driver", "team_ev_aus_mean", "australia_form_team")
-    df["australia_form_driver"] = df["australia_form_driver"].fillna(df["drv_form3"])
-    df["australia_form_team"] = df["australia_form_team"].fillna(df["team_form3"])
-
     df = add_live_strength_adjustments(df)
 
     return df.drop(
@@ -361,7 +346,6 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
             "team_ev_low_mean",
             "team_ev_street_mean",
             "team_ev_ls_mean",
-            "team_ev_aus_mean",
         ],
         errors="ignore",
     )
@@ -395,7 +379,6 @@ def merge_latest_forms(
         "lowdf_driver_form3",
         "street_driver_form3",
         "longstraight_driver_form3",
-        "australia_form_driver",
         "driver_skill_prior",
         "driver_hist_strength",
         "rookie_flag",
@@ -418,7 +401,6 @@ def merge_latest_forms(
         "lowdf_team_form3",
         "street_team_form3",
         "longstraight_team_form3",
-        "australia_form_team",
         "team_prior_strength",
         "team_hist_strength",
     ]
@@ -432,7 +414,6 @@ def merge_latest_forms(
         "lowdf_driver_form3",
         "street_driver_form3",
         "longstraight_driver_form3",
-        "australia_form_driver",
         "driver_hist_strength",
     ]:
         if col in out.columns and out[col].isna().any():
@@ -454,7 +435,6 @@ def merge_latest_forms(
         "lowdf_team_form3",
         "street_team_form3",
         "longstraight_team_form3",
-        "australia_form_team",
         "team_hist_strength",
     ]:
         if col in out.columns and out[col].isna().any():

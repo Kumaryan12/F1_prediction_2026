@@ -23,7 +23,7 @@ const teamColors: Record<string, string> = {
   "Kick Sauber": "border-[#52E252] text-[#52E252]"
 };
 
-// NEW: Map 3-letter initials to Full Driver Names
+// Map 3-letter initials to Full Driver Names
 const driverNames: Record<string, string> = {
   "VER": "Max Verstappen",
   "PER": "Sergio Perez",
@@ -72,7 +72,7 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
           {rows.map((row, idx) => {
             const teamStyle = teamColors[row.team] || "border-white/20 text-white/50";
             
-            // NEW: Look up the full name. If it's not in our dictionary, fallback to whatever the API sent.
+            // Look up the full name. If it's not in our dictionary, fallback to whatever the API sent.
             const fullName = driverNames[row.driver] || row.driver;
             
             return (
@@ -86,10 +86,9 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   </span>
                 </td>
                 
-                {/* Driver - Now rendering the Full Name! */}
+                {/* Driver */}
                 <td className="px-4 py-3 text-base font-black uppercase italic tracking-wider text-white drop-shadow-sm transition-colors flex items-center gap-3">
                   {fullName}
-                  {/* Optional: We can still show the initials in a tiny grey box next to the name for that telemetry feel! */}
                   <span className="hidden sm:inline-block rounded bg-white/10 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/5">
                     {row.driver}
                   </span>
@@ -111,14 +110,16 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   [{row.pi68_low?.toFixed(2) ?? "-"} <span className="text-zinc-600 mx-1">↔</span> {row.pi68_high?.toFixed(2) ?? "-"}]
                 </td>
                 
+                {/* Podium % - Now Imperial Gold */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-track-green/30 bg-track-green/10 px-2 py-0.5 font-mono text-xs font-bold text-track-green">
+                  <span className="inline-block border border-imperial-gold/30 bg-imperial-gold/10 px-2 py-0.5 font-mono text-xs font-bold text-imperial-gold shadow-[0_0_8px_rgba(255,215,0,0.2)]">
                     {pct(row.p_podium)}
                   </span>
                 </td>
                 
+                {/* Top 10 % - Now Shanghai Red */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-accent-blue/30 bg-accent-blue/10 px-2 py-0.5 font-mono text-xs font-bold text-accent-blue">
+                  <span className="inline-block border border-shanghai-red/30 bg-shanghai-red/10 px-2 py-0.5 font-mono text-xs font-bold text-shanghai-red shadow-[0_0_8px_rgba(238,28,37,0.2)]">
                     {pct(row.p_top10)}
                   </span>
                 </td>
