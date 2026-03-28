@@ -60,7 +60,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-accent-blue/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(0,160,214,0.1)] backdrop-blur-md p-6 sm:p-8 group">
+    <div className="relative overflow-hidden rounded-2xl border border-sakura-pink/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(255,20,147,0.1)] backdrop-blur-md p-6 sm:p-8 group">
       {/* Tech Background Grid */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -68,7 +68,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
       <div className="mb-6 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-accent-blue animate-pulse shadow-[0_0_10px_rgba(0,160,214,0.8)]" />
+            <span className="h-3 w-3 rounded-full bg-sakura-pink animate-pulse shadow-[0_0_10px_rgba(255,20,147,0.8)]" />
             "What-If" Engine
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">Live ML Prediction Sandbox</p>
@@ -83,7 +83,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
           <div>
             <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest mb-2">Target Driver</label>
             <select 
-              className="w-full rounded border border-white/20 bg-black/60 px-4 py-3 text-lg font-bold italic uppercase text-white outline-none focus:border-accent-blue"
+              className="w-full rounded border border-white/20 bg-black/60 px-4 py-3 text-lg font-bold italic uppercase text-white outline-none focus:border-sakura-pink"
               value={selectedDriver}
               onChange={(e) => setSelectedDriver(e.target.value)}
             >
@@ -97,14 +97,14 @@ export default function Simulator({ predictions }: SimulatorProps) {
           <div>
             <div className="flex justify-between items-end mb-2">
               <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest">Simulate Grid Position</label>
-              <span className="text-xl font-black text-accent-blue italic drop-shadow-[0_0_8px_rgba(0,160,214,0.6)]">P{customGrid}</span>
+              <span className="text-xl font-black text-sakura-pink italic drop-shadow-[0_0_8px_rgba(255,20,147,0.6)]">P{customGrid}</span>
             </div>
             <input 
               type="range" 
               min="1" max="20" 
               value={customGrid} 
               onChange={(e) => setCustomGrid(Number(e.target.value))}
-              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-accent-blue"
+              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-sakura-pink"
             />
             <div className="flex justify-between text-[10px] text-zinc-600 mt-1 font-mono font-bold">
               <span>POLE (P1)</span>
@@ -115,7 +115,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
           <button 
             onClick={handleSimulate}
             disabled={isSimulating}
-            className="mt-2 w-full rounded border border-accent-blue bg-accent-blue/20 py-4 font-black uppercase italic tracking-widest text-accent-blue transition-all hover:bg-accent-blue hover:text-black disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(0,160,214,0.3)] hover:shadow-[0_0_25px_rgba(0,160,214,0.6)]"
+            className="mt-2 w-full rounded border border-sakura-pink bg-sakura-pink/20 py-4 font-black uppercase italic tracking-widest text-sakura-pink transition-all hover:bg-sakura-pink hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(255,20,147,0.3)] hover:shadow-[0_0_25px_rgba(255,20,147,0.6)]"
           >
             {isSimulating ? "Running Telemetry..." : "Run Simulation"}
           </button>
@@ -136,9 +136,9 @@ export default function Simulator({ predictions }: SimulatorProps) {
 
             {/* Simulated Stats */}
             <div className="flex flex-col gap-1 border-l border-white/10 pl-4">
-              <span className="text-[10px] uppercase tracking-wider text-accent-blue font-mono">Simulated Grid</span>
+              <span className="text-[10px] uppercase tracking-wider text-sakura-pink font-mono">Simulated Grid</span>
               <span className="text-xl font-black text-white italic">{simResult ? `P${simResult.simulated_grid}` : "--"}</span>
-              <span className="text-[10px] uppercase tracking-wider text-accent-blue font-mono mt-2">New Predicted Finish</span>
+              <span className="text-[10px] uppercase tracking-wider text-sakura-pink font-mono mt-2">New Predicted Finish</span>
               <span className={`text-4xl font-black italic drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
                 {simResult ? `P${simResult.new_predicted_rank}` : "--"}
               </span>

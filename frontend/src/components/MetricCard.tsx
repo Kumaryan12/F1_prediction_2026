@@ -2,22 +2,30 @@ type MetricCardProps = {
   label: string;
   value: string;
   subtext?: string;
-  accent?: "red" | "green" | "telemetry";
+  // Upgraded the types to include pink
+  accent?: "red" | "green" | "pink" | "telemetry";
 };
 
-// Map our custom F1 theme colors to the border and text highlights
+// Map our custom Suzuka theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-f1-red",
-    text: "text-f1-red",
+    border: "border-l-suzuka-red",
+    text: "text-suzuka-red",
     glow: "shadow-[0_0_20px_rgba(225,6,0,0.1)]",
-    dot: "bg-f1-red shadow-[0_0_5px_rgba(225,6,0,0.8)]",
+    dot: "bg-suzuka-red shadow-[0_0_5px_rgba(225,6,0,0.8)]",
   },
+  // Safely map any old "green" props directly to the new Sakura Pink theme
   green: {
-    border: "border-l-track-green",
-    text: "text-track-green",
-    glow: "shadow-[0_0_20px_rgba(0,165,81,0.1)]",
-    dot: "bg-track-green shadow-[0_0_5px_rgba(0,165,81,0.8)]",
+    border: "border-l-sakura-pink",
+    text: "text-sakura-pink",
+    glow: "shadow-[0_0_20px_rgba(255,20,147,0.1)]",
+    dot: "bg-sakura-pink shadow-[0_0_5px_rgba(255,20,147,0.8)]",
+  },
+  pink: {
+    border: "border-l-sakura-pink",
+    text: "text-sakura-pink",
+    glow: "shadow-[0_0_20px_rgba(255,20,147,0.1)]",
+    dot: "bg-sakura-pink shadow-[0_0_5px_rgba(255,20,147,0.8)]",
   },
   telemetry: {
     border: "border-l-telemetry",
@@ -39,7 +47,7 @@ export default function MetricCard({
     <div
       className={`relative flex flex-col justify-between overflow-hidden rounded-r-xl rounded-l-sm bg-tarmac-light/90 backdrop-blur-md border-y border-r border-white/5 border-l-4 p-5 transition-all hover:bg-tarmac-light ${style.border} ${style.glow}`}
     >
-      {/* NEW: Pure CSS Carbon Fiber Weave */}
+      {/* Pure CSS Carbon Fiber Weave */}
       <div 
         className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply"
         style={{

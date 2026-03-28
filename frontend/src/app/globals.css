@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 / Chinese GP Palette */
+  /* The F1 / Japanese GP Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #0a0a0c;       /* Deeper black for high contrast nighttime/neon feel */
-  --color-tarmac-light: #141419; /* Slightly lighter for the glassmorphism cards */
+  --color-tarmac: #08080a;       /* Deepest black for high contrast neon contrast */
+  --color-tarmac-light: #121216; /* Slightly lighter for the glassmorphism cards */
   
-  /* New Shanghai Colors */
-  --color-shanghai-red: #EE1C25; /* Striking F1 / China Red */
-  --color-imperial-gold: #FFD700;/* Premium Gold accent */
+  /* New Suzuka Colors */
+  --color-suzuka-red: #E10600;   /* Rising Sun / F1 Red */
+  --color-sakura-pink: #FF1493;  /* Deep Neon Cherry Blossom Pink */
   
   /* Legacy names mapped to new colors (prevents the UI from breaking during transition) */
-  --color-accent-blue: var(--color-shanghai-red);
-  --color-track-green: var(--color-imperial-gold);
+  --color-accent-blue: var(--color-suzuka-red);
+  --color-track-green: var(--color-sakura-pink);
   
   --color-telemetry: #00ff00;    /* Classic neon green for live data/intervals */
 
@@ -42,7 +42,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Shanghai spotlight effect: Darker edges, subtle red/tarmac center */
+  /* Suzuka spotlight effect: Darker edges, subtle pink/red/tarmac center */
   background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 70%);
   background-attachment: fixed;
   font-family: var(--font-sans);
@@ -68,5 +68,33 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-imperial-gold);
+  /* Updated to hover with the new Sakura Pink */
+  background: var(--color-sakura-pink); 
+}
+
+/* --- SAKURA PARTICLE PHYSICS --- */
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sway {
+  0%, 100% {
+    margin-left: 0px;
+  }
+  50% {
+    margin-left: 50px;
+  }
 }

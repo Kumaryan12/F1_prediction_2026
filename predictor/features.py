@@ -31,7 +31,7 @@ except Exception:
 DRIVER_SKILL_PRIOR = {
     "VER": 0.99,
     "NOR": 0.96,
-    "PIA": 0.95,
+    "PIA": 0.97,
     "LEC": 0.92,
     "RUS": 0.96,
     "SAI": 0.89,
@@ -84,9 +84,7 @@ TEAM_BASELINE_PRIOR = {
 DEFAULT_TEAM_PRIOR = 0.75
 
 
-# -------------------------------------------------------------------
-# Helpers
-# -------------------------------------------------------------------
+
 
 def _ensure_numeric(df: pd.DataFrame, cols: list[str]) -> None:
     """Coerce listed columns to numeric (in-place), if they exist."""

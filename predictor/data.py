@@ -10,54 +10,46 @@ from .config import CACHE_DIR, FALLBACK_EVENTS, EXCLUDE_EVENTS
 fastf1.Cache.enable_cache(CACHE_DIR)
 
 
-# -------------------------------------------------------------------
-# Hardcoded race entry lists
-# -------------------------------------------------------------------
-# Use this for season openers / lineup resets / new teams.
-# DriverNumber values can be refreshed automatically from live FP2/FP1/Q.
 
 HARDCODED_ENTRYLISTS: Dict[Tuple[int, str], List[Dict[str, object]]] = {
-    (2026, "Chinese Grand Prix"): [
-        {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 8, "DriverNumber": "3"},
-        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 9, "DriverNumber": "6"},
+    (2026, "Japanese Grand Prix"): [
+        {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 11, "DriverNumber": "3"},
+        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 8, "DriverNumber": "6"},
 
-        {"driver": "NOR", "team": "McLaren", "grid_pos": 6, "DriverNumber": "1"},
-        {"driver": "PIA", "team": "McLaren", "grid_pos": 5, "DriverNumber": "81"},
+        {"driver": "NOR", "team": "McLaren", "grid_pos": 5, "DriverNumber": "1"},
+        {"driver": "PIA", "team": "McLaren", "grid_pos": 3, "DriverNumber": "81"},
 
         {"driver": "LEC", "team": "Ferrari", "grid_pos": 4, "DriverNumber": "16"},
-        {"driver": "HAM", "team": "Ferrari", "grid_pos": 3, "DriverNumber": "44"},
+        {"driver": "HAM", "team": "Ferrari", "grid_pos": 6, "DriverNumber": "44"},
 
         {"driver": "RUS", "team": "Mercedes", "grid_pos": 2, "DriverNumber": "63"},
         {"driver": "ANT", "team": "Mercedes", "grid_pos": 1, "DriverNumber": "12"},
 
-        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 19, "DriverNumber": "14"},
-        {"driver": "STR", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "18"},
+        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "14"},
+        {"driver": "STR", "team": "Aston Martin", "grid_pos": 22, "DriverNumber": "18"},
 
         {"driver": "GAS", "team": "Alpine", "grid_pos": 7, "DriverNumber": "10"},
-        {"driver": "COL", "team": "Alpine", "grid_pos": 12, "DriverNumber": "43"},
+        {"driver": "COL", "team": "Alpine", "grid_pos": 15, "DriverNumber": "43"},
 
-        {"driver": "SAI", "team": "Williams", "grid_pos": 17, "DriverNumber": "55"},
-        {"driver": "ALB", "team": "Williams", "grid_pos": 18, "DriverNumber": "23"},
+        {"driver": "SAI", "team": "Williams", "grid_pos": 16, "DriverNumber": "55"},
+        {"driver": "ALB", "team": "Williams", "grid_pos": 17, "DriverNumber": "23"},
 
         {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 14, "DriverNumber": "30"},
-        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 15, "DriverNumber": "41"},
+        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 10, "DriverNumber": "41"},
 
-        {"driver": "HUL", "team": "Audi", "grid_pos": 11, "DriverNumber": "27"},
-        {"driver": "BOR", "team": "Audi", "grid_pos": 16, "DriverNumber": "5"},
+        {"driver": "HUL", "team": "Audi", "grid_pos": 13, "DriverNumber": "27"},
+        {"driver": "BOR", "team": "Audi", "grid_pos": 9, "DriverNumber": "5"},
 
-        {"driver": "PER", "team": "Cadillac", "grid_pos": 22, "DriverNumber": "11"},
+        {"driver": "PER", "team": "Cadillac", "grid_pos": 19, "DriverNumber": "11"},
         {"driver": "BOT", "team": "Cadillac", "grid_pos": 20, "DriverNumber": "77"},
 
-        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 13, "DriverNumber": "87"},
-        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 10, "DriverNumber": "31"},
+        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 12, "DriverNumber": "87"},
+        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 18, "DriverNumber": "31"},
     ],
 }
 
 
-# -------------------------------------------------------------------
-# Hardcoded Sunday starting grids
-# -------------------------------------------------------------------
-# This remains the single source of truth for final Sunday start order.
+
 
 STARTING_GRIDS: Dict[Tuple[int, str], Dict[str, int]] = {
     (2025, "Abu Dhabi Grand Prix"): {

@@ -5,9 +5,9 @@ type PodiumCardProps = {
 
 const podiumStyle = {
   1: {
-    // Upgraded to a massive Imperial Gold glow with a Shanghai Red bottom border reflection
+    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Sakura Pink
     glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#EE1C25]/50",
+    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#FF1493]/50",
     badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
     text: "text-white",
     bgNumber: "text-[#FFD700]/15",
@@ -64,7 +64,7 @@ export default function PodiumCard({ position, driver }: PodiumCardProps) {
     <div
       className={`relative h-full w-full flex flex-col justify-between overflow-hidden rounded-xl bg-tarmac-light/90 backdrop-blur-xl p-6 transition-transform duration-300 hover:-translate-y-2 ${style.border} ${style.glow}`}
     >
-      {/* Pure CSS Carbon Fiber Weave - Darkened slightly for higher contrast */}
+      {/* Pure CSS Carbon Fiber Weave */}
       <div 
         className="absolute inset-0 opacity-[0.15] pointer-events-none mix-blend-multiply"
         style={{

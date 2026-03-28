@@ -23,33 +23,41 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      {/* NEW: Background Track Watermark */}
+      {/* Massive Kanji Watermark (鈴鹿 = Suzuka) */}
       <div 
-        className="absolute top-20 right-[-10%] w-[800px] h-[800px] bg-no-repeat bg-contain opacity-5 pointer-events-none z-0"
-        style={{ backgroundImage: 'url(/shanghai-track.png)' }}
-      />
+        className="absolute top-10 right-[-5%] flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
+      >
+        <span className="text-[20rem] md:text-[30rem] font-black leading-none text-white drop-shadow-[0_0_50px_rgba(255,20,147,0.5)]">
+          鈴
+        </span>
+        <span className="text-[20rem] md:text-[30rem] font-black leading-none text-white drop-shadow-[0_0_50px_rgba(255,20,147,0.5)] -mt-20">
+          鹿
+        </span>
+      </div>
 
-      {/* Hero Section - The Shanghai Neon Vibe */}
+      {/* Hero Section - The Suzuka Sakura Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
-          {/* F1 Car/Neon City Background Image with Dark Overlay */}
-          <div 
-            className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549692520-acc6669e2f0c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-luminosity transition-transform duration-1000 group-hover:scale-105" 
-          />
-          {/* Aggressive Red to Tarmac Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-shanghai-red/10" />
           
-          {/* Glowing Shanghai Track Minimap */}
-          <div className="absolute top-8 right-8 w-64 h-64 opacity-20 pointer-events-none transition-opacity duration-700 group-hover:opacity-50">
+          {/* Neon Sakura Ambient Glow - Pure CSS, no external images */}
+          <div 
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--color-sakura-pink)_0%,_transparent_70%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
+          />
+          
+          {/* Aggressive Tarmac to Pink Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-sakura-pink/10" />
+          
+          {/* Glowing Suzuka Track Minimap (Figure 8) */}
+          <div className="absolute top-8 right-8 w-64 h-64 opacity-20 pointer-events-none transition-opacity duration-700 group-hover:opacity-60">
             <svg 
               viewBox="0 0 200 200" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-shanghai-red drop-shadow-[0_0_15px_rgba(238,28,37,0.8)]"
+              className="w-full h-full text-sakura-pink drop-shadow-[0_0_15px_rgba(255,20,147,0.8)]"
             >
-              {/* Stylized Shanghai International Circuit Path (Snail + Back Straight) */}
+              {/* Stylized Suzuka Circuit Path (The Crossover) */}
               <path 
-                d="M80 150 C 110 150, 130 110, 100 80 C 70 50, 40 100, 70 120 L 110 120 L 130 170 L 180 150 L 170 30 C 150 10, 130 20, 120 40 L 80 100 L 40 100 Z" 
+                d="M 60 130 C 30 110, 40 60, 80 50 C 120 40, 140 80, 110 110 L 90 130 C 60 160, 110 190, 150 170 C 180 150, 180 110, 150 90 L 120 110" 
                 stroke="currentColor" 
                 strokeWidth="4" 
                 strokeLinecap="round" 
@@ -57,18 +65,18 @@ export default async function HomePage() {
                 className="animate-[dash_4s_linear_infinite]"
               />
               {/* Start/Finish Line Dot */}
-              <circle cx="80" cy="148" r="6" fill="#FFD700" className="animate-pulse shadow-[0_0_15px_rgba(255,215,0,1)]" />
+              <circle cx="65" cy="125" r="6" fill="#E10600" className="animate-pulse shadow-[0_0_15px_rgba(225,6,0,1)]" />
             </svg>
           </div>
           
           <div className="relative z-10">
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-  CHINESE GRAND PRIX 2026
-</h1>
+              JAPANESE GRAND PRIX 2026
+            </h1>
 
             <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
               AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the Chinese Grand Prix.
+              confidence intervals, and team-level race outlook for the Suzuka International Racing Course.
             </p>
           </div>
         </div>
@@ -114,13 +122,14 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed from track-green to imperial-gold for the new theme */}
-              <span className="text-imperial-gold font-bold drop-shadow-[0_0_5px_rgba(255,215,0,0.4)]">0.627 </span>
+              {/* Changed to Sakura Pink */}
+              <span className="text-sakura-pink font-bold drop-shadow-[0_0_5px_rgba(255,20,147,0.4)]">0.627 </span>
             </div>
 
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              <span className="text-shanghai-red font-bold">2.34 </span>
+              {/* Changed to Suzuka Red */}
+              <span className="text-suzuka-red font-bold">2.34 </span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -149,7 +158,8 @@ export default async function HomePage() {
           <div className="order-2 md:order-1 md:h-[85%]">
             <PodiumCard position={2} driver={summary.predicted_podium[1]} />
           </div>
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-shanghai-red/20">
+          {/* Changed shadow highlight to Sakura Pink */}
+          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-sakura-pink/20">
             <PodiumCard position={1} driver={summary.predicted_podium[0]} />
           </div>
           <div className="order-3 md:order-3 md:h-[75%]">
@@ -176,7 +186,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Head-to-Head Combat Terminal - NOW USING FULL GRID */}
+      {/* Head-to-Head Combat Terminal */}
       <section className="mb-16 relative z-10">
         <HeadToHead predictions={fullGrid.rows} />
       </section>

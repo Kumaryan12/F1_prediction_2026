@@ -28,14 +28,14 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
           <h3 className="text-2xl font-black uppercase italic tracking-tight text-white drop-shadow-md">
             Model Diagnostics
           </h3>
-          <p className="mt-1 text-xs font-mono uppercase tracking-[0.3em] text-imperial-gold">
+          <p className="mt-1 text-xs font-mono uppercase tracking-[0.3em] text-sakura-pink">
             Feature Importance Weighting
           </p>
         </div>
         
-        {/* Decorative Diagnostic Icon - Resprayed to Shanghai Red */}
-        <div className="flex h-10 w-10 items-center justify-center rounded bg-shanghai-red/10 border border-shanghai-red/30 shadow-[0_0_15px_rgba(238,28,37,0.3)] animate-pulse">
-          <svg className="w-5 h-5 text-shanghai-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        {/* Decorative Diagnostic Icon - Resprayed to Suzuka Red */}
+        <div className="flex h-10 w-10 items-center justify-center rounded bg-suzuka-red/10 border border-suzuka-red/30 shadow-[0_0_15px_rgba(225,6,0,0.3)] animate-pulse">
+          <svg className="w-5 h-5 text-suzuka-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </div>
@@ -57,16 +57,16 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
                   <span className="text-white/30 mr-2">{String(idx + 1).padStart(2, '0')}</span> 
                   {label}
                 </span>
-                {/* Number changed to Gold */}
-                <span className="text-imperial-gold font-bold drop-shadow-[0_0_8px_rgba(255,215,0,0.6)]">
+                {/* Number changed to Sakura Pink */}
+                <span className="text-sakura-pink font-bold drop-shadow-[0_0_8px_rgba(255,20,147,0.6)]">
                   {item.value ? (item.value * 100).toFixed(1) : "0.0"}%
                 </span>
               </div>
               
-              {/* The Glowing Bar - Shanghai Red to Imperial Gold Gradient */}
+              {/* The Glowing Bar - Suzuka Red to Sakura Pink Gradient */}
               <div className="h-1.5 w-full overflow-hidden rounded-r-full bg-black/60 shadow-inner">
                 <div
-                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(238,28,37,0.8)] to-[#FFD700] shadow-[0_0_12px_rgba(255,215,0,0.6)] transition-all duration-1000 ease-out"
+                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(225,6,0,0.8)] to-[#FF1493] shadow-[0_0_12px_rgba(255,20,147,0.6)] transition-all duration-1000 ease-out"
                   style={{ width: `${pct}%` }}
                 />
               </div>
