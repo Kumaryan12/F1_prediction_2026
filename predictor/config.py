@@ -43,7 +43,7 @@ LONG_STRAIGHT_GPS = {
 CIRCUIT_EXTRAS = {
     "Miami Grand Prix": {
         "expected_stops": 1.8,
-        "overtake_index": 0.55,
+        "overtake_index": 0.64,
         "tow_importance": 0.62,
         "is_low_df": 0,
         "is_street": 1,
