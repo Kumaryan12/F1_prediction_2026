@@ -43,9 +43,9 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md p-6 sm:p-8">
-      {/* Background Styling - Sakura Pink vs Suzuka Red */}
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-sakura-pink/10 to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-suzuka-red/10 to-transparent pointer-events-none" />
+      {/* Background Styling - Miami Cyan vs Vice Pink */}
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-miami-cyan/10 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-vice-pink/10 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="mb-8 text-center relative z-10">
@@ -66,10 +66,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* Driver Selection & Stats */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
         
-        {/* Driver A Side - Sakura Pink Focus */}
+        {/* Driver A Side - Miami Cyan Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-start text-center md:text-left">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-sakura-pink/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-sakura-pink focus:ring-1 focus:ring-sakura-pink transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-miami-cyan/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-miami-cyan focus:ring-1 focus:ring-miami-cyan transition-colors"
             value={driverA}
             onChange={(e) => setDriverA(e.target.value)}
           >
@@ -94,10 +94,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
           <div className="text-3xl font-black italic text-zinc-600 mb-2 drop-shadow-md">VS</div>
         </div>
 
-        {/* Driver B Side - Suzuka Red Focus */}
+        {/* Driver B Side - Vice Pink Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-end text-center md:text-right">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-suzuka-red/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-suzuka-red focus:ring-1 focus:ring-suzuka-red transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-vice-pink/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-vice-pink focus:ring-1 focus:ring-vice-pink transition-colors"
             value={driverB}
             onChange={(e) => setDriverB(e.target.value)}
           >
@@ -121,16 +121,16 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* The Advantage Power Bar */}
       <div className="mt-8 relative z-10">
         <div className="flex justify-between text-[10px] font-mono uppercase text-zinc-500 mb-2 tracking-widest">
-          <span className="text-sakura-pink/80">{driverA} Advantage</span>
-          <span className="text-suzuka-red/80">{driverB} Advantage</span>
+          <span className="text-miami-cyan/80">{driverA} Advantage</span>
+          <span className="text-vice-pink/80">{driverB} Advantage</span>
         </div>
         <div className="h-3 w-full rounded-full bg-black/60 shadow-inner flex overflow-hidden border border-white/5">
           <div 
-            className="h-full bg-sakura-pink shadow-[0_0_12px_rgba(255,20,147,0.9)] transition-all duration-700 ease-out"
+            className="h-full bg-miami-cyan shadow-[0_0_12px_rgba(13,240,214,0.9)] transition-all duration-700 ease-out"
             style={{ width: `${pctA}%` }}
           />
           <div 
-            className="h-full bg-suzuka-red shadow-[0_0_12px_rgba(225,6,0,0.9)] transition-all duration-700 ease-out flex-1"
+            className="h-full bg-vice-pink shadow-[0_0_12px_rgba(255,16,122,0.9)] transition-all duration-700 ease-out flex-1"
           />
         </div>
       </div>

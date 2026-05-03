@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 / Japanese GP Palette */
+  /* The F1 / Miami GP Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #08080a;       /* Deepest black for high contrast neon contrast */
-  --color-tarmac-light: #121216; /* Slightly lighter for the glassmorphism cards */
+  --color-tarmac: #0B0914;       /* Deep midnight purple/blue */
+  --color-tarmac-light: #161224; /* Frosted dark glass */
   
-  /* New Suzuka Colors */
-  --color-suzuka-red: #E10600;   /* Rising Sun / F1 Red */
-  --color-sakura-pink: #FF1493;  /* Deep Neon Cherry Blossom Pink */
+  /* New Miami Colors */
+  --color-miami-cyan: #0DF0D6;   /* Electric Vice Cyan */
+  --color-vice-pink: #FF107A;    /* Hot Magenta/Pink */
   
   /* Legacy names mapped to new colors (prevents the UI from breaking during transition) */
-  --color-accent-blue: var(--color-suzuka-red);
-  --color-track-green: var(--color-sakura-pink);
+  --color-accent-blue: var(--color-miami-cyan);
+  --color-track-green: var(--color-vice-pink);
   
-  --color-telemetry: #00ff00;    /* Classic neon green for live data/intervals */
+  --color-telemetry: #0DF0D6;    /* Swapped from green to cyan for Miami */
 
   /* Fonts - keeping it clean and readable */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -42,7 +42,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Suzuka spotlight effect: Darker edges, subtle pink/red/tarmac center */
+  /* Miami Vice spotlight effect: Deep purple edges with a subtle glow center */
   background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 70%);
   background-attachment: fixed;
   font-family: var(--font-sans);
@@ -68,33 +68,25 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Sakura Pink */
-  background: var(--color-sakura-pink); 
+  /* Updated to hover with the new Electric Cyan */
+  background: var(--color-miami-cyan); 
 }
 
-/* --- SAKURA PARTICLE PHYSICS --- */
+/* --- MIAMI NEON PARTICLE PHYSICS --- */
 @keyframes fall {
-  0% {
-    transform: translateY(-10vh) rotate(0deg);
-    opacity: 0;
+  0% { 
+    transform: translateY(-10vh) rotate(0deg); 
   }
-  10% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(110vh) rotate(360deg);
-    opacity: 0;
+  100% { 
+    transform: translateY(110vh) rotate(360deg); 
   }
 }
 
 @keyframes sway {
-  0%, 100% {
-    margin-left: 0px;
+  0%, 100% { 
+    margin-left: -40px; 
   }
-  50% {
-    margin-left: 50px;
+  50% { 
+    margin-left: 40px; 
   }
 }

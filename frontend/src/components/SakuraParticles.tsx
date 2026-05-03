@@ -2,23 +2,24 @@
 
 import { useEffect, useState, useRef } from "react";
 
-type Petal = {
+type Particle = {
   id: number;
   left: string;
   animationDuration: string;
   animationDelay: string;
   size: string;
+  colorTheme: "cyan" | "pink";
+  styleType: "solid" | "ring" | "square";
 };
 
-// --- INDIVIDUAL INTERACTIVE PETAL COMPONENT ---
-function InteractivePetal({ petal }: { petal: Petal }) {
+// --- INDIVIDUAL INTERACTIVE NEON PARTICLE ---
+function InteractiveParticle({ particle }: { particle: Particle }) {
   const [wind, setWind] = useState({ x: 0, y: 0, isBlown: false });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseOver = (e: React.MouseEvent) => {
     if (wind.isBlown) return;
 
-    // Read mouse velocity. If moving slowly, add a random scatter force.
     let forceX = e.movementX;
     let forceY = e.movementY;
 
@@ -27,7 +28,6 @@ function InteractivePetal({ petal }: { petal: Petal }) {
       forceY = (Math.random() - 0.5) * 40;
     }
 
-    // Amplify the force and push slightly upward to simulate an updraft
     setWind({ 
       x: forceX * 5, 
       y: forceY * 5 - 30, 
@@ -36,7 +36,6 @@ function InteractivePetal({ petal }: { petal: Petal }) {
 
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    // Reset the petal back to normal after 1.5 seconds
     timerRef.current = setTimeout(() => {
       setWind({ x: 0, y: 0, isBlown: false });
     }, 1500);
@@ -48,36 +47,48 @@ function InteractivePetal({ petal }: { petal: Petal }) {
     };
   }, []);
 
+  const isCyan = particle.colorTheme === "cyan";
+  const glowShadow = isCyan 
+    ? "shadow-[0_0_12px_rgba(13,240,214,0.8)]" 
+    : "shadow-[0_0_12px_rgba(255,16,122,0.8)]";
+  
+  const borderColor = isCyan ? "border-miami-cyan" : "border-vice-pink";
+  const bgColor = isCyan ? "bg-miami-cyan/80" : "bg-vice-pink/80";
+
+  let shapeClasses = "";
+  if (particle.styleType === "solid") {
+    shapeClasses = `${bgColor} rounded-full border-none`;
+  } else if (particle.styleType === "ring") {
+    shapeClasses = `bg-transparent border-2 ${borderColor} rounded-full`;
+  } else if (particle.styleType === "square") {
+    shapeClasses = `${bgColor} rounded-sm border-none`;
+  }
+
   return (
     <div
       className="absolute pointer-events-auto"
       style={{
-        left: petal.left,
+        left: particle.left,
         top: '-10%',
-        // The outer div handles the infinite falling and swaying
         animation: `
-          fall ${petal.animationDuration} linear infinite ${petal.animationDelay},
-          sway ${petal.animationDuration} ease-in-out infinite alternate ${petal.animationDelay}
+          fall ${particle.animationDuration} linear infinite ${particle.animationDelay},
+          sway ${particle.animationDuration} ease-in-out infinite alternate ${particle.animationDelay}
         `,
-        // Massive invisible padding creates the "Wind Hitbox"
         padding: '2.5rem',
         marginLeft: '-2.5rem',
         marginTop: '-2.5rem',
       }}
       onMouseOver={handleMouseOver}
     >
-      {/* YOUR EXACT ORIGINAL LEAF DESIGN */}
       <div
-        className="bg-sakura-pink/70 shadow-[0_0_10px_rgba(255,20,147,0.8)] transition-all duration-1000 ease-out"
+        className={`${shapeClasses} ${glowShadow} transition-all duration-1000 ease-out`}
         style={{
-          width: petal.size,
-          height: petal.size,
-          borderRadius: '100% 0 100% 0',
-          // Apply the interactive wind physics
+          width: particle.size,
+          height: particle.size,
           transform: wind.isBlown
             ? `translate(${wind.x}px, ${wind.y}px) rotate(${Math.random() * 720}deg) scale(1.5)`
             : 'translate(0px, 0px) rotate(0deg) scale(1)',
-          opacity: wind.isBlown ? 0 : 1, // Fade out while blowing away
+          opacity: wind.isBlown ? 0 : 1,
         }}
       />
     </div>
@@ -86,27 +97,36 @@ function InteractivePetal({ petal }: { petal: Petal }) {
 
 // --- MAIN WEATHER SYSTEM COMPONENT ---
 export default function SakuraParticles() {
-  const [petals, setPetals] = useState<Petal[]>([]);
+  const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    // Generate 40 random petals exactly as you set them up
-    const newPetals = Array.from({ length: 60 }).map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}vw`,
-      animationDuration: `${Math.random() * 7 + 7}s`,
-      animationDelay: `${Math.random() * 5}s`,
-      size: `${Math.random() * 8 + 6}px`,
-    }));
+    const newParticles = Array.from({ length: 60 }).map((_, i) => {
+      const randStyle = Math.random();
+      let styleType: Particle["styleType"] = "solid";
+      if (randStyle > 0.66) styleType = "ring";
+      else if (randStyle > 0.33) styleType = "square";
+
+      return {
+        id: i,
+        left: `${Math.random() * 100}vw`,
+        animationDuration: `${Math.random() * 7 + 7}s`,
+        // FIX 1: Added the negative sign (-) right before the math
+        animationDelay: `-${Math.random() * 15}s`, 
+        size: `${Math.random() * 8 + 6}px`,
+        colorTheme: Math.random() > 0.5 ? "cyan" : "pink",
+        styleType: styleType,
+      } as Particle; 
+    });
     
-    setPetals(newPetals);
+    setParticles(newParticles);
   }, []);
 
-  if (petals.length === 0) return null;
+  if (particles.length === 0) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true">
-      {/* Keyframes to ensure the fall/sway animations work */}
-      <style jsx>{`
+      {/* FIX 2: Removed 'jsx' from the style tag to ensure global injection */}
+      <style>{`
         @keyframes fall {
           0% { transform: translateY(-10vh) rotate(0deg); }
           100% { transform: translateY(110vh) rotate(360deg); }
@@ -117,8 +137,8 @@ export default function SakuraParticles() {
         }
       `}</style>
 
-      {petals.map((petal) => (
-        <InteractivePetal key={petal.id} petal={petal} />
+      {particles.map((particle) => (
+        <InteractiveParticle key={particle.id} particle={particle} />
       ))}
     </div>
   );

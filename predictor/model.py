@@ -147,7 +147,7 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
 
     rf = RandomForestRegressor(
         n_estimators=1200,
-        min_samples_leaf=16,
+        min_samples_leaf=8,
         max_depth=None,
         random_state=42,
         n_jobs=-1,
@@ -241,8 +241,24 @@ def predict_event_with_uncertainty(
 
     pred_raw = model.predict(X_raw)
 
+    # ---------------------------------------------------
+    # Circuit-specific overtaking amplification
+    # ---------------------------------------------------
+    race_name = str(features_df["gp"].iloc[0])
+
+    DELTA_MULTIPLIERS = {
+        "Miami Grand Prix": 1.15,
+        "Chinese Grand Prix": 1.10,
+        "Australian Grand Prix": 1.08,
+        "Japanese Grand Prix": 0.85,
+        "Monaco Grand Prix": 0.55,
+    }
+
+    delta_multiplier = DELTA_MULTIPLIERS.get(race_name, 1.0)
+
     if getattr(model, "use_delta_target_", False):
-        pred_finish = grid_anchor + pred_raw
+        adjusted_delta = pred_raw * delta_multiplier
+        pred_finish = grid_anchor + adjusted_delta
     else:
         pred_finish = pred_raw
 

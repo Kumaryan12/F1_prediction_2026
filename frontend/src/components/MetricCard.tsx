@@ -2,36 +2,42 @@ type MetricCardProps = {
   label: string;
   value: string;
   subtext?: string;
-  // Upgraded the types to include pink
-  accent?: "red" | "green" | "pink" | "telemetry";
+  // Kept old types to prevent breaking, added cyan
+  accent?: "red" | "green" | "pink" | "cyan" | "telemetry";
 };
 
-// Map our custom Suzuka theme colors to the border and text highlights
+// Map our custom Miami theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-suzuka-red",
-    text: "text-suzuka-red",
-    glow: "shadow-[0_0_20px_rgba(225,6,0,0.1)]",
-    dot: "bg-suzuka-red shadow-[0_0_5px_rgba(225,6,0,0.8)]",
-  },
-  // Safely map any old "green" props directly to the new Sakura Pink theme
-  green: {
-    border: "border-l-sakura-pink",
-    text: "text-sakura-pink",
-    glow: "shadow-[0_0_20px_rgba(255,20,147,0.1)]",
-    dot: "bg-sakura-pink shadow-[0_0_5px_rgba(255,20,147,0.8)]",
+    border: "border-l-vice-pink",
+    text: "text-vice-pink",
+    glow: "shadow-[0_0_20px_rgba(255,16,122,0.1)]",
+    dot: "bg-vice-pink shadow-[0_0_5px_rgba(255,16,122,0.8)]",
   },
   pink: {
-    border: "border-l-sakura-pink",
-    text: "text-sakura-pink",
-    glow: "shadow-[0_0_20px_rgba(255,20,147,0.1)]",
-    dot: "bg-sakura-pink shadow-[0_0_5px_rgba(255,20,147,0.8)]",
+    border: "border-l-vice-pink",
+    text: "text-vice-pink",
+    glow: "shadow-[0_0_20px_rgba(255,16,122,0.1)]",
+    dot: "bg-vice-pink shadow-[0_0_5px_rgba(255,16,122,0.8)]",
+  },
+  // Safely map any old "green" or "telemetry" props directly to Electric Cyan
+  green: {
+    border: "border-l-miami-cyan",
+    text: "text-miami-cyan",
+    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
+    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
+  },
+  cyan: {
+    border: "border-l-miami-cyan",
+    text: "text-miami-cyan",
+    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
+    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
   },
   telemetry: {
-    border: "border-l-telemetry",
-    text: "text-telemetry",
-    glow: "shadow-[0_0_20px_rgba(0,255,0,0.1)]",
-    dot: "bg-telemetry shadow-[0_0_5px_rgba(0,255,0,0.8)]",
+    border: "border-l-miami-cyan",
+    text: "text-miami-cyan",
+    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
+    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
   },
 };
 

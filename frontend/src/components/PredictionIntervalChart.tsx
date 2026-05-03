@@ -36,69 +36,114 @@ export default function PredictionIntervalChart({
   }));
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-zinc-900/70 p-5 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-      <div className="mb-4">
-        <h3 className="text-xl font-semibold text-white">
-          Prediction Interval View
-        </h3>
-        <p className="text-sm text-zinc-400">
-          Lower predicted finish is better. Error bars show the 68% range.
-        </p>
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(255,16,122,0.1)] backdrop-blur-md p-6 sm:p-8">
+      {/* Background Synthwave Glow */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-vice-pink/5 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-miami-cyan/5 to-transparent pointer-events-none" />
+
+      {/* Header */}
+      <div className="mb-8 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
+        <div>
+          <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
+            <span className="h-3 w-3 rounded-full bg-miami-cyan animate-pulse shadow-[0_0_10px_rgba(13,240,214,0.8)]" />
+            Prediction Intervals
+          </h2>
+          <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
+            68% Confidence Range // Lower is better
+          </p>
+        </div>
       </div>
 
-      <div className="h-[420px] w-full">
+      <div className="h-[420px] w-full relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-            <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+            {/* Subtle Grid Lines */}
+            <CartesianGrid stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+            
             <XAxis
               type="number"
               dataKey="pred_rank"
               domain={[1, 10]}
-              tick={{ fill: "#a1a1aa", fontSize: 12 }}
+              tick={{ fill: "#a1a1aa", fontSize: 10, fontFamily: "monospace" }}
               tickLine={false}
-              axisLine={{ stroke: "rgba(255,255,255,0.12)" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               label={{
-                value: "Predicted Rank",
+                value: "PREDICTED RANK",
                 position: "insideBottom",
                 offset: -10,
-                fill: "#a1a1aa",
+                fill: "#0DF0D6", // Miami Cyan
+                fontSize: 10,
+                fontFamily: "monospace",
+                letterSpacing: "0.2em",
               }}
             />
+            
             <YAxis
               type="number"
               dataKey="pred_finish"
               reversed
               domain={[10, 1]}
-              tick={{ fill: "#a1a1aa", fontSize: 12 }}
+              tick={{ fill: "#a1a1aa", fontSize: 10, fontFamily: "monospace" }}
               tickLine={false}
-              axisLine={{ stroke: "rgba(255,255,255,0.12)" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               label={{
-                value: "Predicted Finish",
+                value: "PREDICTED FINISH",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#a1a1aa",
+                fill: "#FF107A", // Vice Pink
+                fontSize: 10,
+                fontFamily: "monospace",
+                letterSpacing: "0.2em",
               }}
             />
+            
             <Tooltip
-  cursor={{ stroke: "rgba(255,255,255,0.15)" }}
-  contentStyle={{
-    background: "#111827",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: 16,
-    color: "white",
-  }}
-  formatter={(value, name) => [
-    typeof value === "number" ? value.toFixed(2) : String(value ?? "-"),
-    String(name),
-  ]}
-  labelFormatter={(_, payload) => {
-    if (!payload || !payload.length) return "";
-    return payload[0].payload.driver;
-  }}
-/>
-            <Scatter data={chartData} fill="#60a5fa">
-              <ErrorBar dataKey="lowError" width={0} strokeWidth={2} stroke="#93c5fd" direction="y" />
-              <ErrorBar dataKey="highError" width={0} strokeWidth={2} stroke="#93c5fd" direction="y" />
+              cursor={{ stroke: "rgba(13,240,214,0.15)", strokeWidth: 2 }}
+              contentStyle={{
+                background: "#0B0914", // Deep Tarmac Purple
+                border: "1px solid rgba(13,240,214,0.3)", // Cyan Border
+                borderRadius: "8px",
+                boxShadow: "0 0 15px rgba(13,240,214,0.2)",
+                color: "white",
+                fontFamily: "monospace",
+                textTransform: "uppercase",
+                fontSize: "12px",
+              }}
+              formatter={(value, name) => [
+                typeof value === "number" ? (
+                  <span style={{ color: "#FF107A", fontWeight: "bold" }}>{value.toFixed(2)}</span>
+                ) : (
+                  String(value ?? "-")
+                ),
+                <span style={{ color: "#a1a1aa" }}>{String(name)}</span>,
+              ]}
+              labelFormatter={(_, payload) => {
+                if (!payload || !payload.length) return "";
+                return (
+                  <div style={{ color: "#0DF0D6", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
+                    {payload[0].payload.driver}
+                  </div>
+                );
+              }}
+            />
+            
+            {/* The Dots: Electric Cyan */}
+            <Scatter data={chartData} fill="#0DF0D6">
+              {/* The Error Bars: Hot Magenta */}
+              <ErrorBar 
+                dataKey="lowError" 
+                width={4} // Increased width slightly so the horizontal caps are visible
+                strokeWidth={2} 
+                stroke="#FF107A" 
+                direction="y" 
+              />
+              <ErrorBar 
+                dataKey="highError" 
+                width={4} 
+                strokeWidth={2} 
+                stroke="#FF107A" 
+                direction="y" 
+              />
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>

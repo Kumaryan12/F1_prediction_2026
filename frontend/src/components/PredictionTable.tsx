@@ -111,16 +111,16 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   [{row.pi68_low?.toFixed(2) ?? "-"} <span className="text-zinc-600 mx-1">↔</span> {row.pi68_high?.toFixed(2) ?? "-"}]
                 </td>
                 
-                {/* Podium % - Now Sakura Pink */}
+                {/* Podium % - Now Electric Cyan */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-sakura-pink/30 bg-sakura-pink/10 px-2 py-0.5 font-mono text-xs font-bold text-sakura-pink shadow-[0_0_8px_rgba(255,20,147,0.2)]">
+                  <span className="inline-block border border-miami-cyan/30 bg-miami-cyan/10 px-2 py-0.5 font-mono text-xs font-bold text-miami-cyan shadow-[0_0_8px_rgba(13,240,214,0.2)]">
                     {pct(row.p_podium)}
                   </span>
                 </td>
                 
-                {/* Top 10 % - Now Suzuka Red */}
+                {/* Top 10 % - Now Hot Magenta / Vice Pink */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-suzuka-red/30 bg-suzuka-red/10 px-2 py-0.5 font-mono text-xs font-bold text-suzuka-red shadow-[0_0_8px_rgba(225,6,0,0.2)]">
+                  <span className="inline-block border border-vice-pink/30 bg-vice-pink/10 px-2 py-0.5 font-mono text-xs font-bold text-vice-pink shadow-[0_0_8px_rgba(255,16,122,0.2)]">
                     {pct(row.p_top10)}
                   </span>
                 </td>

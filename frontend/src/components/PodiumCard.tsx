@@ -5,9 +5,9 @@ type PodiumCardProps = {
 
 const podiumStyle = {
   1: {
-    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Sakura Pink
+    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Miami Electric Cyan
     glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#FF1493]/50",
+    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#0DF0D6]/50",
     badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
     text: "text-white",
     bgNumber: "text-[#FFD700]/15",

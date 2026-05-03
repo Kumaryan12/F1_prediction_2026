@@ -13,13 +13,14 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
     return `${row.driver}: P${row.pred_rank} [${low} - ${high}]`;
   });
 
-  // Inject some fake live race control data for the vibe
+  // Inject some fake live race control data for the Miami vibe
+  // Miami is HOT and HUMID! Let's update the climate data to match South Beach.
   const tickerItems = [
     "RACE CONTROL: DRS ENABLED",
-    "TRACK TEMP: 32.4°C",
-    "AIR TEMP: 21.1°C",
-    "WIND: 12 KM/H SOUTH",
-    "HUMIDITY: 48%",
+    "TRACK TEMP: 46.2°C",
+    "AIR TEMP: 31.8°C",
+    "WIND: 18 KM/H SE",
+    "HUMIDITY: 74%",
     "YELLOW FLAG: CLEAR",
     ...predictionStrings,
   ];
@@ -28,19 +29,21 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
   const tickerText = tickerItems.join(" /// ") + " /// ";
 
   return (
-    <div className="relative flex w-full overflow-hidden border-y border-white/10 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(0,255,0,0.05)] backdrop-blur-md">
+    <div className="relative flex w-full overflow-hidden border-y border-miami-cyan/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(13,240,214,0.15)] backdrop-blur-md">
       
       {/* We render two identical blocks side-by-side. 
         As the first one scrolls entirely out of view, the second one perfectly replaces it!
       */}
       <div className="flex animate-ticker whitespace-nowrap">
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-telemetry">
+        {/* Swapped to Electric Cyan with a neon drop-shadow */}
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-miami-cyan drop-shadow-[0_0_5px_rgba(13,240,214,0.5)]">
           {tickerText}
         </span>
       </div>
       
       <div className="flex animate-ticker whitespace-nowrap">
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-telemetry">
+        {/* Duplicate block for the infinite scroll */}
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-miami-cyan drop-shadow-[0_0_5px_rgba(13,240,214,0.5)]">
           {tickerText}
         </span>
       </div>

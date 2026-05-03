@@ -11,8 +11,6 @@ from .config import (
     CIRCUIT_EXTRAS,
     LOW_DF_GPS,
 )
-
-# Optional sets (safe fallbacks if not provided in config.py)
 try:
     from .config import STREET_GPS
 except Exception:
@@ -22,11 +20,6 @@ try:
     from .config import LONG_STRAIGHT_GPS
 except Exception:
     LONG_STRAIGHT_GPS: set[str] = set()
-
-
-# -------------------------------------------------------------------
-# Driver / team priors
-# -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
     "VER": 0.99,
@@ -48,7 +41,7 @@ DRIVER_SKILL_PRIOR = {
     "HAD": 0.77,
     "STR": 0.70,
 
-    # 2026 additions / returns
+    
     "PER": 0.83,
     "BOT": 0.79,
     "BOR": 0.79,
@@ -87,14 +80,14 @@ DEFAULT_TEAM_PRIOR = 0.75
 
 
 def _ensure_numeric(df: pd.DataFrame, cols: list[str]) -> None:
-    """Coerce listed columns to numeric (in-place), if they exist."""
+    
     for c in cols:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce")
 
 
 def _normalize_team_names(df: pd.DataFrame) -> pd.DataFrame:
-    """Normalize team naming so historical and 2026 rows map cleanly."""
+    
     out = df.copy()
     if "team" in out.columns:
         out["team"] = out["team"].astype(str).replace(TEAM_ALIAS)
@@ -102,10 +95,6 @@ def _normalize_team_names(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _inverse_minmax_strength(s: pd.Series) -> pd.Series:
-    """
-    Convert a 'lower is better' metric (like avg finish position)
-    into a 'higher is better' strength score in [0, 1].
-    """
     s = pd.to_numeric(s, errors="coerce")
     s_min = s.min(skipna=True)
     s_max = s.max(skipna=True)
@@ -117,7 +106,6 @@ def _inverse_minmax_strength(s: pd.Series) -> pd.Series:
 
 
 def add_driver_skill_prior(df: pd.DataFrame) -> pd.DataFrame:
-    """Attach a static driver skill prior + rookie/returnee flags."""
     out = df.copy()
     if "driver" in out.columns:
         out["driver"] = out["driver"].astype(str).str.upper()
@@ -132,7 +120,6 @@ def add_driver_skill_prior(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_team_prior_strength(df: pd.DataFrame) -> pd.DataFrame:
-    """Attach a simple baseline prior for new/renamed teams."""
     out = _normalize_team_names(df)
     if "team" in out.columns:
         out["team_prior_strength"] = out["team"].map(TEAM_BASELINE_PRIOR).fillna(DEFAULT_TEAM_PRIOR)
@@ -148,17 +135,6 @@ def add_live_strength_adjustments(
     hist_driver_weight: float = 0.20,
     live_driver_weight: float = 0.80,
 ) -> pd.DataFrame:
-    """
-    Build 2026-style blended strength features by combining:
-      - historical rolling form (converted to strength)
-      - live FP/session-based strength from sessions.py
-
-    Expected live columns if available:
-      - driver_2026_session_strength
-      - driver_2026_reliability
-      - team_2026_strength
-      - team_2026_reliability
-    """
     out = _normalize_team_names(df.copy())
 
     if "drv_form3" in out.columns:
@@ -194,11 +170,6 @@ def add_live_strength_adjustments(
         out["team_strength_blend_2026"] = out["team_hist_strength"]
 
     return out
-
-
-# -------------------------------------------------------------------
-# Circuit context
-# -------------------------------------------------------------------
 
 def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
     def _lookup(gp: str) -> pd.Series:
@@ -249,10 +220,6 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
     _ensure_numeric(out, EXTRA_NUMERIC_COLS)
     return out
 
-
-# -------------------------------------------------------------------
-# Leakage-safe rolling forms
-# -------------------------------------------------------------------
 
 def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     required = {"year", "gp", "date", "driver", "team", "finish_pos"}
@@ -347,11 +314,6 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
         ],
         errors="ignore",
     )
-
-
-# -------------------------------------------------------------------
-# Merge latest forms into prediction frame
-# -------------------------------------------------------------------
 
 def merge_latest_forms(
     predict_df: pd.DataFrame,

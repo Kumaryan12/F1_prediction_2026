@@ -1,4 +1,3 @@
-# F1_prediction_system/data.py
 from __future__ import annotations
 
 from typing import List, Dict, Tuple, Optional
@@ -12,39 +11,39 @@ fastf1.Cache.enable_cache(CACHE_DIR)
 
 
 HARDCODED_ENTRYLISTS: Dict[Tuple[int, str], List[Dict[str, object]]] = {
-    (2026, "Japanese Grand Prix"): [
-        {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 11, "DriverNumber": "3"},
-        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 8, "DriverNumber": "6"},
+    (2026, "Miami Grand Prix"): [
+        {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 2, "DriverNumber": "3"},
+        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 9, "DriverNumber": "6"},
 
-        {"driver": "NOR", "team": "McLaren", "grid_pos": 5, "DriverNumber": "1"},
-        {"driver": "PIA", "team": "McLaren", "grid_pos": 3, "DriverNumber": "81"},
+        {"driver": "NOR", "team": "McLaren", "grid_pos": 4, "DriverNumber": "1"},
+        {"driver": "PIA", "team": "McLaren", "grid_pos": 7, "DriverNumber": "81"},
 
-        {"driver": "LEC", "team": "Ferrari", "grid_pos": 4, "DriverNumber": "16"},
+        {"driver": "LEC", "team": "Ferrari", "grid_pos": 3, "DriverNumber": "16"},
         {"driver": "HAM", "team": "Ferrari", "grid_pos": 6, "DriverNumber": "44"},
 
-        {"driver": "RUS", "team": "Mercedes", "grid_pos": 2, "DriverNumber": "63"},
+        {"driver": "RUS", "team": "Mercedes", "grid_pos": 5, "DriverNumber": "63"},
         {"driver": "ANT", "team": "Mercedes", "grid_pos": 1, "DriverNumber": "12"},
 
-        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "14"},
-        {"driver": "STR", "team": "Aston Martin", "grid_pos": 22, "DriverNumber": "18"},
+        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 18, "DriverNumber": "14"},
+        {"driver": "STR", "team": "Aston Martin", "grid_pos": 19, "DriverNumber": "18"},
 
-        {"driver": "GAS", "team": "Alpine", "grid_pos": 7, "DriverNumber": "10"},
-        {"driver": "COL", "team": "Alpine", "grid_pos": 15, "DriverNumber": "43"},
+        {"driver": "GAS", "team": "Alpine", "grid_pos": 10, "DriverNumber": "10"},
+        {"driver": "COL", "team": "Alpine", "grid_pos": 8, "DriverNumber": "43"},
 
-        {"driver": "SAI", "team": "Williams", "grid_pos": 16, "DriverNumber": "55"},
-        {"driver": "ALB", "team": "Williams", "grid_pos": 17, "DriverNumber": "23"},
+        {"driver": "SAI", "team": "Williams", "grid_pos": 14, "DriverNumber": "55"},
+        {"driver": "ALB", "team": "Williams", "grid_pos": 16, "DriverNumber": "23"},
 
-        {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 14, "DriverNumber": "30"},
-        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 10, "DriverNumber": "41"},
+        {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 12, "DriverNumber": "30"},
+        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 17, "DriverNumber": "41"},
 
-        {"driver": "HUL", "team": "Audi", "grid_pos": 13, "DriverNumber": "27"},
-        {"driver": "BOR", "team": "Audi", "grid_pos": 9, "DriverNumber": "5"},
+        {"driver": "HUL", "team": "Audi", "grid_pos": 11, "DriverNumber": "27"},
+        {"driver": "BOR", "team": "Audi", "grid_pos": 22, "DriverNumber": "5"},
 
-        {"driver": "PER", "team": "Cadillac", "grid_pos": 19, "DriverNumber": "11"},
+        {"driver": "PER", "team": "Cadillac", "grid_pos": 21, "DriverNumber": "11"},
         {"driver": "BOT", "team": "Cadillac", "grid_pos": 20, "DriverNumber": "77"},
 
-        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 12, "DriverNumber": "87"},
-        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 18, "DriverNumber": "31"},
+        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 15, "DriverNumber": "87"},
+        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 13, "DriverNumber": "31"},
     ],
 }
 
@@ -57,24 +56,12 @@ STARTING_GRIDS: Dict[Tuple[int, str], Dict[str, int]] = {
         "LAW": 13, "SAI": 12, "ALO": 6, "ANT": 14, "TSU": 10, "BOR": 7, "GAS": 19,
         "ALB": 17, "COL": 20, "HUL": 18, "OCO": 8, "BEA": 11, "STR": 15
     },
-    # Example:
-    # (2026, "Australian Grand Prix"): {
-    #     "NOR": 1,
-    #     "VER": 2,
-    #     ...
-    # },
 }
 
 
-# -------------------------------------------------------------------
-# Schedule helpers
-# -------------------------------------------------------------------
+
 
 def _event_schedule(year: int) -> pd.DataFrame:
-    """
-    Return event schedule with columns: gp, date.
-    Falls back to FALLBACK_EVENTS if live schedule is unavailable.
-    """
     try:
         sch = fastf1.get_event_schedule(year)
         if "EventFormat" in sch.columns:
@@ -108,11 +95,6 @@ def _event_date(year: int, gp_name: str):
         return None
     return row["date"].iloc[0]
 
-
-# -------------------------------------------------------------------
-# Session / result loaders
-# -------------------------------------------------------------------
-
 def _race_has_results(year: int, gp: str) -> bool:
     try:
         ses = fastf1.get_session(year, gp, "R")
@@ -140,11 +122,6 @@ def _load_results_only(year: int, gp: str, sess_name: str) -> pd.DataFrame:
     if res is None or res.empty:
         raise ValueError(f"{sess_name} results empty for {gp} {year}")
     return res
-
-
-# -------------------------------------------------------------------
-# Live driver-number helpers
-# -------------------------------------------------------------------
 
 def _get_live_driver_map(
     year: int,
@@ -197,10 +174,6 @@ def _get_live_driver_map(
 
 
 def _hydrate_entrylist_driver_numbers(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
-    """
-    Refresh DriverNumber in a hardcoded entry list using current live session data.
-    Prefer live numbers if available.
-    """
     out = df.copy()
     if "driver" not in out.columns:
         return out
@@ -226,12 +199,6 @@ def _hydrate_entrylist_driver_numbers(df: pd.DataFrame, year: int, gp_name: str)
 
     out = out.drop(columns=["DriverNumber_live", "team_live"], errors="ignore")
     return out
-
-
-# -------------------------------------------------------------------
-# Roster / entry-list helpers
-# -------------------------------------------------------------------
-
 def _last_completed_event(year: int, target_gp: str) -> Optional[str]:
     try:
         prior = list_before_target(year, target_gp)
@@ -245,12 +212,6 @@ def _last_completed_event(year: int, target_gp: str) -> Optional[str]:
 
 
 def _get_roster_map(year: int, target_gp: str) -> pd.DataFrame:
-    """
-    Canonical season roster = last completed race before the target.
-
-    Returns columns:
-      DriverNumber (str), driver (abbr), team
-    """
     last_gp = _last_completed_event(year, target_gp)
     if not last_gp:
         raise RuntimeError(f"No completed race found before {target_gp} {year} to build roster map.")
@@ -272,10 +233,6 @@ def _get_roster_map(year: int, target_gp: str) -> pd.DataFrame:
 
 
 def _build_from_roster(year: int, gp_name: str) -> pd.DataFrame:
-    """
-    Build a prediction entry list from the latest known season roster.
-    Used when hardcoded Sunday grid is present for a non-opener.
-    """
     roster = _get_roster_map(year, gp_name).copy()
     roster.loc[:, "grid_pos"] = pd.NA
     roster.loc[:, "year"] = year
@@ -286,10 +243,6 @@ def _build_from_roster(year: int, gp_name: str) -> pd.DataFrame:
 
 
 def _build_from_hardcoded_entrylist(year: int, gp_name: str) -> pd.DataFrame:
-    """
-    Build target entry list directly from HARDCODED_ENTRYLISTS.
-    Correct path for season openers / lineup resets.
-    """
     rows = HARDCODED_ENTRYLISTS[(year, gp_name)]
     df = pd.DataFrame(rows).copy()
 
@@ -307,19 +260,12 @@ def _build_from_hardcoded_entrylist(year: int, gp_name: str) -> pd.DataFrame:
 
     df = df[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]].copy()
 
-    # Refresh DriverNumbers from live FP2/FP1/Q if available
     df = _hydrate_entrylist_driver_numbers(df, year, gp_name)
 
     return df
 
 
 def _canonicalize_pred_entrylist(pred_df: pd.DataFrame, year: int, target_gp: str) -> pd.DataFrame:
-    """
-    Overwrite pred_df['driver','team'] using canonical roster keyed by DriverNumber.
-    Drop non-roster FP/test entries; dedupe by DriverNumber.
-
-    If DriverNumber is missing for hardcoded entrylists, this function becomes a no-op.
-    """
     out = pred_df.copy()
     if "DriverNumber" not in out.columns:
         return out
@@ -344,17 +290,7 @@ def _canonicalize_pred_entrylist(pred_df: pd.DataFrame, year: int, target_gp: st
     out.loc[:, "driver"] = out["driver"].astype(str).str.upper()
 
     return out
-
-
-# -------------------------------------------------------------------
-# Hardcoded grid application
-# -------------------------------------------------------------------
-
 def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
-    """
-    If a hardcoded Sunday grid exists for (year, gp_name), filter to those drivers
-    and overwrite grid_pos from STARTING_GRIDS.
-    """
     mapping = STARTING_GRIDS.get((year, gp_name))
     if not mapping:
         return df
@@ -378,20 +314,7 @@ def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataF
 
     return out
 
-
-# -------------------------------------------------------------------
-# Training event extraction
-# -------------------------------------------------------------------
-
 def extract_event_qr(year: int, gp_name: str) -> pd.DataFrame:
-    """
-    Return one row per driver with grid_pos and finish_pos.
-    Prefer both from Race results; fall back to Quali for grid only if needed.
-
-    IMPORTANT:
-    - Do NOT apply hardcoded Sunday grids here
-    - Keep training leakage-safe
-    """
     r_res = _load_results_only(year, gp_name, "R")
     if r_res is None or len(r_res) == 0:
         raise RuntimeError("race results empty")
@@ -415,7 +338,6 @@ def extract_event_qr(year: int, gp_name: str) -> pd.DataFrame:
                 }
             ).copy()
 
-    # 2) Otherwise: grid from Quali + finish from Race
     if df is None:
         q_res = _load_results_only(year, gp_name, "Q").copy()
         q_res.loc[:, "DriverNumber"] = q_res["DriverNumber"].astype(str).str.strip()
@@ -473,9 +395,6 @@ def build_training_until(
     target_gp: str,
     hist_years=range(2023, 2025),
 ) -> pd.DataFrame:
-    """
-    Build training data from historical years + current season races before target.
-    """
     from time import perf_counter
 
     def _not_excluded(year: int, gp: str) -> bool:
@@ -505,7 +424,6 @@ def build_training_until(
                 print(f"[SKIP] {y} {gp}: {e}")
                 continue
 
-    # Current season up to target
     try:
         pre_events_raw_all = list_before_target(target_year, target_gp)
         pre_events_raw = [gp for gp in pre_events_raw_all if _not_excluded(target_year, gp)]
@@ -543,21 +461,7 @@ def build_training_until(
 
     return full
 
-
-# -------------------------------------------------------------------
-# Target drivers for prediction
-# -------------------------------------------------------------------
-
 def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
-    """
-    Return driver/team/grid for the target event.
-
-    Preference:
-      1) If hardcoded full entry list exists -> use it
-      2) Otherwise if hardcoded Sunday grid exists -> build from latest season roster and apply it
-      3) Otherwise try Qualifying results
-      4) Otherwise fallback to latest completed race before target
-    """
     # 1) Prefer hardcoded full entry list
     if (year, gp_name) in HARDCODED_ENTRYLISTS:
         df = _build_from_hardcoded_entrylist(year, gp_name)
