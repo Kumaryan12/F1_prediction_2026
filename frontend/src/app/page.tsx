@@ -23,57 +23,57 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      {/* Massive 305 Area Code Watermark */}
+      {/* Massive YUL Area Code Watermark (Montreal) */}
       <div 
-        className="absolute top-10 right-0 flex flex-col items-center opacity-[0.04] pointer-events-none z-0 select-none font-sans"
+        className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
       >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-miami-cyan drop-shadow-[0_0_50px_rgba(13,240,214,0.5)] italic tracking-tighter">
-          305
+        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-frost-blue drop-shadow-[0_0_50px_rgba(0,210,255,0.5)] italic tracking-tighter">
+          YUL
         </span>
       </div>
 
-      {/* Hero Section - The Miami Vice Vibe */}
+      {/* Hero Section - The Montreal Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
           
-          {/* Synthwave Sunset Ambient Glow - Bottom left for that sunset feel */}
+          {/* Maple Red Ambient Glow - Bottom left for aggressive contrast */}
           <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-vice-pink)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-maple-red)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
           />
           
-          {/* Midnight Purple to Cyan Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-miami-cyan/10" />
+          {/* Deep Slate to Frost Blue Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-frost-blue/10" />
           
-          {/* Glowing Miami Track Minimap (Hard Rock Stadium) */}
+          {/* Glowing Montreal Track Minimap (Circuit Gilles Villeneuve) */}
           <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
             <svg 
               viewBox="0 0 200 200" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-miami-cyan drop-shadow-[0_0_15px_rgba(13,240,214,0.8)]"
+              className="w-full h-full text-frost-blue drop-shadow-[0_0_15px_rgba(0,210,255,0.8)]"
             >
-              {/* Stylized Miami Circuit Path */}
+              {/* Stylized Circuit Gilles Villeneuve Path (Long island straight & hairpin) */}
               <path 
-                d="M 50 150 L 90 150 C 110 150, 130 140, 140 120 L 160 80 C 170 60, 150 40, 130 50 L 80 70 C 60 80, 50 100, 40 120 Z" 
+                d="M 150 40 L 160 70 C 170 100, 160 140, 130 150 L 50 170 C 30 175, 20 155, 40 140 L 110 70 C 120 60, 130 30, 150 40 Z" 
                 stroke="currentColor" 
                 strokeWidth="4" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 className="animate-[dash_3s_linear_infinite]"
               />
-              {/* Start/Finish Line Dot - Vice Pink */}
-              <circle cx="70" cy="150" r="6" fill="#FF107A" className="animate-pulse shadow-[0_0_15px_rgba(255,16,122,1)]" />
+              {/* Start/Finish Line Dot - Maple Red (Wall of Champions Chicane) */}
+              <circle cx="160" cy="70" r="6" fill="#E51837" className="animate-pulse shadow-[0_0_15px_rgba(229,24,55,1)]" />
             </svg>
           </div>
           
           <div className="relative z-10">
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              MIAMI GRAND PRIX 2026
+              CANADIAN GRAND PRIX 2026
             </h1>
 
             <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
               AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the Miami International Autodrome.
+              confidence intervals, and team-level race outlook for Circuit Gilles Villeneuve.
             </p>
           </div>
         </div>
@@ -109,8 +109,8 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Electric Cyan */}
-              <span className="text-miami-cyan font-bold drop-shadow-[0_0_5px_rgba(13,240,214,0.4)]">1200 Trees</span>
+              {/* Changed to Frost Blue */}
+              <span className="text-frost-blue font-bold drop-shadow-[0_0_5px_rgba(0,210,255,0.4)]">1200 Trees</span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -120,14 +120,14 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Vice Pink */}
-              <span className="text-vice-pink font-bold drop-shadow-[0_0_5px_rgba(255,16,122,0.4)]">0.627 </span>
+              {/* Changed to Maple Red */}
+              <span className="text-maple-red font-bold drop-shadow-[0_0_5px_rgba(229,24,55,0.4)]">0.631 </span>
             </div>
 
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Electric Cyan */}
-              <span className="text-miami-cyan font-bold">2.34 </span>
+              {/* Changed to Frost Blue */}
+              <span className="text-frost-blue font-bold">2.35 </span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -137,7 +137,7 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end pt-0.5">
               <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right">3.21</span>
+              <span className="text-white text-right">3.19</span>
             </div>
           </div>
         </div>
@@ -156,8 +156,8 @@ export default async function HomePage() {
           <div className="order-2 md:order-1 md:h-[85%]">
             <PodiumCard position={2} driver={summary.predicted_podium[1]} />
           </div>
-          {/* Changed shadow highlight to Electric Cyan */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-miami-cyan/20">
+          {/* Changed shadow highlight to Frost Blue */}
+          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-frost-blue/20">
             <PodiumCard position={1} driver={summary.predicted_podium[0]} />
           </div>
           <div className="order-3 md:order-3 md:h-[75%]">

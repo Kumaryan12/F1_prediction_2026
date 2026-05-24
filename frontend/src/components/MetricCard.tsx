@@ -6,38 +6,38 @@ type MetricCardProps = {
   accent?: "red" | "green" | "pink" | "cyan" | "telemetry";
 };
 
-// Map our custom Miami theme colors to the border and text highlights
+// Map our custom Montreal theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-vice-pink",
-    text: "text-vice-pink",
-    glow: "shadow-[0_0_20px_rgba(255,16,122,0.1)]",
-    dot: "bg-vice-pink shadow-[0_0_5px_rgba(255,16,122,0.8)]",
+    border: "border-l-maple-red",
+    text: "text-maple-red",
+    glow: "shadow-[0_0_20px_rgba(229,24,55,0.1)]",
+    dot: "bg-maple-red shadow-[0_0_5px_rgba(229,24,55,0.8)]",
   },
   pink: {
-    border: "border-l-vice-pink",
-    text: "text-vice-pink",
-    glow: "shadow-[0_0_20px_rgba(255,16,122,0.1)]",
-    dot: "bg-vice-pink shadow-[0_0_5px_rgba(255,16,122,0.8)]",
+    border: "border-l-maple-red",
+    text: "text-maple-red",
+    glow: "shadow-[0_0_20px_rgba(229,24,55,0.1)]",
+    dot: "bg-maple-red shadow-[0_0_5px_rgba(229,24,55,0.8)]",
   },
-  // Safely map any old "green" or "telemetry" props directly to Electric Cyan
+  // Safely map any old "green", "cyan", or "telemetry" props directly to Frost Blue
   green: {
-    border: "border-l-miami-cyan",
-    text: "text-miami-cyan",
-    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
-    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
+    border: "border-l-frost-blue",
+    text: "text-frost-blue",
+    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
+    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
   },
   cyan: {
-    border: "border-l-miami-cyan",
-    text: "text-miami-cyan",
-    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
-    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
+    border: "border-l-frost-blue",
+    text: "text-frost-blue",
+    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
+    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
   },
   telemetry: {
-    border: "border-l-miami-cyan",
-    text: "text-miami-cyan",
-    glow: "shadow-[0_0_20px_rgba(13,240,214,0.1)]",
-    dot: "bg-miami-cyan shadow-[0_0_5px_rgba(13,240,214,0.8)]",
+    border: "border-l-frost-blue",
+    text: "text-frost-blue",
+    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
+    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
   },
 };
 

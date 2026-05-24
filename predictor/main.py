@@ -34,21 +34,11 @@ except Exception:
     build_live_weekend_features = None
 
 
-# -------------------------------------------------------------------
-# NEW: Define absolute paths for output files
-# -------------------------------------------------------------------
-BACKEND_DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\backend\app\data")
-FRONTEND_DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\frontend\data")
 
-
-# -------------------------------------------------------------------
-# Helpers
-# -------------------------------------------------------------------
+BACKEND_DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/app/data")
+FRONTEND_DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/frontend/data")
 
 def build_training_frame(target_year: int, target_gp: str) -> pd.DataFrame:
-    """
-    Build the historical training frame up to (but excluding) target race.
-    """
     train_df = build_until_data(target_year, target_gp, hist_years=HIST_YEARS)
     train_df = add_driver_team_form(train_df)
     train_df = add_circuit_context_df(train_df)
@@ -62,16 +52,6 @@ def build_predict_frame(
     train_df_with_forms: pd.DataFrame,
     use_sessions: bool = False,
 ) -> pd.DataFrame:
-    """
-    Build the prediction frame for the target race.
-
-    Base flow:
-      1) get target drivers
-      2) add circuit context
-      3) merge historical driver/team forms
-      4) optionally merge live weekend features
-      5) refresh blended live strength features
-    """
     pred_df = get_target_drivers(target_year, target_gp)
     pred_df = add_circuit_context_df(pred_df)
     pred_df = merge_latest_forms(pred_df, train_df_with_forms)

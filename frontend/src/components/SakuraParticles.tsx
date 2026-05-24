@@ -8,11 +8,9 @@ type Particle = {
   animationDuration: string;
   animationDelay: string;
   size: string;
-  colorTheme: "cyan" | "pink";
-  styleType: "solid" | "ring" | "square";
 };
 
-// --- INDIVIDUAL INTERACTIVE NEON PARTICLE ---
+// --- INDIVIDUAL INTERACTIVE LEAF ---
 function InteractiveParticle({ particle }: { particle: Particle }) {
   const [wind, setWind] = useState({ x: 0, y: 0, isBlown: false });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -23,6 +21,7 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
     let forceX = e.movementX;
     let forceY = e.movementY;
 
+    // If mouse is moving slowly, add a random scatter gust
     if (Math.abs(forceX) < 2 && Math.abs(forceY) < 2) {
       forceX = (Math.random() - 0.5) * 40;
       forceY = (Math.random() - 0.5) * 40;
@@ -47,26 +46,9 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
     };
   }, []);
 
-  const isCyan = particle.colorTheme === "cyan";
-  const glowShadow = isCyan 
-    ? "shadow-[0_0_12px_rgba(13,240,214,0.8)]" 
-    : "shadow-[0_0_12px_rgba(255,16,122,0.8)]";
-  
-  const borderColor = isCyan ? "border-miami-cyan" : "border-vice-pink";
-  const bgColor = isCyan ? "bg-miami-cyan/80" : "bg-vice-pink/80";
-
-  let shapeClasses = "";
-  if (particle.styleType === "solid") {
-    shapeClasses = `${bgColor} rounded-full border-none`;
-  } else if (particle.styleType === "ring") {
-    shapeClasses = `bg-transparent border-2 ${borderColor} rounded-full`;
-  } else if (particle.styleType === "square") {
-    shapeClasses = `${bgColor} rounded-sm border-none`;
-  }
-
   return (
     <div
-      className="absolute pointer-events-auto"
+      className="absolute pointer-events-auto text-maple-red"
       style={{
         left: particle.left,
         top: '-10%',
@@ -80,8 +62,11 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
       }}
       onMouseOver={handleMouseOver}
     >
-      <div
-        className={`${shapeClasses} ${glowShadow} transition-all duration-1000 ease-out`}
+      {/* Exact Canadian Flag Maple Leaf SVG */}
+      <svg
+        viewBox="0 0 512 512"
+        fill="currentColor"
+        className="drop-shadow-[0_0_10px_rgba(229,24,55,0.8)] transition-all duration-1000 ease-out"
         style={{
           width: particle.size,
           height: particle.size,
@@ -90,32 +75,28 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
             : 'translate(0px, 0px) rotate(0deg) scale(1)',
           opacity: wind.isBlown ? 0 : 1,
         }}
-      />
+      >
+        <path d="M304 432h-96v-80l-72 40-16-48 48-48-80-16-16-64 80-16-32-64 48-16 64 64 24-80 24 80 64-64 48 16-32 64 80 16-16 64-80 16 48 48-16 48-72-40v80z" />
+      </svg>
     </div>
   );
 }
 
 // --- MAIN WEATHER SYSTEM COMPONENT ---
-export default function SakuraParticles() {
+export default function MontrealParticles() {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    const newParticles = Array.from({ length: 60 }).map((_, i) => {
-      const randStyle = Math.random();
-      let styleType: Particle["styleType"] = "solid";
-      if (randStyle > 0.66) styleType = "ring";
-      else if (randStyle > 0.33) styleType = "square";
-
+    // Reduced from 60 to 24 for a much cleaner, less chaotic look
+    const newParticles = Array.from({ length: 24 }).map((_, i) => {
       return {
         id: i,
         left: `${Math.random() * 100}vw`,
         animationDuration: `${Math.random() * 7 + 7}s`,
-        // FIX 1: Added the negative sign (-) right before the math
         animationDelay: `-${Math.random() * 15}s`, 
-        size: `${Math.random() * 8 + 6}px`,
-        colorTheme: Math.random() > 0.5 ? "cyan" : "pink",
-        styleType: styleType,
-      } as Particle; 
+        // Increased base size so the leaf shape is clearly visible
+        size: `${Math.random() * 16 + 14}px`, 
+      }; 
     });
     
     setParticles(newParticles);
@@ -125,18 +106,6 @@ export default function SakuraParticles() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true">
-      {/* FIX 2: Removed 'jsx' from the style tag to ensure global injection */}
-      <style>{`
-        @keyframes fall {
-          0% { transform: translateY(-10vh) rotate(0deg); }
-          100% { transform: translateY(110vh) rotate(360deg); }
-        }
-        @keyframes sway {
-          0%, 100% { margin-left: -30px; }
-          50% { margin-left: 30px; }
-        }
-      `}</style>
-
       {particles.map((particle) => (
         <InteractiveParticle key={particle.id} particle={particle} />
       ))}

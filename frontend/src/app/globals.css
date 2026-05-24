@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 / Miami GP Palette */
+  /* The F1 / Canadian GP Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #0B0914;       /* Deep midnight purple/blue */
-  --color-tarmac-light: #161224; /* Frosted dark glass */
+  --color-tarmac: #0A0F16;       /* Deep slate/navy tarmac for the island vibe */
+  --color-tarmac-light: #131B26; /* Frosted slate glass */
   
-  /* New Miami Colors */
-  --color-miami-cyan: #0DF0D6;   /* Electric Vice Cyan */
-  --color-vice-pink: #FF107A;    /* Hot Magenta/Pink */
+  /* New Montreal Colors */
+  --color-frost-blue: #00D2FF;   /* St. Lawrence River Ice Blue */
+  --color-maple-red: #E51837;    /* Crisp Canadian Flag Red */
   
-  /* Legacy names mapped to new colors (prevents the UI from breaking during transition) */
-  --color-accent-blue: var(--color-miami-cyan);
-  --color-track-green: var(--color-vice-pink);
+  /* Legacy names mapped to new colors to prevent UI breaks */
+  --color-miami-cyan: var(--color-frost-blue);
+  --color-vice-pink: var(--color-maple-red);
   
-  --color-telemetry: #0DF0D6;    /* Swapped from green to cyan for Miami */
+  --color-telemetry: #00D2FF;    /* Frost Blue for live data */
 
   /* Fonts - keeping it clean and readable */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -26,12 +26,8 @@
 
 /* Ticker Keyframes */
 @keyframes ticker {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 
 :root {
@@ -42,7 +38,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Miami Vice spotlight effect: Deep purple edges with a subtle glow center */
+  /* Montreal spotlight effect: Deep slate edges with a subtle frost glow center */
   background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 70%);
   background-attachment: fixed;
   font-family: var(--font-sans);
@@ -68,25 +64,17 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Electric Cyan */
-  background: var(--color-miami-cyan); 
+  /* Updated to hover with the new Maple Red */
+  background: var(--color-maple-red); 
 }
 
-/* --- MIAMI NEON PARTICLE PHYSICS --- */
+/* --- MONTREAL WEATHER PHYSICS --- */
 @keyframes fall {
-  0% { 
-    transform: translateY(-10vh) rotate(0deg); 
-  }
-  100% { 
-    transform: translateY(110vh) rotate(360deg); 
-  }
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
 }
 
 @keyframes sway {
-  0%, 100% { 
-    margin-left: -40px; 
-  }
-  50% { 
-    margin-left: 40px; 
-  }
+  0%, 100% { margin-left: -40px; }
+  50% { margin-left: 40px; }
 }

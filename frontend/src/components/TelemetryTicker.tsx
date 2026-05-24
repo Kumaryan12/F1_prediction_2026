@@ -13,14 +13,15 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
     return `${row.driver}: P${row.pred_rank} [${low} - ${high}]`;
   });
 
-  // Inject some fake live race control data for the Miami vibe
-  // Miami is HOT and HUMID! Let's update the climate data to match South Beach.
+  // Inject some fake live race control data for the Montreal vibe
+  // Circuit Gilles Villeneuve in June is much cooler and prone to unpredictable weather!
   const tickerItems = [
     "RACE CONTROL: DRS ENABLED",
-    "TRACK TEMP: 46.2°C",
-    "AIR TEMP: 31.8°C",
-    "WIND: 18 KM/H SE",
-    "HUMIDITY: 74%",
+    "TRACK TEMP: 28.4°C",
+    "AIR TEMP: 18.5°C",
+    "WIND: 14 KM/H NW",
+    "HUMIDITY: 55%",
+    "WEATHER: 40% CHANCE OF RAIN",
     "YELLOW FLAG: CLEAR",
     ...predictionStrings,
   ];
@@ -29,21 +30,21 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
   const tickerText = tickerItems.join(" /// ") + " /// ";
 
   return (
-    <div className="relative flex w-full overflow-hidden border-y border-miami-cyan/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(13,240,214,0.15)] backdrop-blur-md">
+    <div className="relative flex w-full overflow-hidden border-y border-frost-blue/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(0,210,255,0.15)] backdrop-blur-md">
       
       {/* We render two identical blocks side-by-side. 
         As the first one scrolls entirely out of view, the second one perfectly replaces it!
       */}
       <div className="flex animate-ticker whitespace-nowrap">
-        {/* Swapped to Electric Cyan with a neon drop-shadow */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-miami-cyan drop-shadow-[0_0_5px_rgba(13,240,214,0.5)]">
+        {/* Swapped to Frost Blue with an icy neon drop-shadow */}
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-frost-blue drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]">
           {tickerText}
         </span>
       </div>
       
       <div className="flex animate-ticker whitespace-nowrap">
         {/* Duplicate block for the infinite scroll */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-miami-cyan drop-shadow-[0_0_5px_rgba(13,240,214,0.5)]">
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-frost-blue drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]">
           {tickerText}
         </span>
       </div>

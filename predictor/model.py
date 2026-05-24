@@ -17,7 +17,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 # -------------------------------------------------------------------
 # Save path
 # -------------------------------------------------------------------
-DATA_DIR = Path(r"C:\Users\Aryan\F1_prediction_system\backend\app\data")
+DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/app/data")
 
 
 # -------------------------------------------------------------------
@@ -48,14 +48,19 @@ FEATS = [
     "wet_start_prob",
     "mixed_conditions_risk",
 
-    # Driver / team priors and historical form
+    # Driver / team priors
     "driver_skill_prior",
     "team_prior_strength",
     "rookie_flag",
     "returnee_flag",
 
+    # General recent form
     "drv_form3",
     "team_form3",
+
+    # Canada-relevant circuit-archetype form
+    "lowdf_driver_form3",
+    "lowdf_team_form3",
     "longstraight_driver_form3",
     "longstraight_team_form3",
 

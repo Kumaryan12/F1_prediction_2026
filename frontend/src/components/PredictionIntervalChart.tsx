@@ -36,16 +36,16 @@ export default function PredictionIntervalChart({
   }));
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(255,16,122,0.1)] backdrop-blur-md p-6 sm:p-8">
-      {/* Background Synthwave Glow */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-vice-pink/5 to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-miami-cyan/5 to-transparent pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(229,24,55,0.1)] backdrop-blur-md p-6 sm:p-8">
+      {/* Background Montreal Glow */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-maple-red/5 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-frost-blue/5 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="mb-8 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-miami-cyan animate-pulse shadow-[0_0_10px_rgba(13,240,214,0.8)]" />
+            <span className="h-3 w-3 rounded-full bg-frost-blue animate-pulse shadow-[0_0_10px_rgba(0,210,255,0.8)]" />
             Prediction Intervals
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
@@ -71,7 +71,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED RANK",
                 position: "insideBottom",
                 offset: -10,
-                fill: "#0DF0D6", // Miami Cyan
+                fill: "#00D2FF", // Frost Blue
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -90,7 +90,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED FINISH",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#FF107A", // Vice Pink
+                fill: "#E51837", // Maple Red
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -98,12 +98,12 @@ export default function PredictionIntervalChart({
             />
             
             <Tooltip
-              cursor={{ stroke: "rgba(13,240,214,0.15)", strokeWidth: 2 }}
+              cursor={{ stroke: "rgba(0,210,255,0.15)", strokeWidth: 2 }}
               contentStyle={{
-                background: "#0B0914", // Deep Tarmac Purple
-                border: "1px solid rgba(13,240,214,0.3)", // Cyan Border
+                background: "#0A0F16", // Deep Slate Tarmac
+                border: "1px solid rgba(0,210,255,0.3)", // Frost Blue Border
                 borderRadius: "8px",
-                boxShadow: "0 0 15px rgba(13,240,214,0.2)",
+                boxShadow: "0 0 15px rgba(0,210,255,0.2)",
                 color: "white",
                 fontFamily: "monospace",
                 textTransform: "uppercase",
@@ -111,7 +111,7 @@ export default function PredictionIntervalChart({
               }}
               formatter={(value, name) => [
                 typeof value === "number" ? (
-                  <span style={{ color: "#FF107A", fontWeight: "bold" }}>{value.toFixed(2)}</span>
+                  <span style={{ color: "#E51837", fontWeight: "bold" }}>{value.toFixed(2)}</span>
                 ) : (
                   String(value ?? "-")
                 ),
@@ -120,28 +120,28 @@ export default function PredictionIntervalChart({
               labelFormatter={(_, payload) => {
                 if (!payload || !payload.length) return "";
                 return (
-                  <div style={{ color: "#0DF0D6", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
+                  <div style={{ color: "#00D2FF", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
                     {payload[0].payload.driver}
                   </div>
                 );
               }}
             />
             
-            {/* The Dots: Electric Cyan */}
-            <Scatter data={chartData} fill="#0DF0D6">
-              {/* The Error Bars: Hot Magenta */}
+            {/* The Dots: Frost Blue */}
+            <Scatter data={chartData} fill="#00D2FF">
+              {/* The Error Bars: Maple Red */}
               <ErrorBar 
                 dataKey="lowError" 
-                width={4} // Increased width slightly so the horizontal caps are visible
+                width={4} 
                 strokeWidth={2} 
-                stroke="#FF107A" 
+                stroke="#E51837" 
                 direction="y" 
               />
               <ErrorBar 
                 dataKey="highError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#FF107A" 
+                stroke="#E51837" 
                 direction="y" 
               />
             </Scatter>
