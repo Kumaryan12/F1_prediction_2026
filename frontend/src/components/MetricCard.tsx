@@ -6,38 +6,38 @@ type MetricCardProps = {
   accent?: "red" | "green" | "pink" | "cyan" | "telemetry";
 };
 
-// Map our custom Montreal theme colors to the border and text highlights
+// Map our custom Monaco theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-maple-red",
-    text: "text-maple-red",
-    glow: "shadow-[0_0_20px_rgba(229,24,55,0.1)]",
-    dot: "bg-maple-red shadow-[0_0_5px_rgba(229,24,55,0.8)]",
+    border: "border-l-casino-gold",
+    text: "text-casino-gold",
+    glow: "shadow-[0_0_20px_rgba(212,175,55,0.1)]",
+    dot: "bg-casino-gold shadow-[0_0_5px_rgba(212,175,55,0.8)]",
   },
   pink: {
-    border: "border-l-maple-red",
-    text: "text-maple-red",
-    glow: "shadow-[0_0_20px_rgba(229,24,55,0.1)]",
-    dot: "bg-maple-red shadow-[0_0_5px_rgba(229,24,55,0.8)]",
+    border: "border-l-casino-gold",
+    text: "text-casino-gold",
+    glow: "shadow-[0_0_20px_rgba(212,175,55,0.1)]",
+    dot: "bg-casino-gold shadow-[0_0_5px_rgba(212,175,55,0.8)]",
   },
-  // Safely map any old "green", "cyan", or "telemetry" props directly to Frost Blue
+  // Safely map any old "green", "cyan", or "telemetry" props directly to Riviera Blue
   green: {
-    border: "border-l-frost-blue",
-    text: "text-frost-blue",
-    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
-    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
+    border: "border-l-riviera-blue",
+    text: "text-riviera-blue",
+    glow: "shadow-[0_0_20px_rgba(0,163,224,0.1)]",
+    dot: "bg-riviera-blue shadow-[0_0_5px_rgba(0,163,224,0.8)]",
   },
   cyan: {
-    border: "border-l-frost-blue",
-    text: "text-frost-blue",
-    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
-    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
+    border: "border-l-riviera-blue",
+    text: "text-riviera-blue",
+    glow: "shadow-[0_0_20px_rgba(0,163,224,0.1)]",
+    dot: "bg-riviera-blue shadow-[0_0_5px_rgba(0,163,224,0.8)]",
   },
   telemetry: {
-    border: "border-l-frost-blue",
-    text: "text-frost-blue",
-    glow: "shadow-[0_0_20px_rgba(0,210,255,0.1)]",
-    dot: "bg-frost-blue shadow-[0_0_5px_rgba(0,210,255,0.8)]",
+    border: "border-l-riviera-blue",
+    text: "text-riviera-blue",
+    glow: "shadow-[0_0_20px_rgba(0,163,224,0.1)]",
+    dot: "bg-riviera-blue shadow-[0_0_5px_rgba(0,163,224,0.8)]",
   },
 };
 

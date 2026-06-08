@@ -58,11 +58,9 @@ FEATS = [
     "drv_form3",
     "team_form3",
 
-    # Canada-relevant circuit-archetype form
-    "lowdf_driver_form3",
-    "lowdf_team_form3",
-    "longstraight_driver_form3",
-    "longstraight_team_form3",
+    # Monaco-relevant circuit-archetype form
+    "street_driver_form3",
+    "street_team_form3",
 
     # Historical-strength helper columns
     "driver_hist_strength",

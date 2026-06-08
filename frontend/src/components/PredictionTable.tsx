@@ -49,7 +49,8 @@ const driverNames: Record<string, string> = {
   "LAW": "Liam Lawson",
   "COL": "Franco Colapinto",
   "HAD": "Isack Hadjar",
-  "BOR": "Gabriel Bortoleto"
+  "BOR": "Gabriel Bortoleto",
+  "LIN": "Arvid Lindblad"
 };
 
 export default function PredictionTable({ rows }: PredictionTableProps) {
@@ -111,16 +112,16 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   [{row.pi68_low?.toFixed(2) ?? "-"} <span className="text-zinc-600 mx-1">↔</span> {row.pi68_high?.toFixed(2) ?? "-"}]
                 </td>
                 
-                {/* Podium % - Now Frost Blue */}
+                {/* Podium % - Now Riviera Blue */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-frost-blue/30 bg-frost-blue/10 px-2 py-0.5 font-mono text-xs font-bold text-frost-blue shadow-[0_0_8px_rgba(0,210,255,0.2)]">
+                  <span className="inline-block border border-riviera-blue/30 bg-riviera-blue/10 px-2 py-0.5 font-mono text-xs font-bold text-riviera-blue shadow-[0_0_8px_rgba(0,163,224,0.2)]">
                     {pct(row.p_podium)}
                   </span>
                 </td>
                 
-                {/* Top 10 % - Now Maple Red */}
+                {/* Top 10 % - Now Casino Gold */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-maple-red/30 bg-maple-red/10 px-2 py-0.5 font-mono text-xs font-bold text-maple-red shadow-[0_0_8px_rgba(229,24,55,0.2)]">
+                  <span className="inline-block border border-casino-gold/30 bg-casino-gold/10 px-2 py-0.5 font-mono text-xs font-bold text-casino-gold shadow-[0_0_8px_rgba(212,175,55,0.2)]">
                     {pct(row.p_top10)}
                   </span>
                 </td>

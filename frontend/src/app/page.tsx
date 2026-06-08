@@ -23,57 +23,57 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      {/* Massive YUL Area Code Watermark (Montreal) */}
+      {/* Massive MON Area Code Watermark (Monaco) */}
       <div 
         className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
       >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-frost-blue drop-shadow-[0_0_50px_rgba(0,210,255,0.5)] italic tracking-tighter">
-          YUL
+        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-riviera-blue drop-shadow-[0_0_50px_rgba(0,163,224,0.5)] italic tracking-tighter">
+          MON
         </span>
       </div>
 
-      {/* Hero Section - The Montreal Vibe */}
+      {/* Hero Section - The Monte Carlo Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
           
-          {/* Maple Red Ambient Glow - Bottom left for aggressive contrast */}
+          {/* Casino Gold Ambient Glow - Bottom left for luxurious contrast */}
           <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-maple-red)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-casino-gold)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
           />
           
-          {/* Deep Slate to Frost Blue Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-frost-blue/10" />
+          {/* Deep Harbor Blue to Riviera Blue Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-riviera-blue/10" />
           
-          {/* Glowing Montreal Track Minimap (Circuit Gilles Villeneuve) */}
+          {/* Glowing Monaco Track Minimap (Circuit de Monaco) */}
           <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
             <svg 
               viewBox="0 0 200 200" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-frost-blue drop-shadow-[0_0_15px_rgba(0,210,255,0.8)]"
+              className="w-full h-full text-riviera-blue drop-shadow-[0_0_15px_rgba(0,163,224,0.8)]"
             >
-              {/* Stylized Circuit Gilles Villeneuve Path (Long island straight & hairpin) */}
+              {/* Stylized Circuit de Monaco Path (Tight streets, Sainte Devote, Hairpin, Tunnel) */}
               <path 
-                d="M 150 40 L 160 70 C 170 100, 160 140, 130 150 L 50 170 C 30 175, 20 155, 40 140 L 110 70 C 120 60, 130 30, 150 40 Z" 
+                d="M 140 160 L 50 160 C 30 160, 20 140, 30 120 L 70 50 C 80 30, 110 30, 120 50 L 140 80 C 150 90, 170 90, 180 110 C 190 130, 170 160, 140 160 Z" 
                 stroke="currentColor" 
                 strokeWidth="4" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 className="animate-[dash_3s_linear_infinite]"
               />
-              {/* Start/Finish Line Dot - Maple Red (Wall of Champions Chicane) */}
-              <circle cx="160" cy="70" r="6" fill="#E51837" className="animate-pulse shadow-[0_0_15px_rgba(229,24,55,1)]" />
+              {/* Start/Finish Line Dot - Casino Gold (Main Straight) */}
+              <circle cx="140" cy="160" r="6" fill="#D4AF37" className="animate-pulse shadow-[0_0_15px_rgba(212,175,55,1)]" />
             </svg>
           </div>
           
           <div className="relative z-10">
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              CANADIAN GRAND PRIX 2026
+              MONACO GRAND PRIX 2026
             </h1>
 
             <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
               AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for Circuit Gilles Villeneuve.
+              confidence intervals, and team-level race outlook for the historic Circuit de Monaco.
             </p>
           </div>
         </div>
@@ -109,8 +109,8 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Frost Blue */}
-              <span className="text-frost-blue font-bold drop-shadow-[0_0_5px_rgba(0,210,255,0.4)]">1200 Trees</span>
+              {/* Changed to Riviera Blue */}
+              <span className="text-riviera-blue font-bold drop-shadow-[0_0_5px_rgba(0,163,224,0.4)]">1200 Trees</span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -120,14 +120,14 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Maple Red */}
-              <span className="text-maple-red font-bold drop-shadow-[0_0_5px_rgba(229,24,55,0.4)]">0.631 </span>
+              {/* Changed to Casino Gold */}
+              <span className="text-casino-gold font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.4)]">0.629 </span>
             </div>
 
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Frost Blue */}
-              <span className="text-frost-blue font-bold">2.35 </span>
+              {/* Changed to Riviera Blue */}
+              <span className="text-riviera-blue font-bold">2.35 </span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -137,7 +137,7 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end pt-0.5">
               <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right">3.19</span>
+              <span className="text-white text-right">3.20</span>
             </div>
           </div>
         </div>
@@ -156,8 +156,8 @@ export default async function HomePage() {
           <div className="order-2 md:order-1 md:h-[85%]">
             <PodiumCard position={2} driver={summary.predicted_podium[1]} />
           </div>
-          {/* Changed shadow highlight to Frost Blue */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-frost-blue/20">
+          {/* Changed shadow highlight to Riviera Blue */}
+          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-riviera-blue/20">
             <PodiumCard position={1} driver={summary.predicted_podium[0]} />
           </div>
           <div className="order-3 md:order-3 md:h-[75%]">

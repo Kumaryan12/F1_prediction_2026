@@ -23,30 +23,51 @@ except Exception:
     LONG_STRAIGHT_GPS: set[str] = set()
 
 
+# -------------------------------------------------------------------
+# Driver / team priors
+# Monaco-ready:
+# - Current 2026 form is heavily respected.
+# - Monaco-specific skill/track-position importance is considered.
+# - Ferrari/Leclerc/Hamilton get a Monaco bump.
+# - Aston/Cadillac remain conservative due to current form.
+# -------------------------------------------------------------------
+
 DRIVER_SKILL_PRIOR = {
-    
-    "ANT": 1.00,   
-    "RUS": 0.97,   
-    "NOR": 0.96,
-    "PIA": 0.95,
-    "LEC": 0.93,
-    "HAM": 0.92,
-    "VER": 0.90,
+    # Current 2026 elite form
+    "ANT": 1.00,
+    "RUS": 0.97,
+
+    # Monaco / street-circuit front group
+    "LEC": 0.96,   # Monaco specialist + strong 2026 Ferrari form
+    "HAM": 0.94,   # strong Monaco history + current Ferrari form
+
+    # McLaren strong, but slightly below Mercedes/Ferrari for Monaco setup
+    "NOR": 0.93,
+    "PIA": 0.91,
+
+    # Elite driver, but Red Bull 2026 form weaker than historical baseline
+    "VER": 0.98,
+
+    # Upper midfield / points contenders
     "BEA": 0.84,
-    "GAS": 0.84,
-    "HUL": 0.83,
-    "OCO": 0.82,
-    "LAW": 0.81,
-    "SAI": 0.80,
-    "ALB": 0.79,
+    "GAS": 0.83,
+    "HUL": 0.82,
+    "OCO": 0.81,
+    "LAW": 0.80,
+
+    # Monaco can reward clean execution, but current team form limits ceiling
+    "ALO": 0.79,
     "HAD": 0.78,
-    "BOR": 0.77,
-    "COL": 0.76,
-    "ALO": 0.74,
+    "SAI": 0.77,
+    "ALB": 0.76,
+    "BOR": 0.75,
+    "COL": 0.74,
+
+    # Lower current-form / higher uncertainty group
     "LIN": 0.72,
     "STR": 0.70,
-    "BOT": 0.69,
-    "PER": 0.68,
+    "BOT": 0.67,
+    "PER": 0.66,
 }
 
 DEFAULT_DRIVER_PRIOR = 0.75
@@ -63,22 +84,32 @@ TEAM_ALIAS = {
 }
 
 TEAM_BASELINE_PRIOR = {
-    
+    # Current 2026 form + Monaco suitability
     "Mercedes": 1.00,
-    "McLaren": 0.94,
-    "Ferrari": 0.92,
-    "Red Bull Racing": 0.84,
-    "Alpine": 0.80,
-    "Haas F1 Team": 0.78,
-    "Racing Bulls": 0.76,
-    "Williams": 0.72,
-    "Kick Sauber": 0.70,
-    "Aston Martin": 0.68,
-    "Cadillac": 0.62,
+    "Ferrari": 0.95,
+    "McLaren": 0.90,
+
+    # Historically elite, but current 2026 form is weaker
+    "Red Bull Racing": 0.89,
+
+    # Midfield
+    "Alpine": 0.79,
+    "Haas F1 Team": 0.77,
+    "Racing Bulls": 0.75,
+    "Williams": 0.70,
+    "Kick Sauber": 0.68,
+
+    # Struggling current form
+    "Aston Martin": 0.65,
+    "Cadillac": 0.60,
 }
 
 DEFAULT_TEAM_PRIOR = 0.75
 
+
+# -------------------------------------------------------------------
+# Helpers
+# -------------------------------------------------------------------
 
 def _ensure_numeric(df: pd.DataFrame, cols: list[str]) -> None:
     for c in cols:
@@ -94,6 +125,9 @@ def _normalize_team_names(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _inverse_minmax_strength(s: pd.Series) -> pd.Series:
+    """
+    Convert lower-is-better finish form into higher-is-better strength.
+    """
     s = pd.to_numeric(s, errors="coerce")
     s_min = s.min(skipna=True)
     s_max = s.max(skipna=True)
@@ -146,6 +180,15 @@ def add_live_strength_adjustments(
     hist_driver_weight: float = 0.20,
     live_driver_weight: float = 0.80,
 ) -> pd.DataFrame:
+    """
+    Creates:
+    - driver_hist_strength
+    - team_hist_strength
+    - driver_strength_blend_2026
+    - team_strength_blend_2026
+
+    If live FP/session columns are absent, the blended strength falls back to historical strength.
+    """
     out = _normalize_team_names(df.copy())
 
     if "drv_form3" in out.columns:
@@ -185,6 +228,9 @@ def add_live_strength_adjustments(
     return out
 
 
+# -------------------------------------------------------------------
+# Circuit context
+# -------------------------------------------------------------------
 
 def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
     def _lookup(gp: str) -> pd.Series:
@@ -220,6 +266,7 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
         )
 
     ctx = df["gp"].apply(_lookup)
+
     out = pd.concat(
         [df.reset_index(drop=True), ctx.reset_index(drop=True)],
         axis=1,
@@ -267,6 +314,10 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+# -------------------------------------------------------------------
+# Leakage-safe rolling forms
+# -------------------------------------------------------------------
+
 def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     required = {"year", "gp", "date", "driver", "team", "finish_pos"}
     missing = required.difference(full_df.columns)
@@ -283,12 +334,16 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     df["finish_pos"] = pd.to_numeric(df["finish_pos"], errors="coerce")
     df = df.dropna(subset=["date", "finish_pos"])
-    df = df.sort_values(["date", "year", "gp"], kind="mergesort").reset_index(drop=True)
+    df = df.sort_values(
+        ["date", "year", "gp"],
+        kind="mergesort",
+    ).reset_index(drop=True)
 
     df["drv_form3"] = (
         df.groupby("driver", sort=False)["finish_pos"]
         .transform(lambda s: s.shift(1).rolling(3, min_periods=1).mean())
     )
+
     team_ev = (
         df.groupby(["year", "gp", "date", "team"], sort=False)["finish_pos"]
         .mean()
@@ -376,7 +431,7 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["lowdf_driver_form3"] = df["lowdf_driver_form3"].fillna(df["drv_form3"])
     df["lowdf_team_form3"] = df["lowdf_team_form3"].fillna(df["team_form3"])
 
-    # Street-track form
+    # Street-track form — most important archetype for Monaco
     street_mask = df["gp"].isin(STREET_GPS)
     _subset_forms(
         street_mask,
@@ -409,6 +464,12 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
         ],
         errors="ignore",
     )
+
+
+# -------------------------------------------------------------------
+# Merge latest forms into prediction frame
+# -------------------------------------------------------------------
+
 def merge_latest_forms(
     predict_df: pd.DataFrame,
     train_df_with_forms: pd.DataFrame,
@@ -521,6 +582,11 @@ def merge_latest_forms(
 
     out = add_live_strength_adjustments(out)
     return out
+
+
+# -------------------------------------------------------------------
+# Qualifying proxy
+# -------------------------------------------------------------------
 
 def add_quali_proxy(
     predict_df: pd.DataFrame,

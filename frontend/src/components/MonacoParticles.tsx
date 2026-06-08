@@ -8,9 +8,10 @@ type Particle = {
   animationDuration: string;
   animationDelay: string;
   size: string;
+  type: "spark" | "confetti";
 };
 
-// --- INDIVIDUAL INTERACTIVE LEAF ---
+// --- INDIVIDUAL INTERACTIVE CONFETTI/SPARK ---
 function InteractiveParticle({ particle }: { particle: Particle }) {
   const [wind, setWind] = useState({ x: 0, y: 0, isBlown: false });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -46,9 +47,21 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
     };
   }, []);
 
+  const isConfetti = particle.type === "confetti";
+  
+  // Apply our luxurious Monaco shadows
+  const glowShadow = isConfetti 
+    ? "shadow-[0_0_12px_rgba(212,175,55,0.8)]"  // Casino Gold Glow
+    : "shadow-[0_0_12px_rgba(0,163,224,0.8)]"; // Riviera Blue Glow
+  
+  const bgColor = isConfetti ? "bg-casino-gold/90" : "bg-riviera-blue/90";
+  
+  // Confetti is square, sparks are perfectly round
+  const shape = isConfetti ? "rounded-sm" : "rounded-full";
+
   return (
     <div
-      className="absolute pointer-events-auto text-maple-red"
+      className="absolute pointer-events-auto"
       style={{
         left: particle.left,
         top: '-10%',
@@ -62,11 +75,8 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
       }}
       onMouseOver={handleMouseOver}
     >
-      {/* Exact Canadian Flag Maple Leaf SVG */}
-      <svg
-        viewBox="0 0 512 512"
-        fill="currentColor"
-        className="drop-shadow-[0_0_10px_rgba(229,24,55,0.8)] transition-all duration-1000 ease-out"
+      <div
+        className={`${bgColor} ${shape} ${glowShadow} transition-all duration-1000 ease-out`}
         style={{
           width: particle.size,
           height: particle.size,
@@ -75,28 +85,29 @@ function InteractiveParticle({ particle }: { particle: Particle }) {
             : 'translate(0px, 0px) rotate(0deg) scale(1)',
           opacity: wind.isBlown ? 0 : 1,
         }}
-      >
-        <path d="M304 432h-96v-80l-72 40-16-48 48-48-80-16-16-64 80-16-32-64 48-16 64 64 24-80 24 80 64-64 48 16-32 64 80 16-16 64-80 16 48 48-16 48-72-40v80z" />
-      </svg>
+      />
     </div>
   );
 }
 
 // --- MAIN WEATHER SYSTEM COMPONENT ---
-export default function MontrealParticles() {
+export default function MonacoParticles() {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    // Reduced from 60 to 24 for a much cleaner, less chaotic look
-    const newParticles = Array.from({ length: 24 }).map((_, i) => {
+    // 50 particles for a luxurious champagne & confetti shower
+    const newParticles = Array.from({ length: 50 }).map((_, i) => {
       return {
         id: i,
         left: `${Math.random() * 100}vw`,
-        animationDuration: `${Math.random() * 7 + 7}s`,
+        // Slightly faster fall duration to simulate popping champagne
+        animationDuration: `${Math.random() * 6 + 4}s`, 
         animationDelay: `-${Math.random() * 15}s`, 
-        // Increased base size so the leaf shape is clearly visible
-        size: `${Math.random() * 16 + 14}px`, 
-      }; 
+        // Smaller, finer sizes
+        size: `${Math.random() * 6 + 4}px`, 
+        // Mix of gold squares and blue circles
+        type: Math.random() > 0.6 ? "confetti" : "spark", 
+      } as Particle; 
     });
     
     setParticles(newParticles);

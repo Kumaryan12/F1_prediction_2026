@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 / Canadian GP Palette */
+  /* The F1 / Monaco GP Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #0A0F16;       /* Deep slate/navy tarmac for the island vibe */
-  --color-tarmac-light: #131B26; /* Frosted slate glass */
+  --color-tarmac: #060B13;       /* Deep midnight harbor blue */
+  --color-tarmac-light: #0F1724; /* Frosted yacht glass */
   
-  /* New Montreal Colors */
-  --color-frost-blue: #00D2FF;   /* St. Lawrence River Ice Blue */
-  --color-maple-red: #E51837;    /* Crisp Canadian Flag Red */
+  /* New Monaco Colors */
+  --color-riviera-blue: #00A3E0; /* Mediterranean Sea Blue */
+  --color-casino-gold: #D4AF37;  /* Monte Carlo Casino Gold */
   
-  /* Legacy names mapped to new colors to prevent UI breaks */
-  --color-miami-cyan: var(--color-frost-blue);
-  --color-vice-pink: var(--color-maple-red);
+  /* Legacy names mapped to new colors to prevent UI breaks during transition */
+  --color-frost-blue: var(--color-riviera-blue);
+  --color-maple-red: var(--color-casino-gold);
   
-  --color-telemetry: #00D2FF;    /* Frost Blue for live data */
+  --color-telemetry: #00A3E0;    /* Riviera Blue for live data */
 
   /* Fonts - keeping it clean and readable */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -38,7 +38,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Montreal spotlight effect: Deep slate edges with a subtle frost glow center */
+  /* Monaco spotlight effect: Deep harbor edges with a subtle yacht-deck glow center */
   background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 70%);
   background-attachment: fixed;
   font-family: var(--font-sans);
@@ -64,11 +64,11 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Maple Red */
-  background: var(--color-maple-red); 
+  /* Updated to hover with the new Casino Gold */
+  background: var(--color-casino-gold); 
 }
 
-/* --- MONTREAL WEATHER PHYSICS --- */
+/* --- MONACO PARTICLE PHYSICS --- */
 @keyframes fall {
   0% { transform: translateY(-10vh) rotate(0deg); }
   100% { transform: translateY(110vh) rotate(360deg); }

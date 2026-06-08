@@ -11,7 +11,7 @@ DEFAULT_VSC = 0.5
 DEFAULT_PIT_LOSS = 21.0
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
-    "Canadian Grand Prix": (0.78, 0.48, 18.5),
+    "Monaco Grand Prix": (0.80, 0.45, 20.5),
 }
 
 FALLBACK_EVENTS: Dict[int, list[str]] = {
@@ -21,46 +21,48 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Japanese Grand Prix",
         "Miami Grand Prix",
         "Canadian Grand Prix",
+        "Monaco Grand Prix",
     ],
 }
 
 EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 
-LOW_DF_GPS = {
-    "Canadian Grand Prix",
+# Monaco is NOT low downforce
+LOW_DF_GPS = set()
+
+# Monaco is the strongest street-track archetype
+STREET_GPS = {
+    "Monaco Grand Prix",
 }
 
-STREET_GPS = set()
-
-LONG_STRAIGHT_GPS = {
-    "Canadian Grand Prix",
-}
+# Monaco is NOT long-straight dominated
+LONG_STRAIGHT_GPS = set()
 
 CIRCUIT_EXTRAS = {
-    "Canadian Grand Prix": {
-        "expected_stops": 1.9,
-        "overtake_index": 0.82,
-        "tow_importance": 0.76,
-        "is_low_df": 1,
-        "is_street": 0,
-        "long_straight_index": 0.88,
-        "braking_intensity": 0.92,
-        "warmup_penalty": 0.04,
-        "deg_rate": 0.38,
-        "stint_len_typical": 24,
+    "Monaco Grand Prix": {
+        "expected_stops": 1.4,
+        "overtake_index": 0.12,
+        "tow_importance": 0.18,
+        "is_low_df": 0,
+        "is_street": 1,
+        "long_straight_index": 0.18,
+        "braking_intensity": 0.78,
+        "warmup_penalty": 0.12,
+        "deg_rate": 0.32,
+        "stint_len_typical": 28,
 
-        "surface_bumpiness": 0.62,
-        "wind_sensitivity": 0.36,
-        "track_limits_risk": 0.22,
-        "elevation_change_index": 0.12,
-        "mechanical_failure_risk": 0.52,
-        "corner_count": 14,
-        "avg_speed_kph": 215,
+        "surface_bumpiness": 0.82,
+        "wind_sensitivity": 0.30,
+        "track_limits_risk": 0.18,
+        "elevation_change_index": 0.72,
+        "mechanical_failure_risk": 0.60,
+        "corner_count": 19,
+        "avg_speed_kph": 160,
 
-        "rain_prob_race": 0.30,
-        "wet_lap_fraction": 0.12,
-        "wet_start_prob": 0.08,
-        "mixed_conditions_risk": 0.24,
+        "rain_prob_race": 0.22,
+        "wet_lap_fraction": 0.08,
+        "wet_start_prob": 0.06,
+        "mixed_conditions_risk": 0.18,
     },
 
     "_default": {
