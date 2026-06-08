@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+.pkl
+/Users/aryansatyendrakumar/Projects/F1_prediction_2026/C:\Users\Aryan\F1_prediction_system\backend\app\data
+/Users/aryansatyendrakumar/Projects/F1_prediction_2026/C:\Users\Aryan\F1_prediction_system\frontend\data
