@@ -1,0 +1,2 @@
+prediction_id,year,gp,stage,timestamp_utc,model_version,feature_set_version,data_cutoff,git_commit_hash,predicted_winner,actual_winner,winner_correct,prediction_file_path,dashboard_url
+2026_Monaco Grand Prix_pre_race_2026-06-08T09:00:05.352507+00:00,2026,Monaco Grand Prix,pre_race,2026-06-08T09:00:05.352507+00:00,random_forest_v1,f1_features_v1,manual_current_run,70574b1bb9179f10895ebda1e9faf1af80fb4f85,ANT,,,backend/app/data/predicted_order.csv,

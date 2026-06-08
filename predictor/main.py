@@ -1,6 +1,6 @@
 # main.py  (package: F1_prediction_system)
 from __future__ import annotations
-
+from predictor.evaluation.prediction_logger import log_prediction_run
 import argparse
 from pathlib import Path
 import joblib
@@ -629,6 +629,34 @@ def main():
     predictions_path = BACKEND_DATA_DIR / "predicted_order.csv"
     out.to_csv(predictions_path, index=False)
     print(f"\n[INFO] Saved full predictions to {predictions_path}")
+    # Log timestamped prediction using the final saved prediction file
+    logged_pred_df = pd.read_csv("backend/app/data/predicted_order.csv")
+
+    if "pred_rank" not in logged_pred_df.columns:
+        raise KeyError(
+            f"'pred_rank' missing from saved prediction file. "
+            f"Available columns: {logged_pred_df.columns.tolist()}"
+        )
+
+    predicted_winner = (
+        logged_pred_df
+        .sort_values("pred_rank")
+        .iloc[0]["driver"]
+    )
+
+    log_prediction_run(
+        year=args.year,
+        gp=args.gp,
+        stage="pre_race",
+        model_version="random_forest_v1",
+        feature_set_version="f1_features_v1",
+        data_cutoff="manual_current_run",
+        predicted_winner=predicted_winner,
+        prediction_file_path=str("backend/app/data/predicted_order.csv"),
+        dashboard_url="",
+    )
+
+    print(f"[INFO] Logged timestamped prediction. Predicted winner: {predicted_winner}")
 
 
 if __name__ == "__main__":
