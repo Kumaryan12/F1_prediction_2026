@@ -5,9 +5,9 @@ type PodiumCardProps = {
 
 const podiumStyle = {
   1: {
-    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Monaco Riviera Blue
+    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Spain Catalunya Red
     glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#00A3E0]/50",
+    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#DA291C]/50",
     badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
     text: "text-white",
     bgNumber: "text-[#FFD700]/15",
@@ -53,7 +53,9 @@ const driverNames: Record<string, string> = {
   "DOO": "Jack Doohan",
   "LAW": "Liam Lawson",
   "COL": "Franco Colapinto",
-  "BOR": "Gabriel Bortoleto"
+  "HAD": "Isack Hadjar",
+  "BOR": "Gabriel Bortoleto",
+  "LIN": "Arvid Lindblad"
 };
 
 export default function PodiumCard({ position, driver }: PodiumCardProps) {

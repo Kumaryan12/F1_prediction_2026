@@ -58,9 +58,14 @@ FEATS = [
     "drv_form3",
     "team_form3",
 
-    # Monaco-relevant circuit-archetype form
-    "street_driver_form3",
-    "street_team_form3",
+    # Barcelona / conventional circuit archetype form
+    "longstraight_driver_form3",
+    "longstraight_team_form3",
+
+    # Keep low-downforce form available, but Barcelona itself is not low-downforce.
+    # This can still help the model learn straight-line/aero-efficiency behavior.
+    "lowdf_driver_form3",
+    "lowdf_team_form3",
 
     # Historical-strength helper columns
     "driver_hist_strength",
@@ -132,7 +137,7 @@ def _make_target(df: pd.DataFrame) -> Tuple[pd.Series, pd.Series | None]:
 # Training
 # -------------------------------------------------------------------
 
-def train_model(train_df: pd.DataFrame) -> Pipeline:
+def train_model(train_df: pd.DataFrame, save_model: bool = True) -> Pipeline:
     """
     Fit a RandomForest pipeline with imputation + one-hot for categoricals.
     """
@@ -169,10 +174,11 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     model.use_delta_target_ = USE_DELTA_TARGET
     model.target_name_ = "finish_minus_grid" if USE_DELTA_TARGET else "finish_pos"
 
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    model_path = DATA_DIR / "random_forest_model.pkl"
-    joblib.dump(model, model_path)
-    print(f"✅ Model successfully saved to: {model_path}")
+    if save_model:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        model_path = DATA_DIR / "random_forest_model.pkl"
+        joblib.dump(model, model_path)
+        print(f"✅ Model successfully saved to: {model_path}")
 
     return model
 
@@ -227,14 +233,16 @@ def predict_event_with_uncertainty(
     add_intervals: bool = True,
     mc_samples: int = 0,
     random_state: int = 42,
+    save_features: bool = True,
 ) -> pd.DataFrame:
     """
     Predict finish positions and uncertainty bands.
     """
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    features_path = DATA_DIR / "current_race_features.csv"
-    features_df.to_csv(features_path, index=False)
-    print(f"✅ Features successfully saved to: {features_path}")
+    if save_features:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        features_path = DATA_DIR / "current_race_features.csv"
+        features_df.to_csv(features_path, index=False)
+        print(f"✅ Features successfully saved to: {features_path}")
 
     X_raw, _ = _prep_fe_matrix(features_df.copy())
     prep = model.named_steps["prep"]
@@ -309,8 +317,9 @@ def predict_event_with_uncertainty(
         ranks = np.empty_like(idx_sorted)
         ranks[idx_sorted, np.arange(mc_samples)] = np.arange(1, n + 1)[:, None]
 
-        out["p_top10"] = (ranks <= 10).mean(axis=1)
-        out["p_podium"] = (ranks <= 3).mean(axis=1)
+        out["p_win"] = (ranks <= 1).mean(axis=1)
+        out["p_top10"] = (ranks <= min(10, n)).mean(axis=1)
+        out["p_podium"] = (ranks <= min(3, n)).mean(axis=1)
 
         pr = out["pred_rank"].to_numpy()[:, None]
         out["p_rank_pm1"] = ((ranks >= (pr - 1)) & (ranks <= (pr + 1))).mean(axis=1)

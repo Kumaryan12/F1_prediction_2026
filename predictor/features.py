@@ -34,39 +34,35 @@ except Exception:
 
 DRIVER_SKILL_PRIOR = {
     # Current 2026 elite form
-    "ANT": 1.00,
-    "RUS": 0.97,
+    "ANT": 1.00,   # championship leader, dominant recent form
+    "HAM": 0.96,   # P2 in standings + strong Monaco P2
+    "RUS": 0.94,   # still P3 in standings, but recent no-score/retirement hurts momentum
+    "LEC": 0.93,   # Ferrari front-runner, strong season but Monaco crash hurts slightly
 
-    # Monaco / street-circuit front group
-    "LEC": 0.96,   # Monaco specialist + strong 2026 Ferrari form
-    "HAM": 0.94,   # strong Monaco history + current Ferrari form
+    # Strong conventional-circuit group
+    "PIA": 0.91,   # P5 in standings, solid McLaren race pace
+    "NOR": 0.90,   # P6, but Monaco weekend/retirement lowers short-term confidence
+    "VER": 0.90,   # elite driver quality, but Red Bull 2026 form/reliability is weaker
 
-    # McLaren strong, but slightly below Mercedes/Ferrari for Monaco setup
-    "NOR": 0.93,
-    "PIA": 0.91,
+    # Strong midfield / points threat
+    "HAD": 0.86,   # Monaco podium + strong current Red Bull/Racing Bulls signal
+    "GAS": 0.82,
+    "BEA": 0.81,
+    "HUL": 0.80,
+    "OCO": 0.79,
+    "LAW": 0.78,
 
-    # Elite driver, but Red Bull 2026 form weaker than historical baseline
-    "VER": 0.98,
-
-    # Upper midfield / points contenders
-    "BEA": 0.84,
-    "GAS": 0.83,
-    "HUL": 0.82,
-    "OCO": 0.81,
-    "LAW": 0.80,
-
-    # Monaco can reward clean execution, but current team form limits ceiling
-    "ALO": 0.79,
-    "HAD": 0.78,
+    # Midfield with race-dependent upside
     "SAI": 0.77,
-    "ALB": 0.76,
-    "BOR": 0.75,
-    "COL": 0.74,
+    "ALO": 0.76,
+    "ALB": 0.75,
+    "BOR": 0.74,
+    "COL": 0.73,
+    "LIN": 0.72,
 
     # Lower current-form / higher uncertainty group
-    "LIN": 0.72,
-    "STR": 0.70,
-    "BOT": 0.67,
+    "STR": 0.69,
+    "BOT": 0.68,
     "PER": 0.66,
 }
 
@@ -84,24 +80,29 @@ TEAM_ALIAS = {
 }
 
 TEAM_BASELINE_PRIOR = {
-    # Current 2026 form + Monaco suitability
+    # Clear 2026 benchmark
     "Mercedes": 1.00,
-    "Ferrari": 0.95,
-    "McLaren": 0.90,
 
-    # Historically elite, but current 2026 form is weaker
-    "Red Bull Racing": 0.89,
+    # Strong second-best package
+    "Ferrari": 0.93,
+
+    # Barcelona should suit McLaren better than Monaco, but current standings still place them behind Ferrari
+    "McLaren": 0.88,
+
+    # Historically elite, but current 2026 points/reliability are below the top three
+    "Red Bull Racing": 0.82,
 
     # Midfield
-    "Alpine": 0.79,
-    "Haas F1 Team": 0.77,
-    "Racing Bulls": 0.75,
-    "Williams": 0.70,
-    "Kick Sauber": 0.68,
+    "Racing Bulls": 0.76,   # boosted by Hadjar Monaco podium / current points
+    "Alpine": 0.74,
+    "Haas F1 Team": 0.70,
+    "Williams": 0.66,
 
-    # Struggling current form
-    "Aston Martin": 0.65,
-    "Cadillac": 0.60,
+    # Lower group
+    "Kick Sauber": 0.63,
+    "Audi": 0.63,
+    "Aston Martin": 0.61,
+    "Cadillac": 0.58,
 }
 
 DEFAULT_TEAM_PRIOR = 0.75

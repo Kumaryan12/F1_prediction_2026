@@ -23,57 +23,57 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl relative">
       
-      {/* Massive MON Area Code Watermark (Monaco) */}
+      {/* Massive BCN Area Code Watermark (Barcelona) */}
       <div 
         className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
       >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-riviera-blue drop-shadow-[0_0_50px_rgba(0,163,224,0.5)] italic tracking-tighter">
-          MON
+        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-catalunya-red drop-shadow-[0_0_50px_rgba(218,41,28,0.5)] italic tracking-tighter">
+          BCN
         </span>
       </div>
 
-      {/* Hero Section - The Monte Carlo Vibe */}
+      {/* Hero Section - The Spanish Grand Prix Vibe */}
       <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
           
-          {/* Casino Gold Ambient Glow - Bottom left for luxurious contrast */}
+          {/* Iberian Yellow Ambient Glow - Bottom left for that sun-baked contrast */}
           <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-casino-gold)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-iberian-yellow)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
           />
           
-          {/* Deep Harbor Blue to Riviera Blue Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-riviera-blue/10" />
+          {/* Deep Tarmac to Catalunya Red Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-catalunya-red/10" />
           
-          {/* Glowing Monaco Track Minimap (Circuit de Monaco) */}
+          {/* Glowing Barcelona Track Minimap (Circuit de Barcelona-Catalunya) */}
           <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
             <svg 
               viewBox="0 0 200 200" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-riviera-blue drop-shadow-[0_0_15px_rgba(0,163,224,0.8)]"
+              className="w-full h-full text-catalunya-red drop-shadow-[0_0_15px_rgba(218,41,28,0.8)]"
             >
-              {/* Stylized Circuit de Monaco Path (Tight streets, Sainte Devote, Hairpin, Tunnel) */}
+              {/* Stylized Circuit de Barcelona-Catalunya Path */}
               <path 
-                d="M 140 160 L 50 160 C 30 160, 20 140, 30 120 L 70 50 C 80 30, 110 30, 120 50 L 140 80 C 150 90, 170 90, 180 110 C 190 130, 170 160, 140 160 Z" 
+                d="M 40 150 L 160 150 C 180 150, 180 120, 160 110 L 120 100 C 100 90, 100 70, 120 60 C 140 50, 130 20, 100 30 L 60 60 C 30 80, 20 120, 40 150 Z" 
                 stroke="currentColor" 
                 strokeWidth="4" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 className="animate-[dash_3s_linear_infinite]"
               />
-              {/* Start/Finish Line Dot - Casino Gold (Main Straight) */}
-              <circle cx="140" cy="160" r="6" fill="#D4AF37" className="animate-pulse shadow-[0_0_15px_rgba(212,175,55,1)]" />
+              {/* Start/Finish Line Dot - Iberian Yellow (Main Straight) */}
+              <circle cx="100" cy="150" r="6" fill="#F1BF00" className="animate-pulse shadow-[0_0_15px_rgba(241,191,0,1)]" />
             </svg>
           </div>
           
           <div className="relative z-10">
             <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              MONACO GRAND PRIX 2026
+              SPANISH GRAND PRIX 2026
             </h1>
 
             <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
               AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the historic Circuit de Monaco.
+              confidence intervals, and team-level race outlook for the Circuit de Barcelona-Catalunya.
             </p>
           </div>
         </div>
@@ -109,8 +109,8 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold drop-shadow-[0_0_5px_rgba(0,163,224,0.4)]">1200 Trees</span>
+              {/* Changed to Catalunya Red */}
+              <span className="text-catalunya-red font-bold drop-shadow-[0_0_5px_rgba(218,41,28,0.4)]">1200 Trees</span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -120,14 +120,14 @@ export default async function HomePage() {
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Casino Gold */}
-              <span className="text-casino-gold font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.4)]">0.629 </span>
+              {/* Changed to Iberian Yellow */}
+              <span className="text-iberian-yellow font-bold drop-shadow-[0_0_5px_rgba(241,191,0,0.4)]">0.629 </span>
             </div>
 
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
               <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold">2.35 </span>
+              {/* Changed to Catalunya Red */}
+              <span className="text-catalunya-red font-bold">2.35 </span>
             </div>
             
             <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
@@ -156,8 +156,8 @@ export default async function HomePage() {
           <div className="order-2 md:order-1 md:h-[85%]">
             <PodiumCard position={2} driver={summary.predicted_podium[1]} />
           </div>
-          {/* Changed shadow highlight to Riviera Blue */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-riviera-blue/20">
+          {/* Changed shadow highlight to Catalunya Red */}
+          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-catalunya-red/20">
             <PodiumCard position={1} driver={summary.predicted_podium[0]} />
           </div>
           <div className="order-3 md:order-3 md:h-[75%]">

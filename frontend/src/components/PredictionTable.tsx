@@ -71,10 +71,8 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
         </thead>
         
         <tbody className="divide-y divide-white/5 bg-tarmac-light/30">
-          {rows.map((row, idx) => {
+          {rows.map((row) => {
             const teamStyle = teamColors[row.team] || "border-white/20 text-white/50";
-            
-            // Look up the full name. If it's not in our dictionary, fallback to whatever the API sent.
             const fullName = driverNames[row.driver] || row.driver;
             
             return (
@@ -88,7 +86,6 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   </span>
                 </td>
                 
-                {/* Driver */}
                 <td className="px-4 py-3 text-base font-black uppercase italic tracking-wider text-white drop-shadow-sm transition-colors flex items-center gap-3">
                   {fullName}
                   <span className="hidden sm:inline-block rounded bg-white/10 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/5">
@@ -112,16 +109,16 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   [{row.pi68_low?.toFixed(2) ?? "-"} <span className="text-zinc-600 mx-1">↔</span> {row.pi68_high?.toFixed(2) ?? "-"}]
                 </td>
                 
-                {/* Podium % - Now Riviera Blue */}
+                {/* Podium % - Catalunya Red */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-riviera-blue/30 bg-riviera-blue/10 px-2 py-0.5 font-mono text-xs font-bold text-riviera-blue shadow-[0_0_8px_rgba(0,163,224,0.2)]">
+                  <span className="inline-block border border-catalunya-red/30 bg-catalunya-red/10 px-2 py-0.5 font-mono text-xs font-bold text-catalunya-red shadow-[0_0_8px_rgba(218,41,28,0.2)]">
                     {pct(row.p_podium)}
                   </span>
                 </td>
                 
-                {/* Top 10 % - Now Casino Gold */}
+                {/* Top 10 % - Iberian Yellow */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-casino-gold/30 bg-casino-gold/10 px-2 py-0.5 font-mono text-xs font-bold text-casino-gold shadow-[0_0_8px_rgba(212,175,55,0.2)]">
+                  <span className="inline-block border border-iberian-yellow/30 bg-iberian-yellow/10 px-2 py-0.5 font-mono text-xs font-bold text-iberian-yellow shadow-[0_0_8px_rgba(241,191,0,0.2)]">
                     {pct(row.p_top10)}
                   </span>
                 </td>

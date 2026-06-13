@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import MonacoParticles from "@/components/MonacoParticles";
+import SpainParticles from "@/components/SpainParticles";
 
 export const metadata: Metadata = {
   title: "F1 Race Predictor | Miami GP",
@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased selection:bg-vice-pink selection:text-white relative">
         
         {/* THE NEON STORM IS HERE */}
-        <MonacoParticles />
+        <SpainParticles />
         
         {/* Miami Cyan to Vice Pink Accent Line across the top of the browser */}
         <div className="h-1 w-full bg-gradient-to-r from-miami-cyan via-purple-500 to-vice-pink shadow-[0_0_15px_rgba(13,240,214,0.8)] relative z-50" />

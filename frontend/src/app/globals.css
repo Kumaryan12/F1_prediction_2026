@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 / Monaco GP Palette */
+  /* The F1 Core Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #060B13;       /* Deep midnight harbor blue */
-  --color-tarmac-light: #0F1724; /* Frosted yacht glass */
+  --color-tarmac: #0A0A0C;       /* Deep track black */
+  --color-tarmac-light: #16161A; /* Sun-baked asphalt */
   
-  /* New Monaco Colors */
-  --color-riviera-blue: #00A3E0; /* Mediterranean Sea Blue */
-  --color-casino-gold: #D4AF37;  /* Monte Carlo Casino Gold */
+  /* New Spanish Colors */
+  --color-catalunya-red: #DA291C; /* Spanish Flag Red */
+  --color-iberian-yellow: #F1BF00; /* Spanish Flag Yellow */
   
   /* Legacy names mapped to new colors to prevent UI breaks during transition */
-  --color-frost-blue: var(--color-riviera-blue);
-  --color-maple-red: var(--color-casino-gold);
+  --color-riviera-blue: var(--color-catalunya-red);
+  --color-casino-gold: var(--color-iberian-yellow);
   
-  --color-telemetry: #00A3E0;    /* Riviera Blue for live data */
+  --color-telemetry: #DA291C;    /* Catalunya Red for live data */
 
   /* Fonts - keeping it clean and readable */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -38,8 +38,8 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Monaco spotlight effect: Deep harbor edges with a subtle yacht-deck glow center */
-  background-image: radial-gradient(circle at top right, var(--color-tarmac-light), var(--color-tarmac) 70%);
+  /* Barcelona spotlight effect: Heat haze radiating from the center */
+  background-image: radial-gradient(circle at center, var(--color-tarmac-light), var(--color-tarmac) 80%);
   background-attachment: fixed;
   font-family: var(--font-sans);
 }
@@ -64,17 +64,19 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Casino Gold */
-  background: var(--color-casino-gold); 
+  /* Updated to hover with the new Catalunya Red */
+  background: var(--color-catalunya-red); 
 }
 
-/* --- MONACO PARTICLE PHYSICS --- */
+/* --- SPAIN PARTICLE PHYSICS (Heat Haze / Embers) --- */
 @keyframes fall {
-  0% { transform: translateY(-10vh) rotate(0deg); }
-  100% { transform: translateY(110vh) rotate(360deg); }
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
 }
 
 @keyframes sway {
-  0%, 100% { margin-left: -40px; }
-  50% { margin-left: 40px; }
+  0%, 100% { margin-left: -50px; }
+  50% { margin-left: 50px; }
 }

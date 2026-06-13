@@ -43,9 +43,9 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md p-6 sm:p-8">
-      {/* Background Styling - Riviera Blue vs Casino Gold */}
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-riviera-blue/10 to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-casino-gold/10 to-transparent pointer-events-none" />
+      {/* Background Styling - Catalunya Red vs Iberian Yellow */}
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-catalunya-red/10 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-iberian-yellow/10 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="mb-8 text-center relative z-10">
@@ -66,10 +66,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* Driver Selection & Stats */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
         
-        {/* Driver A Side - Riviera Blue Focus */}
+        {/* Driver A Side - Catalunya Red Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-start text-center md:text-left">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-riviera-blue/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-riviera-blue focus:ring-1 focus:ring-riviera-blue transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-catalunya-red/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-catalunya-red focus:ring-1 focus:ring-catalunya-red transition-colors"
             value={driverA}
             onChange={(e) => setDriverA(e.target.value)}
           >
@@ -94,10 +94,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
           <div className="text-3xl font-black italic text-zinc-600 mb-2 drop-shadow-md">VS</div>
         </div>
 
-        {/* Driver B Side - Casino Gold Focus */}
+        {/* Driver B Side - Iberian Yellow Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-end text-center md:text-right">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-casino-gold/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-casino-gold focus:ring-1 focus:ring-casino-gold transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-iberian-yellow/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-iberian-yellow focus:ring-1 focus:ring-iberian-yellow transition-colors"
             value={driverB}
             onChange={(e) => setDriverB(e.target.value)}
           >
@@ -121,16 +121,16 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* The Advantage Power Bar */}
       <div className="mt-8 relative z-10">
         <div className="flex justify-between text-[10px] font-mono uppercase text-zinc-500 mb-2 tracking-widest">
-          <span className="text-riviera-blue/80">{driverA} Advantage</span>
-          <span className="text-casino-gold/80">{driverB} Advantage</span>
+          <span className="text-catalunya-red/80">{driverA} Advantage</span>
+          <span className="text-iberian-yellow/80">{driverB} Advantage</span>
         </div>
         <div className="h-3 w-full rounded-full bg-black/60 shadow-inner flex overflow-hidden border border-white/5">
           <div 
-            className="h-full bg-riviera-blue shadow-[0_0_12px_rgba(0,163,224,0.9)] transition-all duration-700 ease-out"
+            className="h-full bg-catalunya-red shadow-[0_0_12px_rgba(218,41,28,0.9)] transition-all duration-700 ease-out"
             style={{ width: `${pctA}%` }}
           />
           <div 
-            className="h-full bg-casino-gold shadow-[0_0_12px_rgba(212,175,55,0.9)] transition-all duration-700 ease-out flex-1"
+            className="h-full bg-iberian-yellow shadow-[0_0_12px_rgba(241,191,0,0.9)] transition-all duration-700 ease-out flex-1"
           />
         </div>
       </div>

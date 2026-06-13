@@ -60,7 +60,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-riviera-blue/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(0,163,224,0.1)] backdrop-blur-md p-6 sm:p-8 group">
+    <div className="relative overflow-hidden rounded-2xl border border-catalunya-red/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(218,41,28,0.1)] backdrop-blur-md p-6 sm:p-8 group">
       {/* Tech Background Grid */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -68,7 +68,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
       <div className="mb-6 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-riviera-blue animate-pulse shadow-[0_0_10px_rgba(0,163,224,0.8)]" />
+            <span className="h-3 w-3 rounded-full bg-catalunya-red animate-pulse shadow-[0_0_10px_rgba(218,41,28,0.8)]" />
             "What-If" Engine
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">Live ML Prediction Sandbox</p>
@@ -83,7 +83,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
           <div>
             <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest mb-2">Target Driver</label>
             <select 
-              className="w-full rounded border border-white/20 bg-black/60 px-4 py-3 text-lg font-bold italic uppercase text-white outline-none focus:border-riviera-blue transition-colors"
+              className="w-full rounded border border-white/20 bg-black/60 px-4 py-3 text-lg font-bold italic uppercase text-white outline-none focus:border-catalunya-red transition-colors"
               value={selectedDriver}
               onChange={(e) => setSelectedDriver(e.target.value)}
             >
@@ -93,18 +93,18 @@ export default function Simulator({ predictions }: SimulatorProps) {
             </select>
           </div>
 
-          {/* Grid Slider - Upgraded to Casino Gold for luxury contrast */}
+          {/* Grid Slider - Iberian Yellow contrast */}
           <div>
             <div className="flex justify-between items-end mb-2">
               <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest">Simulate Grid Position</label>
-              <span className="text-xl font-black text-casino-gold italic drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]">P{customGrid}</span>
+              <span className="text-xl font-black text-iberian-yellow italic drop-shadow-[0_0_8px_rgba(241,191,0,0.6)]">P{customGrid}</span>
             </div>
             <input 
               type="range" 
               min="1" max="20" 
               value={customGrid} 
               onChange={(e) => setCustomGrid(Number(e.target.value))}
-              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-casino-gold"
+              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-iberian-yellow"
             />
             <div className="flex justify-between text-[10px] text-zinc-600 mt-1 font-mono font-bold">
               <span>POLE (P1)</span>
@@ -112,11 +112,11 @@ export default function Simulator({ predictions }: SimulatorProps) {
             </div>
           </div>
 
-          {/* Run Button - Riviera Blue Glow */}
+          {/* Run Button - Catalunya Red Glow */}
           <button 
             onClick={handleSimulate}
             disabled={isSimulating}
-            className="mt-2 w-full rounded border border-riviera-blue bg-riviera-blue/10 py-4 font-black uppercase italic tracking-widest text-riviera-blue transition-all hover:bg-riviera-blue hover:text-black disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(0,163,224,0.2)] hover:shadow-[0_0_25px_rgba(0,163,224,0.6)]"
+            className="mt-2 w-full rounded border border-catalunya-red bg-catalunya-red/10 py-4 font-black uppercase italic tracking-widest text-catalunya-red transition-all hover:bg-catalunya-red hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(218,41,28,0.2)] hover:shadow-[0_0_25px_rgba(218,41,28,0.6)]"
           >
             {isSimulating ? "Running Telemetry..." : "Run Simulation"}
           </button>
@@ -135,12 +135,12 @@ export default function Simulator({ predictions }: SimulatorProps) {
               <span className="text-2xl font-black text-white italic">P{originalRank}</span>
             </div>
 
-            {/* Simulated Stats - Highlighted in Casino Gold */}
+            {/* Simulated Stats - Iberian Yellow highlight */}
             <div className="flex flex-col gap-1 border-l border-white/10 pl-4">
-              <span className="text-[10px] uppercase tracking-wider text-casino-gold font-mono">Simulated Grid</span>
+              <span className="text-[10px] uppercase tracking-wider text-iberian-yellow font-mono">Simulated Grid</span>
               <span className="text-xl font-black text-white italic">{simResult ? `P${simResult.simulated_grid}` : "--"}</span>
-              <span className="text-[10px] uppercase tracking-wider text-casino-gold font-mono mt-2">New Predicted Finish</span>
-              <span className={`text-4xl font-black italic drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
+              <span className="text-[10px] uppercase tracking-wider text-iberian-yellow font-mono mt-2">New Predicted Finish</span>
+              <span className={`text-4xl font-black italic drop-shadow-[0_0_15px_rgba(241,191,0,0.4)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
                 {simResult ? `P${simResult.new_predicted_rank}` : "--"}
               </span>
             </div>
