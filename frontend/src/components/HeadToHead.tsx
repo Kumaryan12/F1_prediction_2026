@@ -43,9 +43,9 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md p-6 sm:p-8">
-      {/* Background Styling - Catalunya Red vs Iberian Yellow */}
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-catalunya-red/10 to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-iberian-yellow/10 to-transparent pointer-events-none" />
+      {/* Background Styling - Spielberg Red vs Styrian Green */}
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-spielberg-red/10 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-styrian-green/10 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="mb-8 text-center relative z-10">
@@ -66,10 +66,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* Driver Selection & Stats */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
         
-        {/* Driver A Side - Catalunya Red Focus */}
+        {/* Driver A Side - Spielberg Red Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-start text-center md:text-left">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-catalunya-red/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-catalunya-red focus:ring-1 focus:ring-catalunya-red transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-spielberg-red/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-spielberg-red focus:ring-1 focus:ring-spielberg-red transition-colors"
             value={driverA}
             onChange={(e) => setDriverA(e.target.value)}
           >
@@ -94,10 +94,10 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
           <div className="text-3xl font-black italic text-zinc-600 mb-2 drop-shadow-md">VS</div>
         </div>
 
-        {/* Driver B Side - Iberian Yellow Focus */}
+        {/* Driver B Side - Styrian Green Focus */}
         <div className="w-full md:w-5/12 flex flex-col items-center md:items-end text-center md:text-right">
           <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-iberian-yellow/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-iberian-yellow focus:ring-1 focus:ring-iberian-yellow transition-colors"
+            className="mb-4 w-full max-w-[200px] rounded border border-styrian-green/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-styrian-green focus:ring-1 focus:ring-styrian-green transition-colors"
             value={driverB}
             onChange={(e) => setDriverB(e.target.value)}
           >
@@ -121,16 +121,16 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
       {/* The Advantage Power Bar */}
       <div className="mt-8 relative z-10">
         <div className="flex justify-between text-[10px] font-mono uppercase text-zinc-500 mb-2 tracking-widest">
-          <span className="text-catalunya-red/80">{driverA} Advantage</span>
-          <span className="text-iberian-yellow/80">{driverB} Advantage</span>
+          <span className="text-spielberg-red/80">{driverA} Advantage</span>
+          <span className="text-styrian-green/80">{driverB} Advantage</span>
         </div>
         <div className="h-3 w-full rounded-full bg-black/60 shadow-inner flex overflow-hidden border border-white/5">
           <div 
-            className="h-full bg-catalunya-red shadow-[0_0_12px_rgba(218,41,28,0.9)] transition-all duration-700 ease-out"
+            className="h-full bg-spielberg-red shadow-[0_0_12px_rgba(227,34,25,0.9)] transition-all duration-700 ease-out"
             style={{ width: `${pctA}%` }}
           />
           <div 
-            className="h-full bg-iberian-yellow shadow-[0_0_12px_rgba(241,191,0,0.9)] transition-all duration-700 ease-out flex-1"
+            className="h-full bg-styrian-green shadow-[0_0_12px_rgba(0,210,127,0.9)] transition-all duration-700 ease-out flex-1"
           />
         </div>
       </div>

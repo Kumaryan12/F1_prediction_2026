@@ -25,6 +25,7 @@ DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/
 # -------------------------------------------------------------------
 FEATS = [
     # Sunday starting order
+    # Valid because this is a post-qualifying / pre-race prediction system.
     "grid_pos",
 
     # Core circuit priors
@@ -58,14 +59,12 @@ FEATS = [
     "drv_form3",
     "team_form3",
 
-    # Barcelona / conventional circuit archetype form
-    "longstraight_driver_form3",
-    "longstraight_team_form3",
-
-    # Keep low-downforce form available, but Barcelona itself is not low-downforce.
-    # This can still help the model learn straight-line/aero-efficiency behavior.
+    # Austria / Red Bull Ring archetype form
+    # Austria is power-sensitive, DRS-heavy, braking-heavy, and medium-low-downforce.
     "lowdf_driver_form3",
     "lowdf_team_form3",
+    "longstraight_driver_form3",
+    "longstraight_team_form3",
 
     # Historical-strength helper columns
     "driver_hist_strength",

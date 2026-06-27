@@ -13,16 +13,16 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
     return `${row.driver}: P${row.pred_rank} [${low} - ${high}]`;
   });
 
-  // Inject some live race control data for the Spanish GP vibe
-  // Barcelona is known for high aero load, heavy wind, and intense track heat!
+  // Inject some live race control data for the Austrian GP vibe
+  // Spielberg is known for high-speed undulations, changeable mountain weather, and intense kerb usage!
   const tickerItems = [
     "RACE CONTROL: DRS ENABLED",
-    "TRACK TEMP: 48.5°C",
-    "AIR TEMP: 31.2°C",
-    "WIND: 18 KM/H SE (GUSTY)",
-    "HUMIDITY: 38%",
-    "WEATHER: SUNNY / HIGH INTENSITY",
-    "SECTOR 3: TRACK LIMITS OBSERVED",
+    "TRACK TEMP: 28.2°C",
+    "AIR TEMP: 19.5°C",
+    "WIND: 5 KM/H NW (ALPINE BREEZE)",
+    "HUMIDITY: 55%",
+    "WEATHER: OVERCAST / HIGH ALTITUDE",
+    "TRACK LIMITS: TURNS 1, 4, 9, 10",
     ...predictionStrings,
   ];
 
@@ -30,21 +30,21 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
   const tickerText = tickerItems.join(" /// ") + " /// ";
 
   return (
-    <div className="relative flex w-full overflow-hidden border-y border-catalunya-red/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(218,41,28,0.15)] backdrop-blur-md">
+    <div className="relative flex w-full overflow-hidden border-y border-spielberg-red/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(227,34,25,0.15)] backdrop-blur-md">
       
       {/* We render two identical blocks side-by-side. 
         As the first one scrolls entirely out of view, the second one perfectly replaces it!
       */}
       <div className="flex animate-ticker whitespace-nowrap">
-        {/* Swapped to Catalunya Red with an intense Spanish drop-shadow */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-catalunya-red drop-shadow-[0_0_5px_rgba(218,41,28,0.5)]">
+        {/* Swapped to Spielberg Red with an intense Austrian drop-shadow */}
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-spielberg-red drop-shadow-[0_0_5px_rgba(227,34,25,0.5)]">
           {tickerText}
         </span>
       </div>
       
       <div className="flex animate-ticker whitespace-nowrap">
         {/* Duplicate block for the infinite scroll */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-catalunya-red drop-shadow-[0_0_5px_rgba(218,41,28,0.5)]">
+        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-spielberg-red drop-shadow-[0_0_5px_rgba(227,34,25,0.5)]">
           {tickerText}
         </span>
       </div>

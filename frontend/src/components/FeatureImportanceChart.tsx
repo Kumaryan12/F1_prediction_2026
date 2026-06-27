@@ -28,14 +28,14 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
           <h3 className="text-2xl font-black uppercase italic tracking-tight text-white drop-shadow-md">
             Model Diagnostics
           </h3>
-          <p className="mt-1 text-xs font-mono uppercase tracking-[0.3em] text-iberian-yellow">
+          <p className="mt-1 text-xs font-mono uppercase tracking-[0.3em] text-styrian-green">
             Feature Importance Weighting
           </p>
         </div>
         
-        {/* Decorative Diagnostic Icon - Resprayed to Iberian Yellow */}
-        <div className="flex h-10 w-10 items-center justify-center rounded bg-iberian-yellow/10 border border-iberian-yellow/30 shadow-[0_0_15px_rgba(241,191,0,0.3)] animate-pulse">
-          <svg className="w-5 h-5 text-iberian-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        {/* Decorative Diagnostic Icon - Resprayed to Styrian Green */}
+        <div className="flex h-10 w-10 items-center justify-center rounded bg-styrian-green/10 border border-styrian-green/30 shadow-[0_0_15px_rgba(0,210,127,0.3)] animate-pulse">
+          <svg className="w-5 h-5 text-styrian-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </div>
@@ -57,16 +57,16 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
                   <span className="text-white/30 mr-2">{String(idx + 1).padStart(2, '0')}</span> 
                   {label}
                 </span>
-                {/* Number changed to Catalunya Red */}
-                <span className="text-catalunya-red font-bold drop-shadow-[0_0_8px_rgba(218,41,28,0.6)]">
+                {/* Number changed to Spielberg Red */}
+                <span className="text-spielberg-red font-bold drop-shadow-[0_0_8px_rgba(227,34,25,0.6)]">
                   {item.value ? (item.value * 100).toFixed(1) : "0.0"}%
                 </span>
               </div>
               
-              {/* The Glowing Bar - Catalunya Red to Iberian Yellow Gradient */}
+              {/* The Glowing Bar - Spielberg Red to Styrian Green Gradient */}
               <div className="h-1.5 w-full overflow-hidden rounded-r-full bg-black/60 shadow-inner">
                 <div
-                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(218,41,28,0.8)] to-[#F1BF00] shadow-[0_0_12px_rgba(241,191,0,0.6)] transition-all duration-1000 ease-out"
+                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(227,34,25,0.8)] to-[#00D27F] shadow-[0_0_12px_rgba(0,210,127,0.6)] transition-all duration-1000 ease-out"
                   style={{ width: `${pct}%` }}
                 />
               </div>

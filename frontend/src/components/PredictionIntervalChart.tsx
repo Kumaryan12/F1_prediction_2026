@@ -36,16 +36,16 @@ export default function PredictionIntervalChart({
   }));
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(241,191,0,0.1)] backdrop-blur-md p-6 sm:p-8">
-      {/* Background Spain Glow */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-iberian-yellow/5 to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-catalunya-red/5 to-transparent pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(0,210,127,0.1)] backdrop-blur-md p-6 sm:p-8">
+      {/* Background Austria Glow */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-styrian-green/5 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-spielberg-red/5 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="mb-8 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-catalunya-red animate-pulse shadow-[0_0_10px_rgba(218,41,28,0.8)]" />
+            <span className="h-3 w-3 rounded-full bg-spielberg-red animate-pulse shadow-[0_0_10px_rgba(227,34,25,0.8)]" />
             Prediction Intervals
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
@@ -71,7 +71,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED RANK",
                 position: "insideBottom",
                 offset: -10,
-                fill: "#DA291C", // Catalunya Red
+                fill: "#E32219", // Spielberg Red
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -90,7 +90,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED FINISH",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#F1BF00", // Iberian Yellow
+                fill: "#00D27F", // Styrian Green
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -98,12 +98,12 @@ export default function PredictionIntervalChart({
             />
             
             <Tooltip
-              cursor={{ stroke: "rgba(218,41,28,0.15)", strokeWidth: 2 }}
+              cursor={{ stroke: "rgba(227,34,25,0.15)", strokeWidth: 2 }}
               contentStyle={{
                 background: "#0A0A0C", // Deep Track Black
-                border: "1px solid rgba(218,41,28,0.3)", // Catalunya Red Border
+                border: "1px solid rgba(227,34,25,0.3)", // Spielberg Red Border
                 borderRadius: "8px",
-                boxShadow: "0 0 15px rgba(218,41,28,0.2)",
+                boxShadow: "0 0 15px rgba(227,34,25,0.2)",
                 color: "white",
                 fontFamily: "monospace",
                 textTransform: "uppercase",
@@ -111,7 +111,7 @@ export default function PredictionIntervalChart({
               }}
               formatter={(value, name) => [
                 typeof value === "number" ? (
-                  <span style={{ color: "#F1BF00", fontWeight: "bold" }}>{value.toFixed(2)}</span>
+                  <span style={{ color: "#00D27F", fontWeight: "bold" }}>{value.toFixed(2)}</span>
                 ) : (
                   String(value ?? "-")
                 ),
@@ -120,28 +120,28 @@ export default function PredictionIntervalChart({
               labelFormatter={(_, payload) => {
                 if (!payload || !payload.length) return "";
                 return (
-                  <div style={{ color: "#DA291C", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
+                  <div style={{ color: "#E32219", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
                     {payload[0].payload.driver}
                   </div>
                 );
               }}
             />
             
-            {/* The Dots: Catalunya Red */}
-            <Scatter data={chartData} fill="#DA291C">
-              {/* The Error Bars: Iberian Yellow */}
+            {/* The Dots: Spielberg Red */}
+            <Scatter data={chartData} fill="#E32219">
+              {/* The Error Bars: Styrian Green */}
               <ErrorBar 
                 dataKey="lowError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#F1BF00" 
+                stroke="#00D27F" 
                 direction="y" 
               />
               <ErrorBar 
                 dataKey="highError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#F1BF00" 
+                stroke="#00D27F" 
                 direction="y" 
               />
             </Scatter>

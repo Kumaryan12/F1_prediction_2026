@@ -4,17 +4,17 @@
   /* The F1 Core Palette */
   --color-f1-red: #e10600;
   --color-tarmac: #0A0A0C;       /* Deep track black */
-  --color-tarmac-light: #16161A; /* Sun-baked asphalt */
+  --color-tarmac-light: #16161A; /* Mountain shadow asphalt */
   
-  /* New Spanish Colors */
-  --color-catalunya-red: #DA291C; /* Spanish Flag Red */
-  --color-iberian-yellow: #F1BF00; /* Spanish Flag Yellow */
+  /* New Austrian Colors */
+  --color-spielberg-red: #E32219; /* Red Bull Ring Red */
+  --color-styrian-green: #00D27F; /* Alpine Forest Green */
   
   /* Legacy names mapped to new colors to prevent UI breaks during transition */
-  --color-riviera-blue: var(--color-catalunya-red);
-  --color-casino-gold: var(--color-iberian-yellow);
+  --color-catalunya-red: var(--color-spielberg-red);
+  --color-iberian-yellow: var(--color-styrian-green);
   
-  --color-telemetry: #DA291C;    /* Catalunya Red for live data */
+  --color-telemetry: #00D27F;    /* Styrian Green for live data */
 
   /* Fonts - keeping it clean and readable */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -38,8 +38,8 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Barcelona spotlight effect: Heat haze radiating from the center */
-  background-image: radial-gradient(circle at center, var(--color-tarmac-light), var(--color-tarmac) 80%);
+  /* Spielberg elevation effect: Crisp linear gradient simulating the mountain air */
+  background-image: linear-gradient(to bottom, var(--color-tarmac-light) 0%, var(--color-tarmac) 100%);
   background-attachment: fixed;
   font-family: var(--font-sans);
 }
@@ -64,16 +64,17 @@ body {
   border-radius: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Catalunya Red */
-  background: var(--color-catalunya-red); 
+  /* Updated to hover with the new Spielberg Red */
+  background: var(--color-spielberg-red); 
 }
 
-/* --- SPAIN PARTICLE PHYSICS (Heat Haze / Embers) --- */
+/* --- AUSTRIA PARTICLE PHYSICS (Alpine Mist / Rain) --- */
 @keyframes fall {
-  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  /* Gravity Restored! Particles now fall downward from the sky */
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
   10% { opacity: 1; }
   90% { opacity: 1; }
-  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
 @keyframes sway {

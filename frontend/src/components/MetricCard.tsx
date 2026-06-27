@@ -6,38 +6,38 @@ type MetricCardProps = {
   accent?: "red" | "green" | "pink" | "cyan" | "telemetry";
 };
 
-// Map our custom Spain theme colors to the border and text highlights
+// Map our custom Austria theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-iberian-yellow",
-    text: "text-iberian-yellow",
-    glow: "shadow-[0_0_20px_rgba(241,191,0,0.1)]",
-    dot: "bg-iberian-yellow shadow-[0_0_5px_rgba(241,191,0,0.8)]",
+    border: "border-l-spielberg-red",
+    text: "text-spielberg-red",
+    glow: "shadow-[0_0_20px_rgba(227,34,25,0.1)]",
+    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(227,34,25,0.8)]",
   },
   pink: {
-    border: "border-l-iberian-yellow",
-    text: "text-iberian-yellow",
-    glow: "shadow-[0_0_20px_rgba(241,191,0,0.1)]",
-    dot: "bg-iberian-yellow shadow-[0_0_5px_rgba(241,191,0,0.8)]",
+    border: "border-l-spielberg-red",
+    text: "text-spielberg-red",
+    glow: "shadow-[0_0_20px_rgba(227,34,25,0.1)]",
+    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(227,34,25,0.8)]",
   },
-  // Safely map any old "green", "cyan", or "telemetry" props directly to Catalunya Red
+  // Safely map any old "green", "cyan", or "telemetry" props directly to Styrian Green
   green: {
-    border: "border-l-catalunya-red",
-    text: "text-catalunya-red",
-    glow: "shadow-[0_0_20px_rgba(218,41,28,0.1)]",
-    dot: "bg-catalunya-red shadow-[0_0_5px_rgba(218,41,28,0.8)]",
+    border: "border-l-styrian-green",
+    text: "text-styrian-green",
+    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
+    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
   },
   cyan: {
-    border: "border-l-catalunya-red",
-    text: "text-catalunya-red",
-    glow: "shadow-[0_0_20px_rgba(218,41,28,0.1)]",
-    dot: "bg-catalunya-red shadow-[0_0_5px_rgba(218,41,28,0.8)]",
+    border: "border-l-styrian-green",
+    text: "text-styrian-green",
+    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
+    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
   },
   telemetry: {
-    border: "border-l-catalunya-red",
-    text: "text-catalunya-red",
-    glow: "shadow-[0_0_20px_rgba(218,41,28,0.1)]",
-    dot: "bg-catalunya-red shadow-[0_0_5px_rgba(218,41,28,0.8)]",
+    border: "border-l-styrian-green",
+    text: "text-styrian-green",
+    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
+    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
   },
 };
 

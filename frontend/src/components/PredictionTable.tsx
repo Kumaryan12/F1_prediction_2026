@@ -109,16 +109,16 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
                   [{row.pi68_low?.toFixed(2) ?? "-"} <span className="text-zinc-600 mx-1">↔</span> {row.pi68_high?.toFixed(2) ?? "-"}]
                 </td>
                 
-                {/* Podium % - Catalunya Red */}
+                {/* Podium % - Spielberg Red */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-catalunya-red/30 bg-catalunya-red/10 px-2 py-0.5 font-mono text-xs font-bold text-catalunya-red shadow-[0_0_8px_rgba(218,41,28,0.2)]">
+                  <span className="inline-block border border-spielberg-red/30 bg-spielberg-red/10 px-2 py-0.5 font-mono text-xs font-bold text-spielberg-red shadow-[0_0_8px_rgba(227,34,25,0.2)]">
                     {pct(row.p_podium)}
                   </span>
                 </td>
                 
-                {/* Top 10 % - Iberian Yellow */}
+                {/* Top 10 % - Styrian Green */}
                 <td className="px-4 py-3">
-                  <span className="inline-block border border-iberian-yellow/30 bg-iberian-yellow/10 px-2 py-0.5 font-mono text-xs font-bold text-iberian-yellow shadow-[0_0_8px_rgba(241,191,0,0.2)]">
+                  <span className="inline-block border border-styrian-green/30 bg-styrian-green/10 px-2 py-0.5 font-mono text-xs font-bold text-styrian-green shadow-[0_0_8px_rgba(0,210,127,0.2)]">
                     {pct(row.p_top10)}
                   </span>
                 </td>

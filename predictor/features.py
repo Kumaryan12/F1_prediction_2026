@@ -25,32 +25,33 @@ except Exception:
 
 # -------------------------------------------------------------------
 # Driver / team priors
-# Monaco-ready:
-# - Current 2026 form is heavily respected.
-# - Monaco-specific skill/track-position importance is considered.
-# - Ferrari/Leclerc/Hamilton get a Monaco bump.
-# - Aston/Cadillac remain conservative due to current form.
+# Austria-ready:
+# - Red Bull Ring is a permanent circuit, not street.
+# - It rewards straight-line speed, traction, braking stability,
+#   tyre control, DRS efficiency, and track-limits discipline.
+# - These are live pre-race model priors, not pure driver talent scores.
+# - Freeze these before generating the published race prediction.
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
-    # Current 2026 elite form
-    "ANT": 1.00,   # championship leader, dominant recent form
-    "HAM": 0.96,   # P2 in standings + strong Monaco P2
-    "RUS": 0.94,   # still P3 in standings, but recent no-score/retirement hurts momentum
-    "LEC": 0.93,   # Ferrari front-runner, strong season but Monaco crash hurts slightly
+    # Current 2026 elite / title group
+    "ANT": 1.00,   # championship leader; still strongest overall despite Spain mechanical issue
+    "HAM": 0.98,   # Spanish GP winner + Ferrari momentum
+    "RUS": 0.95,   # strong Mercedes form, consistent front-runner
+    "LEC": 0.94,   # Ferrari strong; Austria winner historically, good fit for Red Bull Ring
 
-    # Strong conventional-circuit group
-    "PIA": 0.91,   # P5 in standings, solid McLaren race pace
-    "NOR": 0.90,   # P6, but Monaco weekend/retirement lowers short-term confidence
-    "VER": 0.90,   # elite driver quality, but Red Bull 2026 form/reliability is weaker
+    # Austria-suitable front group
+    "VER": 0.93,   # Red Bull Ring specialist, but current Red Bull form/reliability limits prior
+    "PIA": 0.91,   # McLaren pace + strong race form
+    "NOR": 0.89,   # McLaren potential, but recent reliability/FP issue lowers confidence slightly
 
-    # Strong midfield / points threat
-    "HAD": 0.86,   # Monaco podium + strong current Red Bull/Racing Bulls signal
+    # Strong midfield / points threats
+    "HAD": 0.86,
     "GAS": 0.82,
     "BEA": 0.81,
     "HUL": 0.80,
-    "OCO": 0.79,
-    "LAW": 0.78,
+    "LAW": 0.79,
+    "OCO": 0.78,
 
     # Midfield with race-dependent upside
     "SAI": 0.77,
@@ -71,36 +72,60 @@ DEFAULT_DRIVER_PRIOR = 0.75
 ROOKIE_DRIVERS = {"LIN"}
 RETURNEE_DRIVERS = {"PER", "BOT"}
 
+
 TEAM_ALIAS = {
     "Audi": "Kick Sauber",
     "Sauber": "Kick Sauber",
     "Stake F1 Team Kick Sauber": "Kick Sauber",
     "Stake Kick Sauber": "Kick Sauber",
+    "Kick Sauber": "Kick Sauber",
+
     "Cadillac Formula 1 Team": "Cadillac",
+
+    "Haas": "Haas F1 Team",
+    "MoneyGram Haas F1 Team": "Haas F1 Team",
+
+    "RB": "Racing Bulls",
+    "Visa Cash App RB": "Racing Bulls",
+    "VCARB": "Racing Bulls",
+
+    "Oracle Red Bull Racing": "Red Bull Racing",
+    "Red Bull": "Red Bull Racing",
+
+    "Scuderia Ferrari": "Ferrari",
+    "Mercedes-AMG PETRONAS Formula One Team": "Mercedes",
+    "Mercedes-AMG": "Mercedes",
+
+    "McLaren F1 Team": "McLaren",
+    "Williams Racing": "Williams",
+    "Aston Martin Aramco": "Aston Martin",
+    "Aston Martin Aramco F1 Team": "Aston Martin",
+    "BWT Alpine F1 Team": "Alpine",
 }
 
+
 TEAM_BASELINE_PRIOR = {
-    # Clear 2026 benchmark
+    # Clear benchmark package in 2026
     "Mercedes": 1.00,
 
-    # Strong second-best package
-    "Ferrari": 0.93,
+    # Ferrari upgraded strongly in Spain and Hamilton won there
+    "Ferrari": 0.96,
 
-    # Barcelona should suit McLaren better than Monaco, but current standings still place them behind Ferrari
-    "McLaren": 0.88,
+    # McLaren has pace, but reliability/session issues keep it below Ferrari for now
+    "McLaren": 0.90,
 
-    # Historically elite, but current 2026 points/reliability are below the top three
-    "Red Bull Racing": 0.82,
+    # Red Bull Ring helps Red Bull, but 2026 team form/reliability remains weaker than top three
+    "Red Bull Racing": 0.87,
 
     # Midfield
-    "Racing Bulls": 0.76,   # boosted by Hadjar Monaco podium / current points
+    "Racing Bulls": 0.77,
     "Alpine": 0.74,
-    "Haas F1 Team": 0.70,
-    "Williams": 0.66,
+    "Haas F1 Team": 0.71,
+    "Williams": 0.67,
 
     # Lower group
-    "Kick Sauber": 0.63,
-    "Audi": 0.63,
+    "Kick Sauber": 0.64,
+    "Audi": 0.64,
     "Aston Martin": 0.61,
     "Cadillac": 0.58,
 }
@@ -120,14 +145,16 @@ def _ensure_numeric(df: pd.DataFrame, cols: list[str]) -> None:
 
 def _normalize_team_names(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
+
     if "team" in out.columns:
         out["team"] = out["team"].astype(str).replace(TEAM_ALIAS)
+
     return out
 
 
 def _inverse_minmax_strength(s: pd.Series) -> pd.Series:
     """
-    Convert lower-is-better finish form into higher-is-better strength.
+    Convert lower-is-better finishing form into higher-is-better strength.
     """
     s = pd.to_numeric(s, errors="coerce")
     s_min = s.min(skipna=True)
@@ -138,6 +165,40 @@ def _inverse_minmax_strength(s: pd.Series) -> pd.Series:
 
     return 1.0 - (s - s_min) / (s_max - s_min)
 
+
+def _latest_by_entity(
+    df: pd.DataFrame,
+    entity_col: str,
+    value_cols: list[str],
+) -> pd.DataFrame:
+    """
+    Return the latest available non-null value per entity for each requested column.
+
+    This helps archetype-specific columns such as lowdf_driver_form3 and
+    longstraight_driver_form3 use the latest relevant archetype race instead
+    of blindly using the latest race overall.
+    """
+    base = pd.DataFrame({entity_col: sorted(df[entity_col].dropna().unique())})
+
+    for col in value_cols:
+        if col not in df.columns:
+            continue
+
+        tmp = (
+            df.dropna(subset=[col])
+            .sort_values("date")
+            .groupby(entity_col, as_index=False)
+            .tail(1)[[entity_col, col]]
+        )
+
+        base = base.merge(tmp, on=entity_col, how="left")
+
+    return base
+
+
+# -------------------------------------------------------------------
+# Priors
+# -------------------------------------------------------------------
 
 def add_driver_skill_prior(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
@@ -176,10 +237,10 @@ def add_team_prior_strength(df: pd.DataFrame) -> pd.DataFrame:
 
 def add_live_strength_adjustments(
     df: pd.DataFrame,
-    hist_team_weight: float = 0.15,
-    live_team_weight: float = 0.90,
-    hist_driver_weight: float = 0.20,
-    live_driver_weight: float = 0.80,
+    hist_team_weight: float = 0.25,
+    live_team_weight: float = 0.75,
+    hist_driver_weight: float = 0.25,
+    live_driver_weight: float = 0.75,
 ) -> pd.DataFrame:
     """
     Creates:
@@ -188,7 +249,9 @@ def add_live_strength_adjustments(
     - driver_strength_blend_2026
     - team_strength_blend_2026
 
-    If live FP/session columns are absent, the blended strength falls back to historical strength.
+    For Austria, live session pace can matter because the lap is short and
+    small gaps can move drivers several grid/race positions. Still, historical
+    strength remains in the blend so FP noise does not dominate.
     """
     out = _normalize_team_names(df.copy())
 
@@ -248,13 +311,22 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
         is_street = extras.get("is_street", 1.0 if gp in STREET_GPS else 0.0)
         extras.setdefault("is_street", float(is_street))
 
-        extras.setdefault("long_straight_index", 0.90 if extras["is_low_df"] else 0.60)
-        extras.setdefault("tow_importance", 0.50)
-        extras.setdefault("overtake_index", 0.45)
-        extras.setdefault("braking_intensity", 0.55)
+        is_long_straight = 1.0 if gp in LONG_STRAIGHT_GPS else 0.0
+
+        if "long_straight_index" not in extras:
+            if extras["is_low_df"]:
+                extras["long_straight_index"] = 0.85
+            elif is_long_straight:
+                extras["long_straight_index"] = 0.70
+            else:
+                extras["long_straight_index"] = 0.50
+
+        extras.setdefault("tow_importance", 0.70 if is_long_straight else 0.50)
+        extras.setdefault("overtake_index", 0.60 if is_long_straight else 0.50)
+        extras.setdefault("braking_intensity", 0.65 if is_long_straight else 0.55)
         extras.setdefault("warmup_penalty", 0.05)
-        extras.setdefault("expected_stops", 1.5)
-        extras.setdefault("deg_rate", 0.50)
+        extras.setdefault("expected_stops", 2.0)
+        extras.setdefault("deg_rate", 0.55)
         extras.setdefault("stint_len_typical", extras.get("stint_len_typical", np.nan))
 
         return pd.Series(
@@ -265,6 +337,9 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
                 **extras,
             }
         )
+
+    if "gp" not in df.columns:
+        raise ValueError("add_circuit_context_df requires a 'gp' column.")
 
     ctx = df["gp"].apply(_lookup)
 
@@ -312,6 +387,7 @@ def add_circuit_context_df(df: pd.DataFrame) -> pd.DataFrame:
     ]
 
     _ensure_numeric(out, extra_numeric_cols)
+
     return out
 
 
@@ -335,6 +411,7 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     df["finish_pos"] = pd.to_numeric(df["finish_pos"], errors="coerce")
     df = df.dropna(subset=["date", "finish_pos"])
+
     df = df.sort_values(
         ["date", "year", "gp"],
         kind="mergesort",
@@ -385,6 +462,9 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
         team_col_out: str,
         window: int = 3,
     ) -> None:
+        df[drv_col_out] = np.nan
+        df[team_col_out] = np.nan
+
         if mask.any():
             sub = df.loc[mask].copy().sort_values(
                 ["date", "year", "gp"],
@@ -397,31 +477,28 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
             )
 
             df.loc[mask, drv_col_out] = drv_series.values
-        else:
-            df[drv_col_out] = np.nan
 
-        team_ev_sub = (
-            df.loc[mask]
-            .groupby(["year", "gp", "date", "team"], sort=False)["finish_pos"]
-            .mean()
-            .reset_index(name=team_col_mean)
-        )
+            team_ev_sub = (
+                df.loc[mask]
+                .groupby(["year", "gp", "date", "team"], sort=False)["finish_pos"]
+                .mean()
+                .reset_index(name=team_col_mean)
+            )
 
-        df_tmp = df.merge(
-            team_ev_sub,
-            on=["year", "gp", "date", "team"],
-            how="left",
-            validate="many_to_one",
-        )
+            df_tmp = df.merge(
+                team_ev_sub,
+                on=["year", "gp", "date", "team"],
+                how="left",
+                validate="many_to_one",
+            )
 
-        team_roll = (
-            df_tmp.groupby("team", sort=False)[team_col_mean]
-            .transform(lambda s: s.shift(1).rolling(window, min_periods=1).mean())
-        )
+            team_roll = (
+                df_tmp.groupby("team", sort=False)[team_col_mean]
+                .transform(lambda s: s.shift(1).rolling(window, min_periods=1).mean())
+            )
 
-        df[team_col_out] = team_roll
+            df[team_col_out] = team_roll
 
-    # Low-downforce form
     low_mask = df["gp"].isin(LOW_DF_GPS)
     _subset_forms(
         low_mask,
@@ -432,7 +509,6 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["lowdf_driver_form3"] = df["lowdf_driver_form3"].fillna(df["drv_form3"])
     df["lowdf_team_form3"] = df["lowdf_team_form3"].fillna(df["team_form3"])
 
-    # Street-track form — most important archetype for Monaco
     street_mask = df["gp"].isin(STREET_GPS)
     _subset_forms(
         street_mask,
@@ -443,7 +519,6 @@ def add_driver_team_form(full_df: pd.DataFrame) -> pd.DataFrame:
     df["street_driver_form3"] = df["street_driver_form3"].fillna(df["drv_form3"])
     df["street_team_form3"] = df["street_team_form3"].fillna(df["team_form3"])
 
-    # Long-straight form
     ls_mask = df["gp"].isin(LONG_STRAIGHT_GPS)
     _subset_forms(
         ls_mask,
@@ -482,50 +557,79 @@ def merge_latest_forms(
     train = train_df_with_forms.copy()
     train["driver"] = train["driver"].astype(str).str.upper()
     train = _normalize_team_names(train)
+    train["date"] = pd.to_datetime(train["date"], errors="coerce")
 
-    latest_driver = (
-        train.sort_values("date")
-        .groupby("driver", as_index=False)
-        .tail(1)
-    )
-
-    driver_cols = [
-        "driver",
+    driver_general_cols = [
         "drv_form3",
-        "lowdf_driver_form3",
-        "street_driver_form3",
-        "longstraight_driver_form3",
         "driver_skill_prior",
         "driver_hist_strength",
         "rookie_flag",
         "returnee_flag",
     ]
 
-    driver_cols = [c for c in driver_cols if c in latest_driver.columns]
-    latest_driver = latest_driver[driver_cols]
-
-    out = out.merge(latest_driver, on="driver", how="left")
-
-    latest_team = (
-        train.sort_values("date")
-        .groupby("team", as_index=False)
-        .tail(1)
+    latest_driver_general = _latest_by_entity(
+        train,
+        "driver",
+        [c for c in driver_general_cols if c in train.columns],
     )
 
-    team_cols = [
-        "team",
+    out = out.merge(latest_driver_general, on="driver", how="left")
+
+    archetype_driver_specs = [
+        (LOW_DF_GPS, "lowdf_driver_form3"),
+        (STREET_GPS, "street_driver_form3"),
+        (LONG_STRAIGHT_GPS, "longstraight_driver_form3"),
+    ]
+
+    for gps, col in archetype_driver_specs:
+        if col not in train.columns:
+            continue
+
+        if gps:
+            sub = train[train["gp"].isin(gps)].copy()
+        else:
+            sub = train.iloc[0:0].copy()
+
+        if not sub.empty:
+            latest = _latest_by_entity(sub, "driver", [col])
+            out = out.merge(latest, on="driver", how="left")
+        else:
+            out[col] = np.nan
+
+    team_general_cols = [
         "team_form3",
-        "lowdf_team_form3",
-        "street_team_form3",
-        "longstraight_team_form3",
         "team_prior_strength",
         "team_hist_strength",
     ]
 
-    team_cols = [c for c in team_cols if c in latest_team.columns]
-    latest_team = latest_team[team_cols]
+    latest_team_general = _latest_by_entity(
+        train,
+        "team",
+        [c for c in team_general_cols if c in train.columns],
+    )
 
-    out = out.merge(latest_team, on="team", how="left")
+    out = out.merge(latest_team_general, on="team", how="left")
+
+    archetype_team_specs = [
+        (LOW_DF_GPS, "lowdf_team_form3"),
+        (STREET_GPS, "street_team_form3"),
+        (LONG_STRAIGHT_GPS, "longstraight_team_form3"),
+    ]
+
+    for gps, col in archetype_team_specs:
+        if col not in train.columns:
+            continue
+
+        if gps:
+            sub = train[train["gp"].isin(gps)].copy()
+        else:
+            sub = train.iloc[0:0].copy()
+
+        if not sub.empty:
+            latest = _latest_by_entity(sub, "team", [col])
+            out = out.merge(latest, on="team", how="left")
+        else:
+            out[col] = np.nan
 
     driver_fill_cols = [
         "drv_form3",
@@ -537,26 +641,32 @@ def merge_latest_forms(
 
     for col in driver_fill_cols:
         if col in out.columns and out[col].isna().any():
-            med = train[col].median(skipna=True)
-            out[col] = out[col].fillna(med)
+            fallback_col = "drv_form3" if col != "drv_form3" and "drv_form3" in out.columns else None
+
+            if fallback_col is not None:
+                out[col] = out[col].fillna(out[fallback_col])
+
+            if out[col].isna().any() and col in train.columns:
+                med = train[col].median(skipna=True)
+                out[col] = out[col].fillna(med)
 
     out["driver_skill_prior"] = out.get(
         "driver_skill_prior",
-        pd.Series(index=out.index),
+        pd.Series(index=out.index, dtype=float),
     ).fillna(
         out["driver"].map(DRIVER_SKILL_PRIOR).fillna(DEFAULT_DRIVER_PRIOR)
     )
 
     out["rookie_flag"] = out.get(
         "rookie_flag",
-        pd.Series(index=out.index),
+        pd.Series(index=out.index, dtype=float),
     ).fillna(
         out["driver"].isin(ROOKIE_DRIVERS).astype(int)
     )
 
     out["returnee_flag"] = out.get(
         "returnee_flag",
-        pd.Series(index=out.index),
+        pd.Series(index=out.index, dtype=float),
     ).fillna(
         out["driver"].isin(RETURNEE_DRIVERS).astype(int)
     )
@@ -571,17 +681,24 @@ def merge_latest_forms(
 
     for col in team_fill_cols:
         if col in out.columns and out[col].isna().any():
-            med = train[col].median(skipna=True)
-            out[col] = out[col].fillna(med)
+            fallback_col = "team_form3" if col != "team_form3" and "team_form3" in out.columns else None
+
+            if fallback_col is not None:
+                out[col] = out[col].fillna(out[fallback_col])
+
+            if out[col].isna().any() and col in train.columns:
+                med = train[col].median(skipna=True)
+                out[col] = out[col].fillna(med)
 
     out["team_prior_strength"] = out.get(
         "team_prior_strength",
-        pd.Series(index=out.index),
+        pd.Series(index=out.index, dtype=float),
     ).fillna(
         out["team"].map(TEAM_BASELINE_PRIOR).fillna(DEFAULT_TEAM_PRIOR)
     )
 
     out = add_live_strength_adjustments(out)
+
     return out
 
 

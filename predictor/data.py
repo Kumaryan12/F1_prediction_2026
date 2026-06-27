@@ -11,39 +11,39 @@ fastf1.Cache.enable_cache(CACHE_DIR)
 
 
 HARDCODED_ENTRYLISTS: Dict[Tuple[int, str], List[Dict[str, object]]] = {
-    (2026, "Spanish Grand Prix"): [
+    (2026, "Austria Grand Prix"): [
         {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 5, "DriverNumber": "3"},
-        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 6, "DriverNumber": "6"},
+        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 8, "DriverNumber": "6"},
 
-        {"driver": "NOR", "team": "McLaren", "grid_pos": 4, "DriverNumber": "1"},
+        {"driver": "NOR", "team": "McLaren", "grid_pos": 6, "DriverNumber": "1"},
         {"driver": "PIA", "team": "McLaren", "grid_pos": 7, "DriverNumber": "81"},
 
-        {"driver": "LEC", "team": "Ferrari", "grid_pos": 10, "DriverNumber": "16"},
-        {"driver": "HAM", "team": "Ferrari", "grid_pos": 2, "DriverNumber": "44"},
+        {"driver": "LEC", "team": "Ferrari", "grid_pos": 2, "DriverNumber": "16"},
+        {"driver": "HAM", "team": "Ferrari", "grid_pos": 3, "DriverNumber": "44"},
 
         {"driver": "RUS", "team": "Mercedes", "grid_pos": 1, "DriverNumber": "63"},
-        {"driver": "ANT", "team": "Mercedes", "grid_pos": 3, "DriverNumber": "12"},
+        {"driver": "ANT", "team": "Mercedes", "grid_pos": 4, "DriverNumber": "12"},
 
-        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 22, "DriverNumber": "14"},
-        {"driver": "STR", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "18"},
+        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "14"},
+        {"driver": "STR", "team": "Aston Martin", "grid_pos": 22, "DriverNumber": "18"},
 
-        {"driver": "GAS", "team": "Alpine", "grid_pos": 14, "DriverNumber": "10"},
-        {"driver": "COL", "team": "Alpine", "grid_pos": 13, "DriverNumber": "43"},
+        {"driver": "GAS", "team": "Alpine", "grid_pos": 11, "DriverNumber": "10"},
+        {"driver": "COL", "team": "Alpine", "grid_pos": 16, "DriverNumber": "43"},
 
-        {"driver": "SAI", "team": "Williams", "grid_pos": 16, "DriverNumber": "55"},
+        {"driver": "SAI", "team": "Williams", "grid_pos": 17, "DriverNumber": "55"},
         {"driver": "ALB", "team": "Williams", "grid_pos": 18, "DriverNumber": "23"},
 
-        {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 8, "DriverNumber": "30"},
-        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 11, "DriverNumber": "41"},
+        {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 9, "DriverNumber": "30"},
+        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 10, "DriverNumber": "41"},
 
-        {"driver": "HUL", "team": "Audi", "grid_pos": 9, "DriverNumber": "27"},
+        {"driver": "HUL", "team": "Audi", "grid_pos": 14, "DriverNumber": "27"},
         {"driver": "BOR", "team": "Audi", "grid_pos": 12, "DriverNumber": "5"},
 
         {"driver": "PER", "team": "Cadillac", "grid_pos": 19, "DriverNumber": "11"},
         {"driver": "BOT", "team": "Cadillac", "grid_pos": 20, "DriverNumber": "77"},
 
-        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 17, "DriverNumber": "87"},
-        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 15, "DriverNumber": "31"},
+        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 15, "DriverNumber": "87"},
+        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 13, "DriverNumber": "31"},
     ],
 }
 

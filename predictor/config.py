@@ -17,13 +17,13 @@ DEFAULT_PIT_LOSS = 21.0
 # -------------------------------------------------------------------
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
-    "Spanish Grand Prix": (0.45, 0.35, 21.5),
+    "Austrian Grand Prix": (0.50, 0.40, 20.0),
 }
 
 
 # -------------------------------------------------------------------
 # 2026 fallback completed/current race list
-# Add Spanish GP after Monaco because we are moving to Barcelona.
+# Add Austrian GP after Spanish GP because we are moving to Austria.
 # -------------------------------------------------------------------
 
 FALLBACK_EVENTS: Dict[int, list[str]] = {
@@ -35,6 +35,7 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Canadian Grand Prix",
         "Monaco Grand Prix",
         "Spanish Grand Prix",
+        "Austrian Grand Prix",
     ],
 }
 
@@ -46,21 +47,24 @@ EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 # Track archetype groups
 # -------------------------------------------------------------------
 
-# Barcelona is high/medium-high downforce, not low-downforce.
-LOW_DF_GPS = set()
+# Red Bull Ring is power-sensitive / medium-low downforce.
+# It is not Monza-level low downforce, but low-DF features are relevant.
+LOW_DF_GPS = {
+    "Austrian Grand Prix",
+}
 
 
 # Keep Monaco as street for historical feature generation.
-# Barcelona is NOT street.
+# Austria is NOT street.
 STREET_GPS = {
     "Monaco Grand Prix",
 }
 
 
-# Barcelona has a long main straight, but it is not a pure low-DF track.
-# This helps if your features.py/model.py uses long-straight archetype form.
+# Austria has several full-throttle sections and DRS zones.
 LONG_STRAIGHT_GPS = {
     "Spanish Grand Prix",
+    "Austrian Grand Prix",
 }
 
 
@@ -70,8 +74,38 @@ LONG_STRAIGHT_GPS = {
 # -------------------------------------------------------------------
 
 CIRCUIT_EXTRAS = {
-    "Spanish Grand Prix": {
+    "Austrian Grand Prix": {
         # Race strategy / overtaking profile
+        "expected_stops": 2.0,
+        "overtake_index": 0.68,
+        "tow_importance": 0.72,
+        "is_low_df": 1,
+        "is_street": 0,
+        "long_straight_index": 0.78,
+        "braking_intensity": 0.72,
+        "warmup_penalty": 0.06,
+        "deg_rate": 0.54,
+        "stint_len_typical": 22,
+
+        # Track / layout extras
+        "surface_bumpiness": 0.38,
+        "wind_sensitivity": 0.58,
+        "track_limits_risk": 0.88,
+        "elevation_change_index": 0.70,
+        "mechanical_failure_risk": 0.48,
+        "corner_count": 10,
+        "avg_speed_kph": 230,
+
+        # Weather priors
+        # Update these closer to race day if you have a real forecast.
+        "rain_prob_race": 0.18,
+        "wet_lap_fraction": 0.06,
+        "wet_start_prob": 0.04,
+        "mixed_conditions_risk": 0.12,
+    },
+
+    # Keep Spanish GP extras for historical/current-season feature generation.
+    "Spanish Grand Prix": {
         "expected_stops": 2.0,
         "overtake_index": 0.52,
         "tow_importance": 0.58,
@@ -83,7 +117,6 @@ CIRCUIT_EXTRAS = {
         "deg_rate": 0.68,
         "stint_len_typical": 20,
 
-        # Track / layout extras
         "surface_bumpiness": 0.35,
         "wind_sensitivity": 0.62,
         "track_limits_risk": 0.62,
@@ -92,8 +125,6 @@ CIRCUIT_EXTRAS = {
         "corner_count": 14,
         "avg_speed_kph": 215,
 
-        # Weather priors
-        # Update these closer to race day if you have a real forecast.
         "rain_prob_race": 0.12,
         "wet_lap_fraction": 0.04,
         "wet_start_prob": 0.03,
