@@ -90,7 +90,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED FINISH",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#00D27F", // Styrian Green
+                fill: "#FDDA24",
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -98,12 +98,12 @@ export default function PredictionIntervalChart({
             />
             
             <Tooltip
-              cursor={{ stroke: "rgba(227,34,25,0.15)", strokeWidth: 2 }}
+              cursor={{ stroke: "rgba(239,51,64,0.15)", strokeWidth: 2 }}
               contentStyle={{
-                background: "#0A0A0C", // Deep Track Black
-                border: "1px solid rgba(227,34,25,0.3)", // Spielberg Red Border
+                background: "#08090B",
+                border: "1px solid rgba(239,51,64,0.3)",
                 borderRadius: "8px",
-                boxShadow: "0 0 15px rgba(227,34,25,0.2)",
+                boxShadow: "0 0 15px rgba(239,51,64,0.2)",
                 color: "white",
                 fontFamily: "monospace",
                 textTransform: "uppercase",
@@ -111,30 +111,28 @@ export default function PredictionIntervalChart({
               }}
               formatter={(value, name) => [
                 typeof value === "number" ? (
-                  <span style={{ color: "#00D27F", fontWeight: "bold" }}>{value.toFixed(2)}</span>
+                  <span key="value" style={{ color: "#FDDA24", fontWeight: "bold" }}>{value.toFixed(2)}</span>
                 ) : (
                   String(value ?? "-")
                 ),
-                <span style={{ color: "#a1a1aa" }}>{String(name)}</span>,
+                <span key="name" style={{ color: "#a1a1aa" }}>{String(name)}</span>,
               ]}
               labelFormatter={(_, payload) => {
                 if (!payload || !payload.length) return "";
                 return (
-                  <div style={{ color: "#E32219", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
+                  <div style={{ color: "#EF3340", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
                     {payload[0].payload.driver}
                   </div>
                 );
               }}
             />
             
-            {/* The Dots: Spielberg Red */}
-            <Scatter data={chartData} fill="#E32219">
-              {/* The Error Bars: Styrian Green */}
+            <Scatter data={chartData} fill="#EF3340">
               <ErrorBar 
                 dataKey="lowError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#00D27F" 
+                stroke="#FDDA24"
                 direction="y" 
               />
               <ErrorBar 

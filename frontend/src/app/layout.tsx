@@ -1,10 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import SpainParticles from "@/components/SpainParticles";
+import BelgiumWeather from "@/components/BelgiumWeather";
 
 export const metadata: Metadata = {
-  title: "F1 Race Predictor | Miami GP",
-  description: "Machine learning race predictions, confidence bands, and telemetry insights for the Miami International Autodrome",
+  title: "Belgian Grand Prix 2026 | F1 Race Intelligence",
+  description:
+    "Machine-learning race predictions, podium probabilities and telemetry insights for the Belgian Grand Prix at Spa-Francorchamps.",
 };
 
 export default function RootLayout({
@@ -14,17 +15,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* Selection color updated to the new Hot Magenta / Vice Pink */}
-      <body className="min-h-screen antialiased selection:bg-vice-pink selection:text-white relative">
-        
-        {/* THE NEON STORM IS HERE */}
-        <SpainParticles />
-        
-        {/* Miami Cyan to Vice Pink Accent Line across the top of the browser */}
-        <div className="h-1 w-full bg-gradient-to-r from-miami-cyan via-purple-500 to-vice-pink shadow-[0_0_15px_rgba(13,240,214,0.8)] relative z-50" />
-        
-        {/* Main layout wrapper to keep things centered and constrained */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <body className="relative min-h-screen antialiased selection:bg-belgian-yellow selection:text-black">
+        <BelgiumWeather />
+        <div className="relative z-50 flex h-1 w-full">
+          <span className="w-1/3 bg-belgian-black" />
+          <span className="w-1/3 bg-belgian-yellow shadow-[0_0_14px_rgba(253,218,36,0.45)]" />
+          <span className="w-1/3 bg-belgian-red" />
+        </div>
+        <main className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           {children}
         </main>
       </body>

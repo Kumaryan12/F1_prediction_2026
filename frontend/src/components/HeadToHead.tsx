@@ -30,9 +30,13 @@ export default function HeadToHead({ predictions }: HeadToHeadProps) {
   const dataB = predictions.find((p) => p.driver === driverB) || predictions[1];
 
   // EXACT JSON KEYS MAPPED HERE:
-  const getPos = (d: any) => d.pred_rank || Math.round(d.pred_finish) || d.predicted_pos || d.position || 0;
-  const getGrid = (d: any) => d.grid_pos || d.grid || 0;
-  const getProb = (d: any) => d.win_prob || d.probability || 0;
+  const getPos = (d: DriverData) =>
+    d.pred_rank ||
+    (typeof d.pred_finish === "number" ? Math.round(d.pred_finish) : 0) ||
+    d.predicted_pos ||
+    d.position ||
+    0;
+  const getGrid = (d: DriverData) => d.grid_pos || d.grid || 0;
 
   // Calculate the "Clash Bar" width based on predicted position
   // Lower position = better. We invert it for the progress bar weight.

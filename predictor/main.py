@@ -6,7 +6,6 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-import fastf1
 
 from .config import HIST_YEARS
 from .data import build_training_until as build_until_data, get_target_drivers
@@ -51,8 +50,15 @@ def build_predict_frame(
     target_gp: str,
     train_df_with_forms: pd.DataFrame,
     use_sessions: bool = False,
+    use_qualifying_grid: bool = True,
+    use_manual_grid: bool = True,
 ) -> pd.DataFrame:
-    pred_df = get_target_drivers(target_year, target_gp)
+    pred_df = get_target_drivers(
+        target_year,
+        target_gp,
+        use_qualifying=use_qualifying_grid,
+        use_manual_grid=use_manual_grid,
+    )
     pred_df = add_circuit_context_df(pred_df)
     pred_df = merge_latest_forms(pred_df, train_df_with_forms)
 
@@ -543,34 +549,23 @@ def main():
     # Build prediction frame
     # ---------------------------------------------------------------
     print(f"[INFO] Building prediction frame for {target_gp} {target_year}…")
+    use_starting_grid = not (args.preq or args.preweekend)
     pred_df = build_predict_frame(
         target_year,
         target_gp,
         train_df,
         use_sessions=(args.use_sessions and not args.preweekend),
+        use_qualifying_grid=use_starting_grid,
+        use_manual_grid=use_starting_grid,
     )
 
     # ---------------------------------------------------------------
-    # Qualifying / grid handling
+    # Pre-qualifying grid handling
     # ---------------------------------------------------------------
-    if args.preq:
-        try:
-            session = fastf1.get_session(args.year, args.gp, "Q")
-            session.load()
-
-            if session.laps.empty:
-                raise ValueError(f"No qualifying data available for {args.gp} {args.year}.")
-
-            pred_df = pred_df.copy()
-            pred_df["grid_pos"] = pred_df["driver"].map(
-                dict(zip(session.laps["Driver"], session.laps["GridPosition"]))
-            )
-
-        except Exception as e:
-            print(f"[WARNING] Failed to load qualifying data for {args.gp} {args.year}. Error: {e}")
-            print(f"[INFO] Using qualifying proxy for {args.gp} {args.year}.")
-            proxy_base = train_df[["driver", "team", "date", "grid_pos"]].dropna()
-            pred_df = add_quali_proxy(pred_df, proxy_base, window=args.proxy_window)
+    if args.preq or args.preweekend:
+        print(f"[INFO] Using qualifying proxy for {args.gp} {args.year}.")
+        proxy_base = train_df[["driver", "team", "date", "grid_pos"]].dropna()
+        pred_df = add_quali_proxy(pred_df, proxy_base, window=args.proxy_window)
 
     # ---------------------------------------------------------------
     # Sanity checks

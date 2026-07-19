@@ -69,7 +69,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
             <span className="h-3 w-3 rounded-full bg-spielberg-red animate-pulse shadow-[0_0_10px_rgba(227,34,25,0.8)]" />
-            "What-If" Engine
+            &ldquo;What-If&rdquo; Engine
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">Live ML Prediction Sandbox</p>
         </div>

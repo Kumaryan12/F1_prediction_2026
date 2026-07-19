@@ -2,17 +2,22 @@ type MetricCardProps = {
   label: string;
   value: string;
   subtext?: string;
-  // Kept old types to prevent breaking, added cyan
-  accent?: "red" | "green" | "pink" | "cyan" | "telemetry";
+  accent?: "red" | "yellow" | "green" | "pink" | "cyan" | "telemetry";
 };
 
 // Map our custom Austria theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-spielberg-red",
-    text: "text-spielberg-red",
-    glow: "shadow-[0_0_20px_rgba(227,34,25,0.1)]",
-    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(227,34,25,0.8)]",
+    border: "border-l-belgian-red",
+    text: "text-belgian-red",
+    glow: "shadow-[0_0_20px_rgba(239,51,64,0.08)]",
+    dot: "bg-belgian-red shadow-[0_0_5px_rgba(239,51,64,0.8)]",
+  },
+  yellow: {
+    border: "border-l-belgian-yellow",
+    text: "text-belgian-yellow",
+    glow: "shadow-[0_0_20px_rgba(253,218,36,0.08)]",
+    dot: "bg-belgian-yellow shadow-[0_0_5px_rgba(253,218,36,0.8)]",
   },
   pink: {
     border: "border-l-spielberg-red",

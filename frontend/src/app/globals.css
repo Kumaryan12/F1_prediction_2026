@@ -1,83 +1,113 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* The F1 Core Palette */
   --color-f1-red: #e10600;
-  --color-tarmac: #0A0A0C;       /* Deep track black */
-  --color-tarmac-light: #16161A; /* Mountain shadow asphalt */
-  
-  /* New Austrian Colors */
-  --color-spielberg-red: #E32219; /* Red Bull Ring Red */
-  --color-styrian-green: #00D27F; /* Alpine Forest Green */
-  
-  /* Legacy names mapped to new colors to prevent UI breaks during transition */
-  --color-catalunya-red: var(--color-spielberg-red);
-  --color-iberian-yellow: var(--color-styrian-green);
-  
-  --color-telemetry: #00D27F;    /* Styrian Green for live data */
+  --color-tarmac: #08090b;
+  --color-tarmac-light: #121419;
 
-  /* Fonts - keeping it clean and readable */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-belgian-black: #101114;
+  --color-belgian-yellow: #fdda24;
+  --color-belgian-red: #ef3340;
 
-  /* Ticker Animation Variable */
-  --animate-ticker: ticker 40s linear infinite;
+  /* Compatibility aliases used throughout the prediction widgets. */
+  --color-spielberg-red: var(--color-belgian-red);
+  --color-styrian-green: var(--color-belgian-yellow);
+  --color-catalunya-red: var(--color-belgian-red);
+  --color-iberian-yellow: var(--color-belgian-yellow);
+  --color-telemetry: var(--color-belgian-yellow);
+
+  --font-sans: "Inter", "Arial Narrow", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
+  --animate-ticker: ticker 48s linear infinite;
 }
 
-/* Ticker Keyframes */
 @keyframes ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
 
-:root {
-  --background: var(--color-tarmac);
-  --foreground: #f3f4f6;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  /* Spielberg elevation effect: Crisp linear gradient simulating the mountain air */
-  background-image: linear-gradient(to bottom, var(--color-tarmac-light) 0%, var(--color-tarmac) 100%);
-  background-attachment: fixed;
-  font-family: var(--font-sans);
-}
-
-/* A custom utility for our glass panels */
-@layer utilities {
-  .f1-glass-panel {
-    @apply bg-tarmac-light/70 backdrop-blur-md border border-white/5 shadow-2xl rounded-xl;
-  }
-}
-
-/* Custom sleek scrollbar for the prediction table */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  /* Updated to hover with the new Spielberg Red */
-  background: var(--color-spielberg-red); 
-}
-
-/* --- AUSTRIA PARTICLE PHYSICS (Alpine Mist / Rain) --- */
 @keyframes fall {
-  /* Gravity Restored! Particles now fall downward from the sky */
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  0% { transform: translateY(-10vh) rotate(8deg); opacity: 0; }
+  8% { opacity: 0.5; }
+  92% { opacity: 0.45; }
+  100% { transform: translateY(110vh) rotate(8deg); opacity: 0; }
 }
 
 @keyframes sway {
-  0%, 100% { margin-left: -50px; }
-  50% { margin-left: 50px; }
+  0%, 100% { margin-left: -25px; }
+  50% { margin-left: 25px; }
+}
+
+@keyframes circuit-dash {
+  to { stroke-dashoffset: -34; }
+}
+
+:root {
+  --background: var(--color-tarmac);
+  --foreground: #f4f4f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  min-width: 320px;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(239, 51, 64, 0.07), transparent 30rem),
+    radial-gradient(circle at 88% 18%, rgba(253, 218, 36, 0.055), transparent 28rem),
+    linear-gradient(to bottom, #111319 0%, #08090b 50rem);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.belgian-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom right, black, transparent 72%);
+}
+
+.circuit-path {
+  stroke-dasharray: 12 6;
+  animation: circuit-dash 3s linear infinite;
+}
+
+@layer utilities {
+  .f1-glass-panel {
+    @apply rounded-xl border border-white/5 bg-tarmac-light/70 shadow-2xl backdrop-blur-md;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(253, 218, 36, 0.22);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-belgian-yellow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

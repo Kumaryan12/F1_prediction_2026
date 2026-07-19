@@ -13,16 +13,15 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
     return `${row.driver}: P${row.pred_rank} [${low} - ${high}]`;
   });
 
-  // Inject some live race control data for the Austrian GP vibe
-  // Spielberg is known for high-speed undulations, changeable mountain weather, and intense kerb usage!
   const tickerItems = [
     "RACE CONTROL: DRS ENABLED",
-    "TRACK TEMP: 28.2°C",
-    "AIR TEMP: 19.5°C",
-    "WIND: 5 KM/H NW (ALPINE BREEZE)",
-    "HUMIDITY: 55%",
-    "WEATHER: OVERCAST / HIGH ALTITUDE",
-    "TRACK LIMITS: TURNS 1, 4, 9, 10",
+    "TRACK STATUS: GREEN",
+    "ARDENNES WEATHER: CHANGEABLE",
+    "SECTOR 1: EAU ROUGE / RAIDILLON",
+    "SECTOR 2: POULHON",
+    "SECTOR 3: BLANCHIMONT",
+    "TYRE LOAD: VERY HIGH",
+    "SLIPSTREAM EFFECT: HIGH",
     ...predictionStrings,
   ];
 
@@ -30,21 +29,20 @@ export default function TelemetryTicker({ rows }: TelemetryTickerProps) {
   const tickerText = tickerItems.join(" /// ") + " /// ";
 
   return (
-    <div className="relative flex w-full overflow-hidden border-y border-spielberg-red/20 bg-tarmac/95 py-2 shadow-[0_0_15px_rgba(227,34,25,0.15)] backdrop-blur-md">
+    <div className="relative flex w-full overflow-hidden bg-tarmac/95 py-2.5 backdrop-blur-md">
       
       {/* We render two identical blocks side-by-side. 
         As the first one scrolls entirely out of view, the second one perfectly replaces it!
       */}
       <div className="flex animate-ticker whitespace-nowrap">
-        {/* Swapped to Spielberg Red with an intense Austrian drop-shadow */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-spielberg-red drop-shadow-[0_0_5px_rgba(227,34,25,0.5)]">
+        <span className="mx-4 text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-belgian-yellow">
           {tickerText}
         </span>
       </div>
       
       <div className="flex animate-ticker whitespace-nowrap">
         {/* Duplicate block for the infinite scroll */}
-        <span className="mx-4 text-xs font-mono font-bold uppercase tracking-[0.2em] text-spielberg-red drop-shadow-[0_0_5px_rgba(227,34,25,0.5)]">
+        <span className="mx-4 text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-belgian-yellow">
           {tickerText}
         </span>
       </div>

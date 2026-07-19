@@ -59,12 +59,17 @@ FEATS = [
     "drv_form3",
     "team_form3",
 
-    # Austria / Red Bull Ring archetype form
-    # Austria is power-sensitive, DRS-heavy, braking-heavy, and medium-low-downforce.
-    "lowdf_driver_form3",
-    "lowdf_team_form3",
+    # Silverstone / British GP archetype form
+    # Silverstone is high-speed, aero-sensitive, wind-sensitive, and tyre-load heavy.
+    # It is not a street circuit and not a true low-downforce track.
     "longstraight_driver_form3",
     "longstraight_team_form3",
+
+    # Secondary straight-line / power-sensitive form
+    # Kept because Silverstone has long full-throttle sections,
+    # but this should be treated as secondary to longstraight/high-speed form.
+    "lowdf_driver_form3",
+    "lowdf_team_form3",
 
     # Historical-strength helper columns
     "driver_hist_strength",

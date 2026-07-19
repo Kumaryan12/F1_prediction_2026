@@ -1,4 +1,3 @@
-import Link from "next/link";
 import MetricCard from "@/components/MetricCard";
 import PodiumCard from "@/components/PodiumCard";
 import PredictionTable from "@/components/PredictionTable";
@@ -6,199 +5,230 @@ import HeadToHead from "@/components/HeadToHead";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import TelemetryTicker from "@/components/TelemetryTicker";
 import Simulator from "@/components/Simulator";
-import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
+import {
+  fetchSummary,
+  fetchTop10,
+  fetchLatestPredictions,
+  fetchFeatureImportance,
+} from "@/lib/api";
 
 export default async function HomePage() {
-  const summary = await fetchSummary();
-  const top10 = await fetchTop10();
-  const fullGrid = await fetchLatestPredictions();
-  // 1. Fetch the raw data
-  const rawFeatures = await fetchFeatureImportance();
+  const [summary, top10, fullGrid, rawFeatures] = await Promise.all([
+    fetchSummary(),
+    fetchTop10(),
+    fetchLatestPredictions(),
+    fetchFeatureImportance(),
+  ]);
 
-  // 2. Filter out any 'null' values so TypeScript knows it's 100% safe
   const validFeatures = rawFeatures.filter(
     (feature): feature is { name: string; value: number } => feature !== null
   );
 
   return (
-    <div className="mx-auto max-w-7xl relative">
-      
-      {/* Massive SPI Area Code Watermark (Spielberg / Austria) */}
-      <div 
-        className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
+    <div className="relative mx-auto max-w-7xl">
+      <div
+        className="pointer-events-none absolute -right-5 top-4 z-0 select-none text-[11rem] font-black italic leading-none tracking-[-0.1em] text-belgian-yellow/[0.025] sm:text-[18rem] lg:text-[24rem]"
+        aria-hidden="true"
       >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-spielberg-red drop-shadow-[0_0_50px_rgba(227,34,25,0.5)] italic tracking-tighter">
-          SPI
-        </span>
+        SPA
       </div>
 
-      {/* Hero Section - The Austrian Grand Prix Vibe */}
-      <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
-        <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
-          
-          {/* Styrian Green Ambient Glow - Bottom left for alpine contrast */}
-          <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-styrian-green)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
-          />
-          
-          {/* Deep Tarmac to Spielberg Red Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-spielberg-red/10" />
-          
-          {/* Glowing Austria Track Minimap (Red Bull Ring) */}
-          <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
-            <svg 
-              viewBox="0 0 200 200" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-spielberg-red drop-shadow-[0_0_15px_rgba(227,34,25,0.8)]"
+      <section className="relative z-10 mb-6 overflow-hidden rounded-[1.75rem] border border-white/10 bg-tarmac-light shadow-2xl">
+        <div className="grid min-h-[470px] lg:grid-cols-[1.55fr_0.75fr]">
+          <div className="relative flex flex-col justify-between overflow-hidden p-7 sm:p-10 lg:p-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_25%,rgba(253,218,36,0.16),transparent_34%),linear-gradient(120deg,rgba(239,51,64,0.16),transparent_45%)]" />
+            <div className="absolute inset-0 opacity-[0.035] belgian-grid" />
+
+            <div className="relative z-10 flex flex-wrap items-center gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full border border-belgian-yellow/30 bg-belgian-yellow/10 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-belgian-yellow">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-belgian-yellow shadow-[0_0_8px_#fdda24]" />
+                Race intelligence live
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+                Spa-Francorchamps · Belgium
+              </span>
+            </div>
+
+            <div className="relative z-10 max-w-3xl py-12">
+              <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.36em] text-belgian-red">
+                Formula 1 · 2026
+              </p>
+              <h1 className="max-w-3xl text-5xl font-black uppercase italic leading-[0.88] tracking-[-0.055em] text-white sm:text-7xl lg:text-[5.75rem]">
+                Belgian
+                <span className="block text-belgian-yellow">Grand Prix</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-sm leading-6 text-zinc-400 sm:text-base">
+                Machine-learning race forecasts built for the longest lap on the
+                calendar—where elevation, slipstream and Ardennes weather can
+                rewrite the order in a single sector.
+              </p>
+            </div>
+
+            <div className="relative z-10 grid max-w-2xl grid-cols-3 gap-3 border-t border-white/10 pt-5">
+              {[
+                ["7.004 KM", "Lap length"],
+                ["44 LAPS", "Race distance"],
+                ["19", "Corners"],
+              ].map(([value, label]) => (
+                <div key={label}>
+                  <p className="text-lg font-black italic text-white sm:text-2xl">{value}</p>
+                  <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden border-t border-white/10 bg-black/25 p-8 lg:border-l lg:border-t-0">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(253,218,36,0.09),transparent_58%)]" />
+            <div className="absolute right-5 top-5 font-mono text-[9px] uppercase tracking-[0.24em] text-zinc-600">
+              Circuit de Spa-Francorchamps
+            </div>
+            <svg
+              viewBox="0 0 340 300"
+              className="relative z-10 w-full max-w-[360px] overflow-visible text-belgian-yellow drop-shadow-[0_0_18px_rgba(253,218,36,0.3)]"
+              role="img"
+              aria-label="Stylised Spa-Francorchamps circuit map"
             >
-              {/* Stylized Red Bull Ring Path */}
-              <path 
-                d="M 80 160 L 150 130 L 170 50 C 170 30, 140 30, 120 40 L 60 80 C 40 100, 20 130, 50 160 Z" 
-                stroke="currentColor" 
-                strokeWidth="4" 
-                strokeLinecap="round" 
+              <path
+                d="M82 241 C57 228 49 201 64 181 C75 166 94 170 103 151 C111 134 103 114 116 99 C130 83 148 87 162 69 C178 48 187 21 208 25 C226 29 218 55 231 67 C245 80 271 68 286 84 C301 100 285 119 264 129 C245 138 231 149 231 169 C232 191 256 199 247 221 C239 241 217 239 199 229 C179 218 161 211 144 226 C126 243 105 253 82 241 Z"
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="14"
+                strokeLinecap="round"
                 strokeLinejoin="round"
-                className="animate-[dash_3s_linear_infinite]"
               />
-              {/* Start/Finish Line Dot - Styrian Green (Main Straight) */}
-              <circle cx="80" cy="160" r="6" fill="#00D27F" className="animate-pulse shadow-[0_0_15px_rgba(0,210,127,1)]" />
+              <path
+                d="M82 241 C57 228 49 201 64 181 C75 166 94 170 103 151 C111 134 103 114 116 99 C130 83 148 87 162 69 C178 48 187 21 208 25 C226 29 218 55 231 67 C245 80 271 68 286 84 C301 100 285 119 264 129 C245 138 231 149 231 169 C232 191 256 199 247 221 C239 241 217 239 199 229 C179 218 161 211 144 226 C126 243 105 253 82 241 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="circuit-path"
+              />
+              <circle cx="82" cy="241" r="6" fill="#ef3340" className="animate-pulse" />
+              <path d="M72 231l16 4-4 16-16-4z" fill="none" stroke="#fff" strokeWidth="2" />
             </svg>
-          </div>
-          
-          <div className="relative z-10">
-            <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              AUSTRIAN GRAND PRIX 2026
-            </h1>
-
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
-              AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the high-speed Red Bull Ring.
-            </p>
-          </div>
-        </div>
-
-       {/* Model Architecture Specs Column */}
-        <div className="relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md">
-          {/* Pure CSS Carbon Fiber Weave */}
-          <div 
-            className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply"
-            style={{
-              backgroundImage: `
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-              `,
-              backgroundPosition: `0 0, 4px 4px`,
-              backgroundSize: `8px 8px`
-            }}
-          />
-
-          {/* Header */}
-          <div className="relative z-10 border-b border-white/10 bg-black/40 px-5 py-4 flex justify-between items-center">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-2">
-              Model Specs
-            </h3>
-          </div>
-
-          {/* Specs List */}
-          <div className="relative z-10 p-5 font-mono text-[11px] sm:text-xs flex flex-col gap-3 h-full text-zinc-300">
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Algorithm</span>
-              <span className="text-white font-bold text-right">Random Forest Reg.</span>
+            <div className="absolute bottom-6 left-7">
+              <p className="text-3xl font-black italic tracking-tighter text-white">102.2 M</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-500">
+                Elevation change
+              </p>
             </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Spielberg Red */}
-              <span className="text-spielberg-red font-bold drop-shadow-[0_0_5px_rgba(227,34,25,0.4)]">1200 Trees</span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Features</span>
-              <span className="text-white text-right">41 <span className="text-zinc-500">(39 Num / 2 Cat)</span></span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Styrian Green */}
-              <span className="text-styrian-green font-bold drop-shadow-[0_0_5px_rgba(0,210,127,0.4)]">0.629 </span>
-            </div>
-
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Spielberg Red */}
-              <span className="text-spielberg-red font-bold">2.35 </span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Min Samples/Leaf</span>
-              <span className="text-white">16</span>
-            </div>
-            
-            <div className="flex justify-between items-end pt-0.5">
-              <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right">3.20</span>
+            <div className="absolute bottom-6 right-7 text-right">
+              <p className="text-sm font-black uppercase italic text-belgian-red">Eau Rouge</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-500">
+                Sector one
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Podium Outlook - Stepped Layout */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-8 flex items-center gap-4">
-          <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-            Podium Outlook
-          </h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-        </div>
+      <div className="relative z-10 mb-10 overflow-hidden rounded-xl border border-white/10">
+        <TelemetryTicker rows={fullGrid.rows} />
+      </div>
 
-        <div className="grid gap-4 md:grid-cols-3 md:items-end md:h-64">
-          <div className="order-2 md:order-1 md:h-[85%]">
+      <section className="relative z-10 mb-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard
+          label="Predicted Winner"
+          value={summary.predicted_winner}
+          subtext="Highest model rank"
+          accent="yellow"
+        />
+        <MetricCard
+          label="Constructor Edge"
+          value={summary.best_team}
+          subtext="Strongest aggregate"
+          accent="red"
+        />
+        <MetricCard
+          label="Grid Model"
+          value={`${summary.total_drivers} Cars`}
+          subtext="Full field processed"
+          accent="yellow"
+        />
+        <MetricCard
+          label="Forecast Spread"
+          value={`±${Number(summary.avg_pred_std).toFixed(2)}`}
+          subtext="Mean model deviation"
+          accent="red"
+        />
+      </section>
+
+      <section className="relative z-10 mb-16">
+        <SectionHeading
+          index="01"
+          title="Podium Outlook"
+          subtitle="Most likely top-three finishers"
+        />
+        <div className="grid gap-4 md:h-64 md:grid-cols-3 md:items-end">
+          <div className="order-2 h-full md:order-1 md:h-[85%]">
             <PodiumCard position={2} driver={summary.predicted_podium[1]} />
           </div>
-          {/* Changed shadow highlight to Spielberg Red */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-spielberg-red/20">
+          <div className="order-1 h-full shadow-2xl shadow-belgian-yellow/10 md:order-2">
             <PodiumCard position={1} driver={summary.predicted_podium[0]} />
           </div>
-          <div className="order-3 md:order-3 md:h-[75%]">
+          <div className="order-3 h-full md:h-[76%]">
             <PodiumCard position={3} driver={summary.predicted_podium[2]} />
           </div>
         </div>
       </section>
 
-      {/* Top 10 Prediction Table */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-              Top 10 Predictions
-            </h2>
-            <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
-              Finishing order probability view // Live Delta
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-tarmac-light/50 backdrop-blur-md overflow-hidden p-1 shadow-2xl shadow-black/50">
+      <section className="relative z-10 mb-16">
+        <SectionHeading
+          index="02"
+          title="Top 10 Forecast"
+          subtitle="Predicted finishing order · 68% confidence intervals"
+        />
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/60 p-1 shadow-2xl shadow-black/50 backdrop-blur-md">
           <PredictionTable rows={top10.rows} />
         </div>
       </section>
 
-      {/* Head-to-Head Combat Terminal */}
-      <section className="mb-16 relative z-10">
+      <section className="relative z-10 mb-16">
         <HeadToHead predictions={fullGrid.rows} />
       </section>
 
-      {/* The What-If Simulator */}
-      <section className="mb-16 relative z-10">
+      <section className="relative z-10 mb-16">
         <Simulator predictions={fullGrid.rows} />
       </section>
 
-      {/* Feature Importance Chart */}
-      <section className="mb-16 relative z-10">
+      <section className="relative z-10 mb-16">
         <FeatureImportanceChart features={validFeatures} />
       </section>
-      
+
+      <footer className="relative z-10 flex flex-col gap-2 border-t border-white/10 py-8 font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
+        <span>F1 Race Intelligence · Belgian GP 2026</span>
+        <span>Model outputs are probabilistic, not guarantees</span>
+      </footer>
+    </div>
+  );
+}
+
+function SectionHeading({
+  index,
+  title,
+  subtitle,
+}: {
+  index: string;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <div className="mb-7 flex items-end gap-4">
+      <span className="pb-1 font-mono text-xs font-bold text-belgian-red">{index}</span>
+      <div>
+        <h2 className="text-2xl font-black uppercase italic tracking-tight text-white sm:text-3xl">
+          {title}
+        </h2>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+          {subtitle}
+        </p>
+      </div>
+      <div className="mb-2 h-px flex-1 bg-gradient-to-r from-belgian-yellow/35 to-transparent" />
     </div>
   );
 }
