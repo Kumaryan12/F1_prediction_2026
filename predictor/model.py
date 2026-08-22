@@ -24,17 +24,35 @@ DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/
 # Feature list (China-ready, Australia-specific features removed)
 # -------------------------------------------------------------------
 FEATS = [
+    # ---------------------------------------------------------------
     # Sunday starting order
-    # Valid because this is a post-qualifying / pre-race prediction system.
+    # ---------------------------------------------------------------
+
+    # Valid because this is a post-qualifying prediction.
     "grid_pos",
 
-    # Core circuit priors
-    "sc_prob", "vsc_prob", "pit_loss",
-    "expected_stops", "overtake_index", "tow_importance",
-    "is_low_df", "is_street", "long_straight_index",
-    "braking_intensity", "warmup_penalty", "deg_rate", "stint_len_typical",
+    # ---------------------------------------------------------------
+    # Core circuit characteristics
+    # ---------------------------------------------------------------
 
-    # Track / layout extras
+    "sc_prob",
+    "vsc_prob",
+    "pit_loss",
+    "expected_stops",
+    "overtake_index",
+    "tow_importance",
+    "is_low_df",
+    "is_street",
+    "long_straight_index",
+    "braking_intensity",
+    "warmup_penalty",
+    "deg_rate",
+    "stint_len_typical",
+
+    # ---------------------------------------------------------------
+    # Track characteristics
+    # ---------------------------------------------------------------
+
     "surface_bumpiness",
     "wind_sensitivity",
     "track_limits_risk",
@@ -43,47 +61,70 @@ FEATS = [
     "corner_count",
     "avg_speed_kph",
 
+    # ---------------------------------------------------------------
     # Weather
+    # ---------------------------------------------------------------
+
     "rain_prob_race",
     "wet_lap_fraction",
     "wet_start_prob",
     "mixed_conditions_risk",
 
-    # Driver / team priors
+    # ---------------------------------------------------------------
+    # Driver / Team priors
+    # ---------------------------------------------------------------
+
     "driver_skill_prior",
     "team_prior_strength",
     "rookie_flag",
     "returnee_flag",
 
+    # ---------------------------------------------------------------
     # General recent form
+    # ---------------------------------------------------------------
+
     "drv_form3",
     "team_form3",
 
-    # Silverstone / British GP archetype form
-    # Silverstone is high-speed, aero-sensitive, wind-sensitive, and tyre-load heavy.
-    # It is not a street circuit and not a true low-downforce track.
+    # ---------------------------------------------------------------
+    # Primary Hungary archetype
+    #
+    # Hungaroring is a high-downforce, technical circuit that rewards:
+    # - mechanical grip
+    # - medium-speed balance
+    # - tyre management
+    # - qualifying pace
+    # ---------------------------------------------------------------
+
+    "highdf_driver_form3",
+    "highdf_team_form3",
+
+    # ---------------------------------------------------------------
+    # Secondary archetype
+    #
+    # General high-speed performance still provides useful information,
+    # but is less important than high-downforce technical form.
+    # ---------------------------------------------------------------
+
     "longstraight_driver_form3",
     "longstraight_team_form3",
 
-    # Secondary straight-line / power-sensitive form
-    # Kept because Silverstone has long full-throttle sections,
-    # but this should be treated as secondary to longstraight/high-speed form.
-    "lowdf_driver_form3",
-    "lowdf_team_form3",
+    # ---------------------------------------------------------------
+    # Historical normalized strength
+    # ---------------------------------------------------------------
 
-    # Historical-strength helper columns
     "driver_hist_strength",
     "team_hist_strength",
 
-    # Blended 2026-adjusted strength
+    # ---------------------------------------------------------------
+    # Live 2026 blended strength
+    # ---------------------------------------------------------------
+
     "driver_strength_blend_2026",
     "team_strength_blend_2026",
-
-    # Categoricals
     "team",
     "driver",
 ]
-
 CAT_COLS = ["team", "driver"]
 NUM_COLS = [c for c in FEATS if c not in CAT_COLS]
 

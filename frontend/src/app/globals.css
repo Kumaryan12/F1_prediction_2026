@@ -2,44 +2,31 @@
 
 @theme inline {
   --color-f1-red: #e10600;
-  --color-tarmac: #08090b;
-  --color-tarmac-light: #121419;
+  --color-tarmac: #080a0b;
+  --color-tarmac-light: #121516;
 
-  --color-belgian-black: #101114;
-  --color-belgian-yellow: #fdda24;
-  --color-belgian-red: #ef3340;
+  --color-hungary-red: #ce2939;
+  --color-hungary-ivory: #f4f0e8;
+  --color-hungary-green: #5c9a68;
 
-  /* Compatibility aliases used throughout the prediction widgets. */
-  --color-spielberg-red: var(--color-belgian-red);
-  --color-styrian-green: var(--color-belgian-yellow);
-  --color-catalunya-red: var(--color-belgian-red);
-  --color-iberian-yellow: var(--color-belgian-yellow);
-  --color-telemetry: var(--color-belgian-yellow);
+  /* Compatibility aliases used by shared prediction widgets. */
+  --color-spielberg-red: var(--color-hungary-red);
+  --color-styrian-green: var(--color-hungary-green);
+  --color-catalunya-red: var(--color-hungary-red);
+  --color-iberian-yellow: var(--color-hungary-green);
+  --color-telemetry: var(--color-hungary-green);
 
   --font-sans: "Inter", "Arial Narrow", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
-  --animate-ticker: ticker 48s linear infinite;
-}
-
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
-
-@keyframes fall {
-  0% { transform: translateY(-10vh) rotate(8deg); opacity: 0; }
-  8% { opacity: 0.5; }
-  92% { opacity: 0.45; }
-  100% { transform: translateY(110vh) rotate(8deg); opacity: 0; }
-}
-
-@keyframes sway {
-  0%, 100% { margin-left: -25px; }
-  50% { margin-left: 25px; }
 }
 
 @keyframes circuit-dash {
   to { stroke-dashoffset: -34; }
+}
+
+@keyframes heat-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
+  50% { transform: translate3d(18px, -12px, 0) scale(1.05); opacity: 0.55; }
 }
 
 :root {
@@ -59,18 +46,18 @@ body {
   min-width: 320px;
   background-color: var(--background);
   background-image:
-    radial-gradient(circle at 12% 8%, rgba(239, 51, 64, 0.07), transparent 30rem),
-    radial-gradient(circle at 88% 18%, rgba(253, 218, 36, 0.055), transparent 28rem),
-    linear-gradient(to bottom, #111319 0%, #08090b 50rem);
+    radial-gradient(circle at 10% 6%, rgba(206, 41, 57, 0.085), transparent 30rem),
+    radial-gradient(circle at 91% 24%, rgba(92, 154, 104, 0.055), transparent 28rem),
+    linear-gradient(to bottom, #111516 0%, #080a0b 50rem);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
 }
 
-.belgian-grid {
+.hungary-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.42) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.42) 1px, transparent 1px);
   background-size: 34px 34px;
   mask-image: linear-gradient(to bottom right, black, transparent 72%);
 }
@@ -78,6 +65,10 @@ body {
 .circuit-path {
   stroke-dasharray: 12 6;
   animation: circuit-dash 3s linear infinite;
+}
+
+.heat-orb {
+  animation: heat-drift 9s ease-in-out infinite;
 }
 
 @layer utilities {
@@ -97,11 +88,11 @@ body {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  background: rgba(253, 218, 36, 0.22);
+  background: rgba(206, 41, 57, 0.24);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-belgian-yellow);
+  background: var(--color-hungary-red);
 }
 
 @media (prefers-reduced-motion: reduce) {

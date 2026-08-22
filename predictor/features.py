@@ -22,100 +22,119 @@ try:
 except Exception:
     LONG_STRAIGHT_GPS: set[str] = set()
 
+try:
+    from .config import HIGH_DF_TECHNICAL_GPS
+except Exception:
+    # Safe fallback until this set is added to config.py.
+    HIGH_DF_TECHNICAL_GPS: set[str] = {
+        "Hungarian Grand Prix",
+        "Monaco Grand Prix",
+    }
+
 
 # -------------------------------------------------------------------
 # Driver and team priors
 #
-# Belgian GP / Spa-Francorchamps configuration
+# Hungarian GP / Hungaroring configuration
 #
-# These values represent pre-race competitiveness, not pure driver
-# ability. They combine:
+# These are current pre-race competitiveness priors, not pure talent
+# ratings. They use:
 #
-# - 2026 championship performance
-# - recent race form
-# - current team competitiveness
-# - suitability for Spa
-# - high-speed confidence
-# - straight-line efficiency
-# - tyre management
-# - mixed-weather performance
+# - 2026 championship position and points
+# - recent races through the Belgian Grand Prix
+# - team package strength
+# - qualifying and race consistency
+# - Hungary suitability
+# - high-downforce and technical-circuit performance
+# - tyre management and traffic management
 #
-# Freeze these values before using Belgian GP qualifying or race data.
+# Freeze these before incorporating Hungarian GP qualifying or race data.
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
     # ---------------------------------------------------------------
-    # Championship-leading group
+    # Leading championship group
     # ---------------------------------------------------------------
 
-    # Championship leader and strongest overall 2026 campaign.
+    # Championship leader, six wins and Belgian GP winner.
+    # Mercedes is currently the strongest package.
     "ANT": 1.00,
 
-    # Championship P2, Austrian GP winner and Silverstone runner-up.
-    "RUS": 0.99,
-
-    # Championship P3 and Silverstone podium finisher.
+    # Championship P2, multiple podiums and strong technical-track record.
+    # Finished fourth in Belgium after a time penalty.
     "HAM": 0.97,
 
-    # Silverstone winner and strong recent upward trajectory.
+    # Championship P3. Austria winner and consistently competitive,
+    # although Belgium ended with a Lap 1 retirement.
+    "RUS": 0.95,
+
+    # Consecutive strong races: Silverstone win and Belgium P2.
+    # Ferrari's high-downforce pace gives him strong Hungary upside.
     "LEC": 0.96,
 
     # ---------------------------------------------------------------
     # Leading challengers
     # ---------------------------------------------------------------
 
-    # McLaren's leading championship driver.
-    "NOR": 0.92,
+    # Championship P5. Strong overall consistency and technical-track pace.
+    "NOR": 0.91,
 
-    # Strong overall package, although recent results have been uneven.
-    "PIA": 0.89,
+    # Championship P6 and Belgium P5.
+    # Hungary should suit McLaren better than Spa.
+    "PIA": 0.90,
 
-    # Strong Spa-specific driver profile, but weaker current team form.
+    # Belgium podium and strong driver-level ability.
+    # Current Red Bull package is below Mercedes and Ferrari.
     "VER": 0.92,
 
-    # Strongest driver outside the leading four teams this season.
+    # Championship P8 and recovered from the back to P6 in Belgium.
     "HAD": 0.87,
 
     # ---------------------------------------------------------------
     # Upper midfield
     # ---------------------------------------------------------------
 
-    "GAS": 0.82,
+    # Alpine's highest-ranked driver, though Belgium produced no points.
+    "GAS": 0.81,
 
-    # Strong Silverstone result and competitive recent form.
-    "LAW": 0.83,
+    # Championship P10. Strong recent consistency before Belgium P12.
+    "LAW": 0.81,
 
-    # Rookie uncertainty remains, but current results justify an increase.
+    # Rookie with consecutive points at Silverstone and Belgium.
     "LIN": 0.80,
 
-    "BEA": 0.77,
-    "COL": 0.76,
+    # Belgium P10 and championship P12.
+    "COL": 0.78,
 
-    # Audi's current points scorer and strong Silverstone finisher.
-    "BOR": 0.76,
+    # Audi's only points scorer, with consecutive P8 finishes.
+    "BOR": 0.79,
 
-    # ---------------------------------------------------------------
-    # Midfield
-    # ---------------------------------------------------------------
-
-    "SAI": 0.75,
-    "ALB": 0.74,
-    "OCO": 0.72,
-    "HUL": 0.71,
+    # Championship P13, but Belgium P14 weakens recent form.
+    "BEA": 0.75,
 
     # ---------------------------------------------------------------
-    # Lower current-performance group
+    # Lower midfield
     # ---------------------------------------------------------------
 
-    # Strong historical ability, but Aston Martin is currently weak.
-    "ALO": 0.70,
+    "SAI": 0.72,
+    "ALB": 0.71,
+    "OCO": 0.69,
+    "HUL": 0.69,
 
-    "BOT": 0.66,
-    "PER": 0.65,
-    "STR": 0.64,
+    # Aston Martin remains weak, but Hungary may suit Alonso's driving
+    # and the team's high-downforce upgrades better than Spa.
+    "ALO": 0.71,
+
+    # ---------------------------------------------------------------
+    # Rear group
+    # ---------------------------------------------------------------
+
+    "STR": 0.62,
+    "BOT": 0.64,
+    "PER": 0.61,
 }
 
-DEFAULT_DRIVER_PRIOR = 0.74
+DEFAULT_DRIVER_PRIOR = 0.73
 
 
 ROOKIE_DRIVERS = {
@@ -131,16 +150,14 @@ RETURNEE_DRIVERS = {
 
 # -------------------------------------------------------------------
 # Team-name normalization
-#
-# All legacy Sauber/Kick Sauber naming is normalized to Audi for the
-# 2026 prediction frame.
 # -------------------------------------------------------------------
 
 TEAM_ALIAS = {
-    # Audi / legacy Sauber naming
+    # Audi and historical Sauber names
     "Audi": "Audi",
     "Audi F1 Team": "Audi",
     "Sauber": "Audi",
+    "Sauber Motorsport": "Audi",
     "Kick Sauber": "Audi",
     "Stake Kick Sauber": "Audi",
     "Stake F1 Team Kick Sauber": "Audi",
@@ -193,38 +210,58 @@ TEAM_ALIAS = {
 
     # Alpine
     "Alpine": "Alpine",
+    "Alpine F1 Team": "Alpine",
     "BWT Alpine F1 Team": "Alpine",
 }
 
 
+# -------------------------------------------------------------------
+# Team current-performance priors
+#
+# Championship order after Belgium:
+# Mercedes, Ferrari, McLaren, Red Bull, Alpine/Racing Bulls,
+# Haas, Williams, Audi, Aston Martin, Cadillac.
+#
+# Hungary-specific suitability is only a small adjustment. Championship
+# and recent race evidence remain the main basis.
+# -------------------------------------------------------------------
+
 TEAM_BASELINE_PRIOR = {
-    # Constructors' Championship leader.
+    # 358 points and clear championship leader.
     "Mercedes": 1.00,
 
-    # Second in the championship and winner of the latest race.
+    # 285 points and consecutive strong races.
+    # High-downforce Hungary should suit Ferrari.
     "Ferrari": 0.96,
 
-    # Third in the championship with strong aero efficiency.
-    "McLaren": 0.89,
+    # 195 points. Hungary may suit McLaren better than Spa did.
+    "McLaren": 0.90,
 
-    # Strong driver pairing but inconsistent 2026 package.
+    # 151 points. Strong driver performance but inconsistent package.
     "Red Bull Racing": 0.84,
 
-    # Upper midfield
-    "Racing Bulls": 0.74,
+    # Both teams have 61 points.
     "Alpine": 0.73,
+    "Racing Bulls": 0.73,
 
-    # Lower midfield
-    "Haas F1 Team": 0.66,
-    "Williams": 0.61,
-    "Audi": 0.58,
+    # 21 points and inconsistent recent performance.
+    "Haas F1 Team": 0.64,
 
-    # Lower group
+    # 11 points and weak recent races.
+    "Williams": 0.58,
+
+    # 10 points, all from Bortoleto, with recent upward form.
+    "Audi": 0.60,
+
+    # Only one point, but Hungary-specific upgrades could improve the
+    # package relative to the raw championship position.
     "Aston Martin": 0.53,
-    "Cadillac": 0.49,
+
+    # Scoreless and two weak Belgian GP results.
+    "Cadillac": 0.46,
 }
 
-DEFAULT_TEAM_PRIOR = 0.70
+DEFAULT_TEAM_PRIOR = 0.69
 
 
 # -------------------------------------------------------------------
@@ -239,7 +276,10 @@ def _ensure_numeric(
 
     for col in cols:
         if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
+            df[col] = pd.to_numeric(
+                df[col],
+                errors="coerce",
+            )
 
 
 def _normalize_team_names(
@@ -266,12 +306,14 @@ def _inverse_minmax_strength(
     """
     Convert lower-is-better finishing form into higher-is-better strength.
 
-    Example:
-        average finish 2.0 -> high strength
-        average finish 16.0 -> low strength
+    Best recent average finish approaches 1.0.
+    Worst recent average finish approaches 0.0.
     """
 
-    values = pd.to_numeric(series, errors="coerce")
+    values = pd.to_numeric(
+        series,
+        errors="coerce",
+    )
 
     minimum = values.min(skipna=True)
     maximum = values.max(skipna=True)
@@ -287,7 +329,10 @@ def _inverse_minmax_strength(
             dtype=float,
         )
 
-    return 1.0 - (values - minimum) / (maximum - minimum)
+    return 1.0 - (
+        (values - minimum)
+        / (maximum - minimum)
+    )
 
 
 def _latest_by_entity(
@@ -296,10 +341,12 @@ def _latest_by_entity(
     value_cols: list[str],
 ) -> pd.DataFrame:
     """
-    Return the latest non-null value for each entity and feature.
+    Return the latest available non-null value for every entity-feature
+    combination.
 
-    Archetype features therefore use the latest relevant archetype race,
-    rather than blindly using the latest race of any circuit type.
+    Each feature is resolved independently, which is important because
+    the latest technical-circuit observation may not be the latest race
+    overall.
     """
 
     if entity_col not in df.columns:
@@ -307,14 +354,12 @@ def _latest_by_entity(
             f"_latest_by_entity requires column '{entity_col}'."
         )
 
-    entities = sorted(
-        df[entity_col]
-        .dropna()
-        .unique()
-    )
-
     result = pd.DataFrame({
-        entity_col: entities,
+        entity_col: sorted(
+            df[entity_col]
+            .dropna()
+            .unique()
+        )
     })
 
     for col in value_cols:
@@ -331,13 +376,17 @@ def _latest_by_entity(
 
         if "date" in valid.columns:
             valid = valid.sort_values(
-                "date",
+                ["date"],
                 kind="mergesort",
             )
 
         latest = (
             valid
-            .groupby(entity_col, as_index=False)
+            .groupby(
+                entity_col,
+                as_index=False,
+                sort=False,
+            )
             .tail(1)[[entity_col, col]]
         )
 
@@ -358,10 +407,10 @@ def _fill_from_general_or_median(
     general_col: str | None,
 ) -> None:
     """
-    Fill a prediction feature using:
+    Fill prediction features in this order:
 
-    1. general rolling form
-    2. training-set median
+    1. corresponding general form
+    2. historical training median
     """
 
     if col not in out.columns:
@@ -370,11 +419,16 @@ def _fill_from_general_or_median(
     if (
         general_col is not None
         and general_col in out.columns
-        and col != general_col
+        and general_col != col
     ):
-        out[col] = out[col].fillna(out[general_col])
+        out[col] = out[col].fillna(
+            out[general_col]
+        )
 
-    if out[col].isna().any() and col in train.columns:
+    if (
+        out[col].isna().any()
+        and col in train.columns
+    ):
         median = pd.to_numeric(
             train[col],
             errors="coerce",
@@ -391,7 +445,7 @@ def _fill_from_general_or_median(
 def add_driver_skill_prior(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Add driver competitiveness and status flags."""
+    """Add current driver competitiveness and status flags."""
 
     out = df.copy()
 
@@ -412,6 +466,7 @@ def add_driver_skill_prior(
         out["driver"]
         .map(DRIVER_SKILL_PRIOR)
         .fillna(DEFAULT_DRIVER_PRIOR)
+        .astype(float)
     )
 
     out["rookie_flag"] = (
@@ -432,7 +487,7 @@ def add_driver_skill_prior(
 def add_team_prior_strength(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Add the current constructor competitiveness prior."""
+    """Add current constructor competitiveness prior."""
 
     out = _normalize_team_names(df)
 
@@ -444,101 +499,120 @@ def add_team_prior_strength(
         out["team"]
         .map(TEAM_BASELINE_PRIOR)
         .fillna(DEFAULT_TEAM_PRIOR)
+        .astype(float)
     )
 
     return out
 
 
 # -------------------------------------------------------------------
-# Historical and live strength blending
+# Historical and live-session strength blending
 # -------------------------------------------------------------------
 
 def add_live_strength_adjustments(
     df: pd.DataFrame,
-    hist_team_weight: float = 0.40,
-    live_team_weight: float = 0.60,
-    hist_driver_weight: float = 0.40,
-    live_driver_weight: float = 0.60,
+    hist_team_weight: float = 0.45,
+    live_team_weight: float = 0.55,
+    hist_driver_weight: float = 0.45,
+    live_driver_weight: float = 0.55,
 ) -> pd.DataFrame:
     """
-    Create historical and live strength features.
+    Create:
 
-    Outputs:
-        driver_hist_strength
-        team_hist_strength
-        driver_strength_blend_2026
-        team_strength_blend_2026
+    - driver_hist_strength
+    - team_hist_strength
+    - driver_strength_blend_2026
+    - team_strength_blend_2026
 
-    Spa is sensitive to:
-        aerodynamic efficiency
-        straight-line speed
-        sector-two balance
-        wind
-        tyre warm-up
-        weather variation
+    Hungary is highly setup-sensitive, but practice results can be
+    distorted by fuel load, tyre age, engine mode and traffic.
 
-    Live session performance is useful, but it is intentionally limited
-    to 60% of the blended feature because practice programmes may differ.
+    Live performance therefore receives 55%, rather than the more
+    aggressive 60-75% used previously.
     """
+
+    if not np.isclose(
+        hist_team_weight + live_team_weight,
+        1.0,
+    ):
+        raise ValueError(
+            "Team history and live weights must sum to 1."
+        )
+
+    if not np.isclose(
+        hist_driver_weight + live_driver_weight,
+        1.0,
+    ):
+        raise ValueError(
+            "Driver history and live weights must sum to 1."
+        )
 
     out = _normalize_team_names(df.copy())
 
     if "drv_form3" in out.columns:
-        out["driver_hist_strength"] = _inverse_minmax_strength(
-            out["drv_form3"]
+        out["driver_hist_strength"] = (
+            _inverse_minmax_strength(
+                out["drv_form3"]
+            )
         )
     else:
         out["driver_hist_strength"] = np.nan
 
     if "team_form3" in out.columns:
-        out["team_hist_strength"] = _inverse_minmax_strength(
-            out["team_form3"]
+        out["team_hist_strength"] = (
+            _inverse_minmax_strength(
+                out["team_form3"]
+            )
         )
     else:
         out["team_hist_strength"] = np.nan
 
-    if "driver_2026_session_strength" in out.columns:
-        historical = pd.to_numeric(
-            out["driver_hist_strength"],
-            errors="coerce",
-        )
+    driver_history = pd.to_numeric(
+        out["driver_hist_strength"],
+        errors="coerce",
+    )
 
-        live = pd.to_numeric(
+    if "driver_2026_session_strength" in out.columns:
+        driver_live = pd.to_numeric(
             out["driver_2026_session_strength"],
             errors="coerce",
         )
 
         out["driver_strength_blend_2026"] = np.where(
-            historical.notna() & live.notna(),
-            hist_driver_weight * historical
-            + live_driver_weight * live,
-            historical.fillna(live),
+            driver_history.notna() & driver_live.notna(),
+            (
+                hist_driver_weight * driver_history
+                + live_driver_weight * driver_live
+            ),
+            driver_history.fillna(driver_live),
         )
     else:
         out["driver_strength_blend_2026"] = (
-            out["driver_hist_strength"]
+            driver_history
         )
+
+    team_history = pd.to_numeric(
+        out["team_hist_strength"],
+        errors="coerce",
+    )
 
     if "team_2026_strength" in out.columns:
-        historical = pd.to_numeric(
-            out["team_hist_strength"],
-            errors="coerce",
-        )
-
-        live = pd.to_numeric(
+        team_live = pd.to_numeric(
             out["team_2026_strength"],
             errors="coerce",
         )
 
         out["team_strength_blend_2026"] = np.where(
-            historical.notna() & live.notna(),
-            hist_team_weight * historical
-            + live_team_weight * live,
-            historical.fillna(live),
+            team_history.notna() & team_live.notna(),
+            (
+                hist_team_weight * team_history
+                + live_team_weight * team_live
+            ),
+            team_history.fillna(team_live),
         )
     else:
         out["team_strength_blend_2026"] = (
-            out["team_hist_strength"]
+            team_history
         )
 
     return out
@@ -558,7 +632,9 @@ def add_circuit_context_df(
             "add_circuit_context_df requires a 'gp' column."
         )
 
-    def _lookup(gp: str) -> pd.Series:
+    def _lookup(gp_value: object) -> pd.Series:
+        gp = str(gp_value).strip()
+
         sc_prob, vsc_prob, pit_loss = CIRCUIT_VOL.get(
             gp,
             (
@@ -585,7 +661,9 @@ def add_circuit_context_df(
             float(gp in STREET_GPS),
         )
 
-        is_long_straight = gp in LONG_STRAIGHT_GPS
+        is_long_straight = (
+            gp in LONG_STRAIGHT_GPS
+        )
 
         if "long_straight_index" not in extras:
             if extras["is_low_df"]:
@@ -618,13 +696,28 @@ def add_circuit_context_df(
             **extras,
         })
 
-    context = df["gp"].astype(str).apply(_lookup)
+    base = df.reset_index(drop=True).copy()
+
+    context = (
+        base["gp"]
+        .apply(_lookup)
+        .reset_index(drop=True)
+    )
+
+    # Prevent duplicate feature columns if context is added twice.
+    overlapping = [
+        col
+        for col in context.columns
+        if col in base.columns
+    ]
+
+    if overlapping:
+        base = base.drop(
+            columns=overlapping
+        )
 
     out = pd.concat(
-        [
-            df.reset_index(drop=True),
-            context.reset_index(drop=True),
-        ],
+        [base, context],
         axis=1,
     )
 
@@ -667,7 +760,10 @@ def add_circuit_context_df(
         "returnee_flag",
     ]
 
-    _ensure_numeric(out, numeric_cols)
+    _ensure_numeric(
+        out,
+        numeric_cols,
+    )
 
     return out
 
@@ -680,10 +776,10 @@ def add_driver_team_form(
     full_df: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Create leakage-safe driver, team and circuit-archetype rolling form.
+    Create leakage-safe general and circuit-archetype rolling forms.
 
-    Every rolling calculation uses shift(1), ensuring that the current
-    race result is never used to predict itself.
+    Every rolling calculation uses shift(1), so the current race result
+    cannot be used to predict the same race.
     """
 
     required = {
@@ -695,7 +791,9 @@ def add_driver_team_form(
         "finish_pos",
     }
 
-    missing = required.difference(full_df.columns)
+    missing = required.difference(
+        full_df.columns
+    )
 
     if missing:
         raise ValueError(
@@ -749,7 +847,10 @@ def add_driver_team_form(
 
     df["drv_form3"] = (
         df
-        .groupby("driver", sort=False)["finish_pos"]
+        .groupby(
+            "driver",
+            sort=False,
+        )["finish_pos"]
         .transform(
             lambda values: (
                 values
@@ -766,8 +867,8 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # General team form
     #
-    # Calculate one team result per race first, preventing each team's
-    # two drivers from being treated as separate chronological races.
+    # First reduce each team-race to one observation. Otherwise each
+    # team's two drivers would incorrectly count as separate races.
     # ---------------------------------------------------------------
 
     team_events = (
@@ -799,7 +900,10 @@ def add_driver_team_form(
 
     team_events["team_form3"] = (
         team_events
-        .groupby("team", sort=False)["team_event_finish"]
+        .groupby(
+            "team",
+            sort=False,
+        )["team_event_finish"]
         .transform(
             lambda values: (
                 values
@@ -834,7 +938,7 @@ def add_driver_team_form(
     )
 
     # ---------------------------------------------------------------
-    # Manual current priors
+    # Frozen pre-Hungary manual priors
     # ---------------------------------------------------------------
 
     df["driver_skill_prior"] = (
@@ -872,21 +976,22 @@ def add_driver_team_form(
         window: int = 3,
     ) -> None:
         """
-        Add leakage-safe form for a selected circuit archetype.
-
-        Values exist on archetype-event rows. Non-archetype rows remain
-        missing and are later filled using general rolling form.
+        Add driver and team form using only events in one circuit group.
         """
 
         df[driver_output_col] = np.nan
         df[team_output_col] = np.nan
+
+        if not gps:
+            return
 
         mask = df["gp"].isin(gps)
 
         if not mask.any():
             return
 
-        archetype_driver = (
+        # Driver form within the selected archetype.
+        driver_subset = (
             df.loc[
                 mask,
                 [
@@ -909,8 +1014,8 @@ def add_driver_team_form(
             )
         )
 
-        archetype_driver[driver_output_col] = (
-            archetype_driver
+        driver_subset[driver_output_col] = (
+            driver_subset
             .groupby(
                 "driver",
                 sort=False,
@@ -929,11 +1034,12 @@ def add_driver_team_form(
         )
 
         df.loc[
-            archetype_driver.index,
+            driver_subset.index,
             driver_output_col,
-        ] = archetype_driver[driver_output_col]
+        ] = driver_subset[driver_output_col]
 
-        archetype_team_events = (
+        # Team form within the selected archetype.
+        team_subset = (
             df.loc[mask]
             .groupby(
                 [
@@ -960,8 +1066,8 @@ def add_driver_team_form(
             )
         )
 
-        archetype_team_events[team_output_col] = (
-            archetype_team_events
+        team_subset[team_output_col] = (
+            team_subset
             .groupby(
                 "team",
                 sort=False,
@@ -979,7 +1085,7 @@ def add_driver_team_form(
             )
         )
 
-        team_lookup = archetype_team_events[
+        lookup = team_subset[
             [
                 "year",
                 "gp",
@@ -1000,7 +1106,7 @@ def add_driver_team_form(
                 ],
             ]
             .merge(
-                team_lookup,
+                lookup,
                 on=[
                     "year",
                     "gp",
@@ -1017,8 +1123,7 @@ def add_driver_team_form(
             team_output_col,
         ] = matched[team_output_col].to_numpy()
 
-    # Spa belongs to both low-downforce/power-sensitive and
-    # long-straight/high-speed archetypes.
+    # Existing archetypes
     _add_archetype_forms(
         gps=LOW_DF_GPS,
         driver_output_col="lowdf_driver_form3",
@@ -1037,37 +1142,37 @@ def add_driver_team_form(
         team_output_col="longstraight_team_form3",
     )
 
-    # For training rows where archetype history is unavailable, fall
-    # back to the driver's or team's general rolling form.
-    df["lowdf_driver_form3"] = (
-        df["lowdf_driver_form3"]
-        .fillna(df["drv_form3"])
+    # Primary Hungarian GP archetype.
+    _add_archetype_forms(
+        gps=HIGH_DF_TECHNICAL_GPS,
+        driver_output_col="highdf_driver_form3",
+        team_output_col="highdf_team_form3",
     )
 
-    df["lowdf_team_form3"] = (
-        df["lowdf_team_form3"]
-        .fillna(df["team_form3"])
-    )
+    # Use general form where an archetype-specific history is absent.
+    driver_archetype_cols = [
+        "lowdf_driver_form3",
+        "street_driver_form3",
+        "longstraight_driver_form3",
+        "highdf_driver_form3",
+    ]
 
-    df["street_driver_form3"] = (
-        df["street_driver_form3"]
-        .fillna(df["drv_form3"])
-    )
+    for col in driver_archetype_cols:
+        df[col] = df[col].fillna(
+            df["drv_form3"]
+        )
 
-    df["street_team_form3"] = (
-        df["street_team_form3"]
-        .fillna(df["team_form3"])
-    )
+    team_archetype_cols = [
+        "lowdf_team_form3",
+        "street_team_form3",
+        "longstraight_team_form3",
+        "highdf_team_form3",
+    ]
 
-    df["longstraight_driver_form3"] = (
-        df["longstraight_driver_form3"]
-        .fillna(df["drv_form3"])
-    )
-
-    df["longstraight_team_form3"] = (
-        df["longstraight_team_form3"]
-        .fillna(df["team_form3"])
-    )
+    for col in team_archetype_cols:
+        df[col] = df[col].fillna(
+            df["team_form3"]
+        )
 
     df = add_live_strength_adjustments(df)
 
@@ -1083,8 +1188,8 @@ def merge_latest_forms(
     train_df_with_forms: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Merge the latest available general and archetype form into the
-    upcoming-race prediction dataframe.
+    Merge latest general and archetype form into the Hungary prediction
+    dataframe.
     """
 
     required_predict = {
@@ -1160,13 +1265,10 @@ def merge_latest_forms(
 
     driver_general_cols = [
         "drv_form3",
-        "driver_skill_prior",
         "driver_hist_strength",
-        "rookie_flag",
-        "returnee_flag",
     ]
 
-    latest_driver_general = _latest_by_entity(
+    latest_driver = _latest_by_entity(
         train,
         entity_col="driver",
         value_cols=[
@@ -1177,7 +1279,7 @@ def merge_latest_forms(
     )
 
     out = out.merge(
-        latest_driver_general,
+        latest_driver,
         on="driver",
         how="left",
         validate="many_to_one",
@@ -1199,6 +1301,10 @@ def merge_latest_forms(
         (
             LONG_STRAIGHT_GPS,
             "longstraight_driver_form3",
+        ),
+        (
+            HIGH_DF_TECHNICAL_GPS,
+            "highdf_driver_form3",
         ),
     ]
 
@@ -1234,11 +1340,10 @@ def merge_latest_forms(
 
     team_general_cols = [
         "team_form3",
-        "team_prior_strength",
         "team_hist_strength",
     ]
 
-    latest_team_general = _latest_by_entity(
+    latest_team = _latest_by_entity(
         train,
         entity_col="team",
         value_cols=[
@@ -1249,7 +1354,7 @@ def merge_latest_forms(
     )
 
     out = out.merge(
-        latest_team_general,
+        latest_team,
         on="team",
         how="left",
         validate="many_to_one",
@@ -1271,6 +1376,10 @@ def merge_latest_forms(
         (
             LONG_STRAIGHT_GPS,
             "longstraight_team_form3",
+        ),
+        (
+            HIGH_DF_TECHNICAL_GPS,
+            "highdf_team_form3",
         ),
     ]
 
@@ -1301,7 +1410,7 @@ def merge_latest_forms(
         )
 
     # ---------------------------------------------------------------
-    # Driver-feature fallback handling
+    # Driver feature fallbacks
     # ---------------------------------------------------------------
 
     driver_fill_specs = {
@@ -1309,6 +1418,7 @@ def merge_latest_forms(
         "lowdf_driver_form3": "drv_form3",
         "street_driver_form3": "drv_form3",
         "longstraight_driver_form3": "drv_form3",
+        "highdf_driver_form3": "drv_form3",
         "driver_hist_strength": None,
     }
 
@@ -1320,7 +1430,7 @@ def merge_latest_forms(
             general_col=fallback_col,
         )
 
-    # Always refresh the manually frozen priors for the upcoming race.
+    # Refresh priors rather than carrying old pre-Belgium values.
     out["driver_skill_prior"] = (
         out["driver"]
         .map(DRIVER_SKILL_PRIOR)
@@ -1340,7 +1450,7 @@ def merge_latest_forms(
     )
 
     # ---------------------------------------------------------------
-    # Team-feature fallback handling
+    # Team feature fallbacks
     # ---------------------------------------------------------------
 
     team_fill_specs = {
@@ -1348,6 +1458,7 @@ def merge_latest_forms(
         "lowdf_team_form3": "team_form3",
         "street_team_form3": "team_form3",
         "longstraight_team_form3": "team_form3",
+        "highdf_team_form3": "team_form3",
         "team_hist_strength": None,
     }
 
@@ -1359,7 +1470,6 @@ def merge_latest_forms(
             general_col=fallback_col,
         )
 
-    # Always refresh the manually frozen team priors.
     out["team_prior_strength"] = (
         out["team"]
         .map(TEAM_BASELINE_PRIOR)
@@ -1385,8 +1495,11 @@ def add_quali_proxy(
     Fill missing grid positions using recent qualifying performance.
 
     Proxy:
-        driver_weight * driver qualifying form
-        + (1 - driver_weight) * team qualifying form
+        driver_weight * recent driver qualifying average
+        + (1 - driver_weight) * recent team qualifying average
+
+    This is only for pre-qualifying operation. Once the official
+    Hungary grid is available, use the real grid.
     """
 
     if not 0.0 <= driver_weight <= 1.0:
@@ -1397,6 +1510,21 @@ def add_quali_proxy(
     if window < 1:
         raise ValueError(
             "window must be at least 1."
+        )
+
+    required_predict = {
+        "driver",
+        "team",
+    }
+
+    missing_predict = required_predict.difference(
+        predict_df.columns
+    )
+
+    if missing_predict:
+        raise ValueError(
+            "Prediction dataframe is missing: "
+            f"{sorted(missing_predict)}"
         )
 
     out = predict_df.copy()
@@ -1416,19 +1544,21 @@ def add_quali_proxy(
         )
         return out
 
-    required = {
+    required_train = {
         "driver",
         "team",
         "grid_pos",
         "date",
     }
 
-    missing = required.difference(train_df.columns)
+    missing_train = required_train.difference(
+        train_df.columns
+    )
 
-    if missing:
+    if missing_train:
         raise ValueError(
             "Training dataframe for qualifying proxy is missing: "
-            f"{sorted(missing)}"
+            f"{sorted(missing_train)}"
         )
 
     base = train_df.copy()
@@ -1463,7 +1593,10 @@ def add_quali_proxy(
             ]
         )
         .sort_values(
-            "date",
+            [
+                "date",
+                "driver",
+            ],
             kind="mergesort",
         )
     )
@@ -1479,20 +1612,36 @@ def add_quali_proxy(
 
     driver_proxy = (
         base
-        .groupby("driver", sort=False)
+        .groupby(
+            "driver",
+            sort=False,
+            group_keys=False,
+        )
         .tail(window)
-        .groupby("driver", as_index=False)["grid_pos"]
+        .groupby(
+            "driver",
+            as_index=False,
+        )["grid_pos"]
         .mean()
         .rename(columns={
             "grid_pos": "driver_qual_proxy",
         })
     )
 
+    # Two drivers per team means roughly 2 * window rows correspond to
+    # the same number of recent race weekends.
     team_proxy = (
         base
-        .groupby("team", sort=False)
+        .groupby(
+            "team",
+            sort=False,
+            group_keys=False,
+        )
         .tail(window * 2)
-        .groupby("team", as_index=False)["grid_pos"]
+        .groupby(
+            "team",
+            as_index=False,
+        )["grid_pos"]
         .mean()
         .rename(columns={
             "grid_pos": "team_qual_proxy",
@@ -1513,25 +1662,38 @@ def add_quali_proxy(
         validate="many_to_one",
     )
 
+    driver_values = pd.to_numeric(
+        out["driver_qual_proxy"],
+        errors="coerce",
+    )
+
+    team_values = pd.to_numeric(
+        out["team_qual_proxy"],
+        errors="coerce",
+    )
+
     both_available = (
-        out["driver_qual_proxy"].notna()
-        & out["team_qual_proxy"].notna()
+        driver_values.notna()
+        & team_values.notna()
     )
 
     out["qual_proxy"] = np.where(
         both_available,
-        driver_weight * out["driver_qual_proxy"]
-        + (1.0 - driver_weight) * out["team_qual_proxy"],
-        out["driver_qual_proxy"].fillna(
-            out["team_qual_proxy"]
+        (
+            driver_weight * driver_values
+            + (1.0 - driver_weight) * team_values
         ),
+        driver_values.fillna(team_values),
     )
 
-    # Final fallback if both the driver and constructor are new.
-    global_grid_median = base["grid_pos"].median(skipna=True)
+    global_grid_median = (
+        base["grid_pos"]
+        .median(skipna=True)
+    )
 
-    out["qual_proxy"] = out["qual_proxy"].fillna(
-        global_grid_median
+    out["qual_proxy"] = (
+        out["qual_proxy"]
+        .fillna(global_grid_median)
     )
 
     missing_grid = out["grid_pos"].isna()

@@ -5,44 +5,42 @@ type MetricCardProps = {
   accent?: "red" | "yellow" | "green" | "pink" | "cyan" | "telemetry";
 };
 
-// Map our custom Austria theme colors to the border and text highlights
 const accentMap = {
   red: {
-    border: "border-l-belgian-red",
-    text: "text-belgian-red",
-    glow: "shadow-[0_0_20px_rgba(239,51,64,0.08)]",
-    dot: "bg-belgian-red shadow-[0_0_5px_rgba(239,51,64,0.8)]",
+    border: "border-l-hungary-red",
+    text: "text-hungary-red",
+    glow: "shadow-[0_0_20px_rgba(206,41,57,0.08)]",
+    dot: "bg-hungary-red shadow-[0_0_5px_rgba(206,41,57,0.8)]",
   },
   yellow: {
-    border: "border-l-belgian-yellow",
-    text: "text-belgian-yellow",
-    glow: "shadow-[0_0_20px_rgba(253,218,36,0.08)]",
-    dot: "bg-belgian-yellow shadow-[0_0_5px_rgba(253,218,36,0.8)]",
+    border: "border-l-hungary-ivory",
+    text: "text-hungary-ivory",
+    glow: "shadow-[0_0_20px_rgba(244,240,232,0.05)]",
+    dot: "bg-hungary-ivory shadow-[0_0_5px_rgba(244,240,232,0.5)]",
   },
   pink: {
     border: "border-l-spielberg-red",
     text: "text-spielberg-red",
-    glow: "shadow-[0_0_20px_rgba(227,34,25,0.1)]",
-    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(227,34,25,0.8)]",
+    glow: "shadow-[0_0_20px_rgba(206,41,57,0.08)]",
+    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(206,41,57,0.8)]",
   },
-  // Safely map any old "green", "cyan", or "telemetry" props directly to Styrian Green
   green: {
-    border: "border-l-styrian-green",
-    text: "text-styrian-green",
-    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
-    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
+    border: "border-l-hungary-green",
+    text: "text-hungary-green",
+    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
+    dot: "bg-hungary-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
   },
   cyan: {
     border: "border-l-styrian-green",
     text: "text-styrian-green",
-    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
-    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
+    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
+    dot: "bg-styrian-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
   },
   telemetry: {
     border: "border-l-styrian-green",
     text: "text-styrian-green",
-    glow: "shadow-[0_0_20px_rgba(0,210,127,0.1)]",
-    dot: "bg-styrian-green shadow-[0_0_5px_rgba(0,210,127,0.8)]",
+    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
+    dot: "bg-styrian-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
   },
 };
 

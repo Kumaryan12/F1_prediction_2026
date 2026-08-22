@@ -32,16 +32,16 @@ DEFAULT_PIT_LOSS = 21.0
 # -------------------------------------------------------------------
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
-    "Belgian Grand Prix": (0.63, 0.20, 18.8),
+    "Hungarian Grand Prix": (0.13, 0.25, 20.56),
 }
 
 
 # -------------------------------------------------------------------
-# 2026 completed/current race list
+# Completed 2026 races available for training/form generation
 #
-# British GP is retained as a completed event.
-# Belgian GP is now the active prediction event, so it should not be
-# added here until after the Belgian GP has been completed.
+# Belgium is now completed and may be included.
+# Hungary is the active prediction target and must remain excluded
+# until the Hungarian Grand Prix has finished.
 # -------------------------------------------------------------------
 
 FALLBACK_EVENTS: Dict[int, list[str]] = {
@@ -55,6 +55,7 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Spanish Grand Prix",
         "Austrian Grand Prix",
         "British Grand Prix",
+        "Belgian Grand Prix",
     ],
 }
 
@@ -66,22 +67,28 @@ EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 # Track archetype groups
 # -------------------------------------------------------------------
 
-# Spa is power-sensitive and generally uses a relatively low-drag
-# aerodynamic configuration. It is not as extreme as Monza, but it is
-# appropriate to include Spa in the low-downforce archetype.
+# Low-downforce / power-sensitive circuits.
+#
+# Hungary is NOT included because the Hungaroring requires high
+# downforce and mechanical grip.
 LOW_DF_GPS = {
     "Austrian Grand Prix",
     "Belgian Grand Prix",
 }
 
 
-# Spa is a permanent road circuit, not a street circuit.
+# Street circuits.
+#
+# Hungary is a permanent purpose-built circuit.
 STREET_GPS = {
     "Monaco Grand Prix",
 }
 
 
-# Spa strongly rewards straight-line speed, energy deployment and tow.
+# Long-straight / power-sensitive circuits.
+#
+# Hungary has one meaningful main straight, but the lap is dominated
+# by connected low-speed and medium-speed corners.
 LONG_STRAIGHT_GPS = {
     "Spanish Grand Prix",
     "Austrian Grand Prix",
@@ -93,105 +100,130 @@ LONG_STRAIGHT_GPS = {
 # -------------------------------------------------------------------
 # Circuit-specific feature priors
 #
-# Values between 0 and 1 are normalized engineering priors.
-# Weather values are provisional climatological/race-week priors and
-# should be replaced by forecast-derived values closer to the event.
+# Normalized values are engineering priors between 0 and 1.
+# Weather values should be refreshed before the final prediction.
 # -------------------------------------------------------------------
 
 CIRCUIT_EXTRAS = {
-    "Belgian Grand Prix": {
+    # ---------------------------------------------------------------
+    # Hungarian Grand Prix
+    # ---------------------------------------------------------------
+
+    "Hungarian Grand Prix": {
         # -----------------------------------------------------------
         # Strategy and overtaking
         # -----------------------------------------------------------
 
-        # Spa can support one-stop or two-stop strategies depending on
-        # tyre compounds, degradation, weather and Safety Car timing.
+        # One-stop and two-stop strategies can both be viable depending
+        # on tyre compounds, degradation, track temperature and traffic.
         "expected_stops": 1.8,
 
-        # Kemmel Straight and the long lap provide genuine overtaking
-        # opportunities, although sector-two aero performance matters.
-        "overtake_index": 0.76,
+        # Passing is possible into Turn 1, but following through the
+        # technical middle sector is difficult.
+        "overtake_index": 0.38,
 
-        # Slipstreaming is particularly important from Eau Rouge and
-        # Raidillon onto the Kemmel Straight.
-        "tow_importance": 0.88,
+        # Tow matters on the pit straight, but is less influential than
+        # at Spa, Austria or other power-sensitive circuits.
+        "tow_importance": 0.46,
 
-        # Spa is power-sensitive and relatively low drag, but not an
-        # extreme minimum-downforce circuit like Monza.
-        "is_low_df": 1,
+        # Hungaroring is a high-downforce circuit.
+        "is_low_df": 0,
 
+        # Permanent circuit, not a street circuit.
         "is_street": 0,
 
-        # One of the strongest long-straight profiles on the calendar.
-        "long_straight_index": 0.91,
+        # Only one major straight; most of the lap is corner-dominated.
+        "long_straight_index": 0.40,
 
-        # Heavy braking occurs at La Source and Les Combes, but much of
-        # the circuit is dominated by medium/high-speed cornering.
-        "braking_intensity": 0.62,
+        # Important braking zones exist at Turns 1, 2 and 12, but the
+        # circuit is primarily defined by continuous corner sequences.
+        "braking_intensity": 0.64,
 
-        # Low track temperatures and wet conditions can create tyre
-        # warm-up difficulties.
-        "warmup_penalty": 0.18,
+        # Hot conditions usually reduce tyre warm-up difficulty.
+        "warmup_penalty": 0.03,
 
-        # Spa can produce moderate tyre degradation, but tyre stress is
-        # strongly affected by setup and weather.
-        "deg_rate": 0.58,
+        # High track temperatures and sustained cornering can create
+        # meaningful thermal degradation.
+        "deg_rate": 0.70,
 
-        # Approximate representative stint length over a 44-lap race.
-        "stint_len_typical": 22,
+        # Representative stint-length prior for a 70-lap race.
+        "stint_len_typical": 25,
 
         # -----------------------------------------------------------
         # Track and layout characteristics
         # -----------------------------------------------------------
 
-        # The modern surface is not exceptionally bumpy, although the
-        # circuit's elevation and compression zones load the car.
-        "surface_bumpiness": 0.43,
+        # The surface is generally not extremely bumpy, although kerb
+        # use and mechanical compliance remain important.
+        "surface_bumpiness": 0.34,
 
-        # Wind has a substantial effect because of the long lap, open
-        # surroundings and high-speed cornering.
-        "wind_sensitivity": 0.78,
+        # Wind matters, but the compact enclosed layout is less
+        # wind-sensitive than Silverstone or Spa.
+        "wind_sensitivity": 0.42,
 
-        # Track limits can matter at Raidillon, Les Combes, Pouhon and
-        # the exit of several high-speed corners.
-        "track_limits_risk": 0.67,
+        # Track-limit exposure is moderate around corner exits.
+        "track_limits_risk": 0.52,
 
-        # Spa has one of the largest elevation profiles in Formula 1.
-        "elevation_change_index": 0.96,
+        # The circuit contains noticeable elevation changes but is not
+        # in the same category as Spa or Austria.
+        "elevation_change_index": 0.43,
 
-        # Long periods at high throttle and large mechanical loads
-        # increase power-unit and reliability exposure.
-        "mechanical_failure_risk": 0.68,
+        # Lower full-throttle demand reduces power-unit stress relative
+        # to Spa, although heat can affect cooling and reliability.
+        "mechanical_failure_risk": 0.44,
 
-        # Official modern Spa layout.
-        "corner_count": 19,
+        # Modern Hungaroring layout.
+        "corner_count": 14,
 
-        # Representative race/qualifying-speed prior, not a guaranteed
-        # measured value for the 2026 cars.
-        "avg_speed_kph": 233,
+        # Representative circuit-speed prior.
+        "avg_speed_kph": 198,
 
         # -----------------------------------------------------------
         # Weather priors
+        #
+        # Current race-day forecast indicates hot, predominantly dry
+        # conditions. Refresh immediately before the final prediction.
         # -----------------------------------------------------------
 
-        # Spa weather can change rapidly and conditions may differ
-        # between different parts of the seven-kilometre circuit.
+        "rain_prob_race": 0.05,
+        "wet_lap_fraction": 0.01,
+        "wet_start_prob": 0.02,
+        "mixed_conditions_risk": 0.04,
+    },
+
+    # ---------------------------------------------------------------
+    # Belgian Grand Prix
+    # Retained for historical and current-season form generation.
+    # ---------------------------------------------------------------
+
+    "Belgian Grand Prix": {
+        "expected_stops": 1.8,
+        "overtake_index": 0.76,
+        "tow_importance": 0.88,
+        "is_low_df": 1,
+        "is_street": 0,
+        "long_straight_index": 0.91,
+        "braking_intensity": 0.62,
+        "warmup_penalty": 0.18,
+        "deg_rate": 0.58,
+        "stint_len_typical": 22,
+
+        "surface_bumpiness": 0.43,
+        "wind_sensitivity": 0.78,
+        "track_limits_risk": 0.67,
+        "elevation_change_index": 0.96,
+        "mechanical_failure_risk": 0.68,
+        "corner_count": 19,
+        "avg_speed_kph": 233,
+
         "rain_prob_race": 0.42,
-
-        # Expected fraction of laps potentially affected by wet or
-        # intermediate conditions before race-week forecast updates.
         "wet_lap_fraction": 0.22,
-
         "wet_start_prob": 0.16,
-
-        # High because localized rain can produce partially wet laps
-        # and difficult tyre decisions.
         "mixed_conditions_risk": 0.48,
     },
 
     # ---------------------------------------------------------------
     # British Grand Prix
-    # Retained for current-season and historical feature generation.
     # ---------------------------------------------------------------
 
     "British Grand Prix": {

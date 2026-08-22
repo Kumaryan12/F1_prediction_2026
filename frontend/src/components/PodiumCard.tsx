@@ -5,9 +5,8 @@ type PodiumCardProps = {
 
 const podiumStyle = {
   1: {
-    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Austria Spielberg Red
     glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#E32219]/50",
+    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#CE2939]/50",
     badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
     text: "text-white",
     bgNumber: "text-[#FFD700]/15",

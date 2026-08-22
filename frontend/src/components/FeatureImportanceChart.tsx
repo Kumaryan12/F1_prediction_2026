@@ -33,8 +33,7 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
           </p>
         </div>
         
-        {/* Decorative Diagnostic Icon - Resprayed to Styrian Green */}
-        <div className="flex h-10 w-10 items-center justify-center rounded bg-styrian-green/10 border border-styrian-green/30 shadow-[0_0_15px_rgba(0,210,127,0.3)] animate-pulse">
+        <div className="flex h-10 w-10 items-center justify-center rounded bg-styrian-green/10 border border-styrian-green/30 shadow-[0_0_15px_rgba(92,154,104,0.3)] animate-pulse">
           <svg className="w-5 h-5 text-styrian-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -57,16 +56,14 @@ export default function FeatureImportanceChart({ features }: FeatureImportancePr
                   <span className="text-white/30 mr-2">{String(idx + 1).padStart(2, '0')}</span> 
                   {label}
                 </span>
-                {/* Number changed to Spielberg Red */}
-                <span className="text-spielberg-red font-bold drop-shadow-[0_0_8px_rgba(227,34,25,0.6)]">
+                <span className="text-spielberg-red font-bold drop-shadow-[0_0_8px_rgba(206,41,57,0.6)]">
                   {item.value ? (item.value * 100).toFixed(1) : "0.0"}%
                 </span>
               </div>
               
-              {/* The Glowing Bar - Spielberg Red to Styrian Green Gradient */}
               <div className="h-1.5 w-full overflow-hidden rounded-r-full bg-black/60 shadow-inner">
                 <div
-                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(227,34,25,0.8)] to-[#00D27F] shadow-[0_0_12px_rgba(0,210,127,0.6)] transition-all duration-1000 ease-out"
+                  className="h-full rounded-r-full bg-gradient-to-r from-[rgba(206,41,57,0.85)] to-[#5c9a68] shadow-[0_0_12px_rgba(92,154,104,0.45)] transition-all duration-1000 ease-out"
                   style={{ width: `${pct}%` }}
                 />
               </div>

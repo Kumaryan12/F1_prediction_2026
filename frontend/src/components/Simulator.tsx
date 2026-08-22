@@ -60,7 +60,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-spielberg-red/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(227,34,25,0.1)] backdrop-blur-md p-6 sm:p-8 group">
+    <div className="relative overflow-hidden rounded-2xl border border-spielberg-red/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(206,41,57,0.1)] backdrop-blur-md p-6 sm:p-8 group">
       {/* Tech Background Grid */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -68,7 +68,7 @@ export default function Simulator({ predictions }: SimulatorProps) {
       <div className="mb-6 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-spielberg-red animate-pulse shadow-[0_0_10px_rgba(227,34,25,0.8)]" />
+            <span className="h-3 w-3 rounded-full bg-spielberg-red animate-pulse shadow-[0_0_10px_rgba(206,41,57,0.8)]" />
             &ldquo;What-If&rdquo; Engine
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">Live ML Prediction Sandbox</p>
@@ -93,11 +93,10 @@ export default function Simulator({ predictions }: SimulatorProps) {
             </select>
           </div>
 
-          {/* Grid Slider - Styrian Green contrast */}
           <div>
             <div className="flex justify-between items-end mb-2">
               <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest">Simulate Grid Position</label>
-              <span className="text-xl font-black text-styrian-green italic drop-shadow-[0_0_8px_rgba(0,210,127,0.6)]">P{customGrid}</span>
+              <span className="text-xl font-black text-styrian-green italic drop-shadow-[0_0_8px_rgba(92,154,104,0.6)]">P{customGrid}</span>
             </div>
             <input 
               type="range" 
@@ -112,11 +111,10 @@ export default function Simulator({ predictions }: SimulatorProps) {
             </div>
           </div>
 
-          {/* Run Button - Spielberg Red Glow */}
           <button 
             onClick={handleSimulate}
             disabled={isSimulating}
-            className="mt-2 w-full rounded border border-spielberg-red bg-spielberg-red/10 py-4 font-black uppercase italic tracking-widest text-spielberg-red transition-all hover:bg-spielberg-red hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(227,34,25,0.2)] hover:shadow-[0_0_25px_rgba(227,34,25,0.6)]"
+            className="mt-2 w-full rounded border border-spielberg-red bg-spielberg-red/10 py-4 font-black uppercase italic tracking-widest text-spielberg-red transition-all hover:bg-spielberg-red hover:text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(206,41,57,0.2)] hover:shadow-[0_0_25px_rgba(206,41,57,0.6)]"
           >
             {isSimulating ? "Running Telemetry..." : "Run Simulation"}
           </button>
@@ -135,12 +133,11 @@ export default function Simulator({ predictions }: SimulatorProps) {
               <span className="text-2xl font-black text-white italic">P{originalRank}</span>
             </div>
 
-            {/* Simulated Stats - Styrian Green highlight */}
             <div className="flex flex-col gap-1 border-l border-white/10 pl-4">
               <span className="text-[10px] uppercase tracking-wider text-styrian-green font-mono">Simulated Grid</span>
               <span className="text-xl font-black text-white italic">{simResult ? `P${simResult.simulated_grid}` : "--"}</span>
               <span className="text-[10px] uppercase tracking-wider text-styrian-green font-mono mt-2">New Predicted Finish</span>
-              <span className={`text-4xl font-black italic drop-shadow-[0_0_15px_rgba(0,210,127,0.4)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
+              <span className={`text-4xl font-black italic drop-shadow-[0_0_15px_rgba(92,154,104,0.4)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
                 {simResult ? `P${simResult.new_predicted_rank}` : "--"}
               </span>
             </div>
