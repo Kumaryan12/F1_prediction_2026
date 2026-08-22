@@ -41,7 +41,7 @@ METRICS_PATH = DATA_DIR / "model_metrics.json"
 MODEL_PATH = DATA_DIR / "random_forest_model.pkl"  # TODO: Update to your exact model filename
 FEATURES_PATH = DATA_DIR / "current_race_features.csv" # TODO: Update to the CSV containing your 41 features
 
-DEFAULT_RACE_NAME = "Australian Grand Prix 2026"
+DEFAULT_RACE_NAME = "Dutch Grand Prix 2026"
 
 
 # -------------------------------------------------------------------
@@ -69,8 +69,9 @@ def load_predictions() -> pd.DataFrame:
     df = pd.read_csv(PREDICTIONS_PATH)
     df = df.where(pd.notnull(df), None)
 
-    if "pred_rank" in df.columns:
-        df = df.sort_values("pred_rank", ascending=True).reset_index(drop=True)
+    rank_column = "calibrated_pred_rank" if "calibrated_pred_rank" in df.columns else "pred_rank"
+    if rank_column in df.columns:
+        df = df.sort_values(rank_column, ascending=True).reset_index(drop=True)
 
     return df
 
@@ -186,7 +187,8 @@ def get_summary() -> SummaryResponse:
     if df.empty:
         raise HTTPException(status_code=404, detail="No predictions available")
 
-    podium_df = df.sort_values("pred_rank").head(3)
+    rank_column = "calibrated_pred_rank" if "calibrated_pred_rank" in df.columns else "pred_rank"
+    podium_df = df.sort_values(rank_column).head(3)
     winner = podium_df.iloc[0]["driver"]
 
     team_scores = (

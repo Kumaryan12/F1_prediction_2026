@@ -1,116 +1,35 @@
-type PodiumCardProps = {
-  position: 1 | 2 | 3;
-  driver: string;
-};
+type PodiumCardProps = { position: 1 | 2 | 3; driver: string };
 
-const podiumStyle = {
-  1: {
-    glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#CE2939]/50",
-    badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
-    text: "text-white",
-    bgNumber: "text-[#FFD700]/15",
-  },
-  2: {
-    glow: "shadow-[0_0_20px_rgba(192,192,192,0.05)]",
-    border: "border-t-4 border-t-[#C0C0C0] border-x-white/5 border-b-white/5",
-    badge: "bg-gradient-to-r from-[#C0C0C0] to-gray-300 text-black",
-    text: "text-zinc-200",
-    bgNumber: "text-[#C0C0C0]/10",
-  },
-  3: {
-    glow: "shadow-[0_0_20px_rgba(205,127,50,0.05)]",
-    border: "border-t-4 border-t-[#CD7F32] border-x-white/5 border-b-white/5",
-    badge: "bg-gradient-to-r from-[#CD7F32] to-orange-400 text-black",
-    text: "text-zinc-300",
-    bgNumber: "text-[#CD7F32]/10",
-  },
-};
-
-// Map 3-letter initials to Full Driver Names
 const driverNames: Record<string, string> = {
-  "VER": "Max Verstappen",
-  "PER": "Sergio Perez",
-  "HAM": "Lewis Hamilton",
-  "RUS": "George Russell",
-  "LEC": "Charles Leclerc",
-  "SAI": "Carlos Sainz",
-  "NOR": "Lando Norris",
-  "PIA": "Oscar Piastri",
-  "ALO": "Fernando Alonso",
-  "STR": "Lance Stroll",
-  "GAS": "Pierre Gasly",
-  "OCO": "Esteban Ocon",
-  "ALB": "Alexander Albon",
-  "TSU": "Yuki Tsunoda",
-  "HUL": "Nico Hulkenberg",
-  "MAG": "Kevin Magnussen",
-  "BOT": "Valtteri Bottas",
-  "ZHO": "Zhou Guanyu",
-  "BEA": "Oliver Bearman",
-  "ANT": "Kimi Antonelli",
-  "DOO": "Jack Doohan",
-  "LAW": "Liam Lawson",
-  "COL": "Franco Colapinto",
-  "HAD": "Isack Hadjar",
-  "BOR": "Gabriel Bortoleto",
-  "LIN": "Arvid Lindblad"
+  VER: "Max Verstappen", PER: "Sergio Perez", HAM: "Lewis Hamilton", RUS: "George Russell",
+  LEC: "Charles Leclerc", SAI: "Carlos Sainz", NOR: "Lando Norris", PIA: "Oscar Piastri",
+  ALO: "Fernando Alonso", STR: "Lance Stroll", GAS: "Pierre Gasly", OCO: "Esteban Ocon",
+  ALB: "Alexander Albon", TSU: "Yuki Tsunoda", HUL: "Nico Hulkenberg", MAG: "Kevin Magnussen",
+  BOT: "Valtteri Bottas", ZHO: "Zhou Guanyu", BEA: "Oliver Bearman", ANT: "Kimi Antonelli",
+  DOO: "Jack Doohan", LAW: "Liam Lawson", COL: "Franco Colapinto", HAD: "Isack Hadjar",
+  BOR: "Gabriel Bortoleto", LIN: "Arvid Lindblad",
 };
+
+const positionColor = { 1: "bg-dutch-orange text-black", 2: "bg-[#b9bdc3] text-black", 3: "bg-[#a66b3f] text-black" };
 
 export default function PodiumCard({ position, driver }: PodiumCardProps) {
-  const style = podiumStyle[position];
   const fullName = driverNames[driver] || driver;
-
+  const [first, ...lastParts] = fullName.split(" ");
   return (
-    <div
-      className={`relative h-full w-full flex flex-col justify-between overflow-hidden rounded-xl bg-tarmac-light/90 backdrop-blur-xl p-6 transition-transform duration-300 hover:-translate-y-2 ${style.border} ${style.glow}`}
-    >
-      {/* Pure CSS Carbon Fiber Weave */}
-      <div 
-        className="absolute inset-0 opacity-[0.15] pointer-events-none mix-blend-multiply"
-        style={{
-          backgroundImage: `
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-          `,
-          backgroundPosition: `0 0, 4px 4px`,
-          backgroundSize: `8px 8px`
-        }}
-      />
-
-      {/* Massive Background Number for Depth */}
-      <div 
-        className={`absolute -bottom-8 -right-4 text-[12rem] font-black italic leading-none select-none pointer-events-none ${style.bgNumber}`}
-      >
-        {position}
-      </div>
-
-      {/* Top: Position Badge */}
-      <div className="relative z-10">
-        <div
-          className={`inline-flex items-center justify-center rounded-sm px-4 py-1 text-sm font-black italic tracking-widest ${style.badge}`}
-        >
-          P{position}
+    <article className="relative min-h-56 overflow-hidden bg-[#111315] p-6">
+      <div className="absolute right-4 top-1 select-none font-mono text-[7rem] font-bold leading-none text-white/[0.035]">{position}</div>
+      <div className="relative flex h-full flex-col justify-between">
+        <div className="flex items-start justify-between">
+          <span className={`px-3 py-1.5 text-sm font-black italic ${positionColor[position]}`}>P{position}</span>
+          <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-zinc-600">Projected finish</span>
+        </div>
+        <div>
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-dutch-orange">{driver}</p>
+          <h3 className="mt-2 text-3xl font-black uppercase italic leading-[0.9] tracking-[-0.045em] text-white">
+            <span className="block text-lg text-zinc-500">{first}</span>{lastParts.join(" ")}
+          </h3>
         </div>
       </div>
-
-      {/* Bottom: Driver Info */}
-      <div className="relative z-10 mt-auto pt-10">
-        <div className="flex items-center gap-2 mb-1">
-          <p className="text-xs font-mono uppercase tracking-[0.3em] text-zinc-500">
-            Predicted Finisher
-          </p>
-          {/* Telemetry Tag for the 3-letter initial */}
-          <span className="rounded bg-black/50 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/10 shadow-inner">
-            {driver}
-          </span>
-        </div>
-        <h3 
-          className={`text-3xl md:text-4xl font-black uppercase italic tracking-tighter drop-shadow-lg leading-none mt-1 ${style.text}`}
-        >
-          {fullName}
-        </h3>
-      </div>
-    </div>
+    </article>
   );
 }

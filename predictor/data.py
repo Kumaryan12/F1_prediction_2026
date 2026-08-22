@@ -17,30 +17,30 @@ GP_NAME_ALIASES = {
 
 
 MANUAL_GRID_YEAR = 2026
-MANUAL_GRID_GP = "Hungarian Grand Prix"
+MANUAL_GRID_GP = "Dutch Grand Prix"
 MANUAL_STARTING_GRID: Dict[str, int] = {
-    "RUS": 7,
-    "LEC": 2,
+    "RUS": 2,
+    "LEC": 6,
     "HAM": 5,
     "ANT": 3,
-    "VER": 6,
+    "VER": 7,
     "NOR": 1,
     "PIA": 4,
-    "HAD": 8,
-    "LAW": 11,
-    "LIN": 9,
-    "GAS": 12,
-    "BOR": 14,
-    "BEA": 17,
-    "HUL": 10,
+    "HAD": 99,
+    "LAW": 8,
+    "LIN": 10,
+    "GAS": 11,
+    "BOR": 9,
+    "BEA": 20,
+    "HUL": 13,
     "OCO": 15,
-    "COL": 13,
-    "SAI": 18,
-    "ALB": 19,
+    "COL": 14,
+    "SAI": 17,
+    "ALB": 16,
     "PER": 22,
     "BOT": 21,
-    "ALO": 16,
-    "STR": 20,
+    "ALO": 18,
+    "STR": 19,
 }
 
 

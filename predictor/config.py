@@ -32,16 +32,16 @@ DEFAULT_PIT_LOSS = 21.0
 # -------------------------------------------------------------------
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
-    "Hungarian Grand Prix": (0.13, 0.25, 20.56),
+    "Dutch Grand Prix": (0.48, 0.32, 21.0),
 }
 
 
 # -------------------------------------------------------------------
 # Completed 2026 races available for training/form generation
 #
-# Belgium is now completed and may be included.
-# Hungary is the active prediction target and must remain excluded
-# until the Hungarian Grand Prix has finished.
+# Hungary is now completed and can be included.
+# Dutch GP is the active prediction target and should remain excluded
+# until the race has actually finished.
 # -------------------------------------------------------------------
 
 FALLBACK_EVENTS: Dict[int, list[str]] = {
@@ -56,6 +56,7 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Austrian Grand Prix",
         "British Grand Prix",
         "Belgian Grand Prix",
+        "Hungarian Grand Prix",
     ],
 }
 
@@ -68,9 +69,7 @@ EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 # -------------------------------------------------------------------
 
 # Low-downforce / power-sensitive circuits.
-#
-# Hungary is NOT included because the Hungaroring requires high
-# downforce and mechanical grip.
+# Zandvoort is NOT low-downforce.
 LOW_DF_GPS = {
     "Austrian Grand Prix",
     "Belgian Grand Prix",
@@ -78,17 +77,14 @@ LOW_DF_GPS = {
 
 
 # Street circuits.
-#
-# Hungary is a permanent purpose-built circuit.
+# Zandvoort is a permanent purpose-built circuit.
 STREET_GPS = {
     "Monaco Grand Prix",
 }
 
 
 # Long-straight / power-sensitive circuits.
-#
-# Hungary has one meaningful main straight, but the lap is dominated
-# by connected low-speed and medium-speed corners.
+# Zandvoort has a usable main straight but is primarily corner dominated.
 LONG_STRAIGHT_GPS = {
     "Spanish Grand Prix",
     "Austrian Grand Prix",
@@ -97,93 +93,134 @@ LONG_STRAIGHT_GPS = {
 }
 
 
+# High-downforce / technical circuits.
+#
+# Zandvoort fits this group well, although it is faster and more
+# aero-sensitive than Hungary or Monaco.
+HIGH_DF_TECHNICAL_GPS = {
+    "Monaco Grand Prix",
+    "Hungarian Grand Prix",
+    "Dutch Grand Prix",
+}
+
+
 # -------------------------------------------------------------------
 # Circuit-specific feature priors
 #
-# Normalized values are engineering priors between 0 and 1.
-# Weather values should be refreshed before the final prediction.
+# Values are engineering priors between 0 and 1.
+# Weather values should be refreshed close to race start.
 # -------------------------------------------------------------------
 
 CIRCUIT_EXTRAS = {
     # ---------------------------------------------------------------
-    # Hungarian Grand Prix
+    # Dutch Grand Prix - Zandvoort
     # ---------------------------------------------------------------
 
-    "Hungarian Grand Prix": {
+    "Dutch Grand Prix": {
         # -----------------------------------------------------------
         # Strategy and overtaking
         # -----------------------------------------------------------
 
-        # One-stop and two-stop strategies can both be viable depending
-        # on tyre compounds, degradation, track temperature and traffic.
-        "expected_stops": 1.8,
+        # Usually one-stop or two-stop depending on compound choice,
+        # tyre degradation, Sprint-weekend learning and Safety Cars.
+        "expected_stops": 1.7,
 
-        # Passing is possible into Turn 1, but following through the
-        # technical middle sector is difficult.
-        "overtake_index": 0.38,
+        # Overtaking is difficult because of the narrow, flowing layout.
+        # Turn 1 provides the main conventional opportunity.
+        "overtake_index": 0.34,
 
-        # Tow matters on the pit straight, but is less influential than
-        # at Spa, Austria or other power-sensitive circuits.
-        "tow_importance": 0.46,
+        # Tow matters on the pit straight but is much less dominant
+        # than at Spa or Austria.
+        "tow_importance": 0.42,
 
-        # Hungaroring is a high-downforce circuit.
+        # High-downforce circuit.
         "is_low_df": 0,
 
-        # Permanent circuit, not a street circuit.
+        # Permanent circuit.
         "is_street": 0,
 
-        # Only one major straight; most of the lap is corner-dominated.
-        "long_straight_index": 0.40,
+        # Short main straight relative to the overall technical nature.
+        "long_straight_index": 0.38,
 
-        # Important braking zones exist at Turns 1, 2 and 12, but the
-        # circuit is primarily defined by continuous corner sequences.
-        "braking_intensity": 0.64,
+        # Braking is important at Tarzan and several slower corners,
+        # but much of the lap depends on flow and corner speed.
+        "braking_intensity": 0.58,
 
-        # Hot conditions usually reduce tyre warm-up difficulty.
-        "warmup_penalty": 0.03,
+        # Coastal conditions and cool tyre temperatures can make
+        # preparation harder than at Hungary.
+        "warmup_penalty": 0.10,
 
-        # High track temperatures and sustained cornering can create
-        # meaningful thermal degradation.
-        "deg_rate": 0.70,
+        # High lateral loads and repeated cornering make tyre management
+        # important over a stint.
+        "deg_rate": 0.64,
 
-        # Representative stint-length prior for a 70-lap race.
+        # Representative stint length over a 72-lap race.
         "stint_len_typical": 25,
 
         # -----------------------------------------------------------
         # Track and layout characteristics
         # -----------------------------------------------------------
 
-        # The surface is generally not extremely bumpy, although kerb
-        # use and mechanical compliance remain important.
-        "surface_bumpiness": 0.34,
+        # Modern surface is reasonably smooth but banking and compression
+        # add substantial vertical loading.
+        "surface_bumpiness": 0.38,
 
-        # Wind matters, but the compact enclosed layout is less
-        # wind-sensitive than Silverstone or Spa.
-        "wind_sensitivity": 0.42,
+        # Coastal location makes Zandvoort notably wind-sensitive.
+        "wind_sensitivity": 0.78,
 
-        # Track-limit exposure is moderate around corner exits.
-        "track_limits_risk": 0.52,
+        # Narrow circuit and aggressive corner exits create moderate
+        # track-limits / mistake exposure.
+        "track_limits_risk": 0.58,
 
-        # The circuit contains noticeable elevation changes but is not
-        # in the same category as Spa or Austria.
-        "elevation_change_index": 0.43,
+        # Significant undulation through the dunes.
+        "elevation_change_index": 0.62,
 
-        # Lower full-throttle demand reduces power-unit stress relative
-        # to Spa, although heat can affect cooling and reliability.
-        "mechanical_failure_risk": 0.44,
+        # High lateral loads and repeated acceleration/braking impose
+        # moderate mechanical stress.
+        "mechanical_failure_risk": 0.50,
 
-        # Modern Hungaroring layout.
+        # Current Zandvoort layout.
         "corner_count": 14,
 
-        # Representative circuit-speed prior.
-        "avg_speed_kph": 198,
+        # Representative average-speed prior.
+        "avg_speed_kph": 215,
 
         # -----------------------------------------------------------
         # Weather priors
         #
-        # Current race-day forecast indicates hot, predominantly dry
-        # conditions. Refresh immediately before the final prediction.
+        # Coastal weather can change quickly. These should be updated
+        # using the actual race-day forecast.
         # -----------------------------------------------------------
+
+        "rain_prob_race": 0.24,
+        "wet_lap_fraction": 0.09,
+        "wet_start_prob": 0.06,
+        "mixed_conditions_risk": 0.18,
+    },
+
+    # ---------------------------------------------------------------
+    # Hungarian Grand Prix
+    # ---------------------------------------------------------------
+
+    "Hungarian Grand Prix": {
+        "expected_stops": 1.8,
+        "overtake_index": 0.38,
+        "tow_importance": 0.46,
+        "is_low_df": 0,
+        "is_street": 0,
+        "long_straight_index": 0.40,
+        "braking_intensity": 0.64,
+        "warmup_penalty": 0.03,
+        "deg_rate": 0.70,
+        "stint_len_typical": 25,
+
+        "surface_bumpiness": 0.34,
+        "wind_sensitivity": 0.42,
+        "track_limits_risk": 0.52,
+        "elevation_change_index": 0.43,
+        "mechanical_failure_risk": 0.44,
+        "corner_count": 14,
+        "avg_speed_kph": 198,
 
         "rain_prob_race": 0.05,
         "wet_lap_fraction": 0.01,
@@ -193,7 +230,6 @@ CIRCUIT_EXTRAS = {
 
     # ---------------------------------------------------------------
     # Belgian Grand Prix
-    # Retained for historical and current-season form generation.
     # ---------------------------------------------------------------
 
     "Belgian Grand Prix": {

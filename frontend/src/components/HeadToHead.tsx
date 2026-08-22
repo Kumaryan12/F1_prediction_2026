@@ -2,139 +2,43 @@
 
 import { useState } from "react";
 
-// Updated to match your EXACT Python JSON output
-type DriverData = {
-  driver: string;
-  team: string;
-  pred_rank?: number;
-  pred_finish?: number;
-  grid_pos?: number;
-  // Fallbacks in case your API uses slightly different names
-  predicted_pos?: number; 
-  position?: number;
-  grid?: number;
-  win_prob?: number;
-  probability?: number;
-};
-
-type HeadToHeadProps = {
-  predictions: DriverData[];
-};
+type DriverData = { driver: string; team: string; pred_rank?: number; pred_finish?: number; grid_pos?: number; predicted_pos?: number; position?: number; grid?: number };
+type HeadToHeadProps = { predictions: DriverData[] };
 
 export default function HeadToHead({ predictions }: HeadToHeadProps) {
-  // Set default rivals (e.g., top 2 predicted drivers)
   const [driverA, setDriverA] = useState(predictions[0]?.driver || "VER");
   const [driverB, setDriverB] = useState(predictions[1]?.driver || "NOR");
-
   const dataA = predictions.find((p) => p.driver === driverA) || predictions[0];
   const dataB = predictions.find((p) => p.driver === driverB) || predictions[1];
-
-  // EXACT JSON KEYS MAPPED HERE:
-  const getPos = (d: DriverData) =>
-    d.pred_rank ||
-    (typeof d.pred_finish === "number" ? Math.round(d.pred_finish) : 0) ||
-    d.predicted_pos ||
-    d.position ||
-    0;
+  const getPos = (d: DriverData) => d.pred_rank || (typeof d.pred_finish === "number" ? Math.round(d.pred_finish) : 0) || d.predicted_pos || d.position || 0;
   const getGrid = (d: DriverData) => d.grid_pos || d.grid || 0;
-
-  // Calculate the "Clash Bar" width based on predicted position
-  // Lower position = better. We invert it for the progress bar weight.
   const weightA = Math.max(20 - getPos(dataA), 1);
   const weightB = Math.max(20 - getPos(dataB), 1);
-  const totalWeight = weightA + weightB;
-  const pctA = (totalWeight > 0) ? (weightA / totalWeight) * 100 : 50; // Added a safe fallback
+  const pctA = (weightA / (weightA + weightB)) * 100;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md p-6 sm:p-8">
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-spielberg-red/10 to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-styrian-green/10 to-transparent pointer-events-none" />
-
-      {/* Header */}
-      <div className="mb-8 text-center relative z-10">
-        <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center justify-center gap-3">
-          <svg className="w-6 h-6 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          H2H Combat Terminal
-          <svg className="w-6 h-6 text-zinc-400 transform scale-x-[-1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </h2>
-        <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
-          Machine Learning Matchup Analysis
-        </p>
+    <div className="border border-white/10 bg-[#111315]">
+      <header className="flex flex-col gap-2 border-b border-white/10 p-5 sm:flex-row sm:items-end sm:justify-between">
+        <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-dutch-orange">Driver comparison</p><h2 className="mt-1 text-2xl font-black uppercase italic tracking-[-0.04em] text-white">Head to head</h2></div>
+        <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">Relative predicted race advantage</p>
+      </header>
+      <div className="grid md:grid-cols-[1fr_100px_1fr]">
+        <DriverPanel side="A" driver={driverA} data={dataA} predictions={predictions} getPos={getPos} getGrid={getGrid} onChange={setDriverA} />
+        <div className="grid place-items-center border-y border-white/10 bg-tarmac py-5 text-2xl font-black italic text-zinc-700 md:border-x md:border-y-0">VS</div>
+        <DriverPanel side="B" driver={driverB} data={dataB} predictions={predictions} getPos={getPos} getGrid={getGrid} onChange={setDriverB} />
       </div>
-
-      {/* Driver Selection & Stats */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-        
-        <div className="w-full md:w-5/12 flex flex-col items-center md:items-start text-center md:text-left">
-          <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-spielberg-red/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-spielberg-red focus:ring-1 focus:ring-spielberg-red transition-colors"
-            value={driverA}
-            onChange={(e) => setDriverA(e.target.value)}
-          >
-            {predictions.map((p) => (
-              <option key={`A-${p.driver}`} value={p.driver}>{p.driver} - {p.team}</option>
-            ))}
-          </select>
-          <div className="space-y-2 w-full max-w-[200px]">
-            <div className="flex justify-between border-b border-white/10 pb-1 font-mono text-sm">
-              <span className="text-zinc-500 uppercase">Pred. Finish</span>
-              <span className="text-white font-bold text-lg">P{getPos(dataA)}</span>
-            </div>
-            <div className="flex justify-between border-b border-white/10 pb-1 font-mono text-sm">
-              <span className="text-zinc-500 uppercase">Grid Pos</span>
-              <span className="text-white font-bold">P{getGrid(dataA)}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* The VS Clash Graphic */}
-        <div className="w-full md:w-2/12 flex flex-col items-center justify-center">
-          <div className="text-3xl font-black italic text-zinc-600 mb-2 drop-shadow-md">VS</div>
-        </div>
-
-        <div className="w-full md:w-5/12 flex flex-col items-center md:items-end text-center md:text-right">
-          <select 
-            className="mb-4 w-full max-w-[200px] rounded border border-styrian-green/30 bg-black/50 px-3 py-2 text-xl font-black italic uppercase text-white outline-none focus:border-styrian-green focus:ring-1 focus:ring-styrian-green transition-colors"
-            value={driverB}
-            onChange={(e) => setDriverB(e.target.value)}
-          >
-            {predictions.map((p) => (
-              <option key={`B-${p.driver}`} value={p.driver}>{p.driver} - {p.team}</option>
-            ))}
-          </select>
-          <div className="space-y-2 w-full max-w-[200px]">
-            <div className="flex justify-between border-b border-white/10 pb-1 font-mono text-sm flex-row-reverse">
-              <span className="text-zinc-500 uppercase">Pred. Finish</span>
-              <span className="text-white font-bold text-lg">P{getPos(dataB)}</span>
-            </div>
-            <div className="flex justify-between border-b border-white/10 pb-1 font-mono text-sm flex-row-reverse">
-              <span className="text-zinc-500 uppercase">Grid Pos</span>
-              <span className="text-white font-bold">P{getGrid(dataB)}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* The Advantage Power Bar */}
-      <div className="mt-8 relative z-10">
-        <div className="flex justify-between text-[10px] font-mono uppercase text-zinc-500 mb-2 tracking-widest">
-          <span className="text-spielberg-red/80">{driverA} Advantage</span>
-          <span className="text-styrian-green/80">{driverB} Advantage</span>
-        </div>
-        <div className="h-3 w-full rounded-full bg-black/60 shadow-inner flex overflow-hidden border border-white/5">
-          <div 
-            className="h-full bg-spielberg-red shadow-[0_0_12px_rgba(206,41,57,0.8)] transition-all duration-700 ease-out"
-            style={{ width: `${pctA}%` }}
-          />
-          <div 
-            className="h-full bg-styrian-green shadow-[0_0_12px_rgba(92,154,104,0.8)] transition-all duration-700 ease-out flex-1"
-          />
-        </div>
+      <div className="border-t border-white/10 p-5">
+        <div className="mb-2 flex justify-between font-mono text-[8px] font-bold uppercase tracking-[0.16em]"><span className="text-dutch-orange">{driverA} advantage</span><span className="text-dutch-blue">{driverB} advantage</span></div>
+        <div className="flex h-2 bg-black"><div className="bg-dutch-orange transition-[width] duration-500" style={{ width: `${pctA}%` }} /><div className="flex-1 bg-dutch-blue" /></div>
       </div>
     </div>
   );
+}
+
+function DriverPanel({ side, driver, data, predictions, getPos, getGrid, onChange }: { side: string; driver: string; data: DriverData; predictions: DriverData[]; getPos: (d: DriverData) => number; getGrid: (d: DriverData) => number; onChange: (value: string) => void }) {
+  return <div className="p-5 sm:p-7"><span className="font-mono text-[8px] text-zinc-600">DRIVER {side}</span><select className="mt-3 w-full border border-white/15 bg-tarmac px-3 py-3 text-lg font-black uppercase italic text-white outline-none focus:border-dutch-orange" value={driver} onChange={(e) => onChange(e.target.value)}>{predictions.map((p) => <option key={`${side}-${p.driver}`} value={p.driver}>{p.driver} · {p.team}</option>)}</select><div className="mt-6 grid grid-cols-2 gap-px bg-white/10"><Stat label="Grid" value={`P${getGrid(data)}`} /><Stat label="Forecast" value={`P${getPos(data)}`} /></div></div>;
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return <div className="bg-tarmac p-4"><p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">{label}</p><p className="mt-1 text-3xl font-black italic text-white">{value}</p></div>;
 }

@@ -2,98 +2,68 @@
 
 @theme inline {
   --color-f1-red: #e10600;
-  --color-tarmac: #080a0b;
-  --color-tarmac-light: #121516;
+  --color-tarmac: #0b0c0e;
+  --color-tarmac-light: #15171a;
+  --color-dutch-orange: #ff5f00;
+  --color-dutch-blue: #21468b;
+  --color-dutch-red: #ae1c28;
+  --color-dutch-sand: #d9d0bc;
+  --color-dutch-cream: #f4f0e8;
 
-  --color-hungary-red: #ce2939;
-  --color-hungary-ivory: #f4f0e8;
-  --color-hungary-green: #5c9a68;
+  /* Compatibility aliases used by the existing data widgets. */
+  --color-hungary-red: var(--color-dutch-orange);
+  --color-hungary-ivory: var(--color-dutch-cream);
+  --color-hungary-green: var(--color-dutch-blue);
+  --color-spielberg-red: var(--color-dutch-orange);
+  --color-styrian-green: var(--color-dutch-blue);
+  --color-catalunya-red: var(--color-dutch-orange);
+  --color-iberian-yellow: var(--color-dutch-sand);
+  --color-telemetry: var(--color-dutch-blue);
 
-  /* Compatibility aliases used by shared prediction widgets. */
-  --color-spielberg-red: var(--color-hungary-red);
-  --color-styrian-green: var(--color-hungary-green);
-  --color-catalunya-red: var(--color-hungary-red);
-  --color-iberian-yellow: var(--color-hungary-green);
-  --color-telemetry: var(--color-hungary-green);
-
-  --font-sans: "Inter", "Arial Narrow", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
-}
-
-@keyframes circuit-dash {
-  to { stroke-dashoffset: -34; }
-}
-
-@keyframes heat-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
-  50% { transform: translate3d(18px, -12px, 0) scale(1.05); opacity: 0.55; }
+  --font-sans: "Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", "Roboto Mono", Consolas, monospace;
 }
 
 :root {
-  --background: var(--color-tarmac);
-  --foreground: #f4f4f5;
+  --background: #0b0c0e;
+  --foreground: #f4f0e8;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   background: var(--background);
+  scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
-  background-color: var(--background);
-  background-image:
-    radial-gradient(circle at 10% 6%, rgba(206, 41, 57, 0.085), transparent 30rem),
-    radial-gradient(circle at 91% 24%, rgba(92, 154, 104, 0.055), transparent 28rem),
-    linear-gradient(to bottom, #111516 0%, #080a0b 50rem);
-  background-attachment: fixed;
+  margin: 0;
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
 }
 
-.hungary-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.42) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.42) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mask-image: linear-gradient(to bottom right, black, transparent 72%);
+button, select, input { font: inherit; }
+
+.dashboard-grid {
+  border-top: 1px solid rgba(255, 255, 255, 0.025);
 }
 
-.circuit-path {
-  stroke-dasharray: 12 6;
-  animation: circuit-dash 3s linear infinite;
+.dutch-dots {
+  border: 18px solid rgba(33, 70, 139, 0.08);
 }
 
-.heat-orb {
-  animation: heat-drift 9s ease-in-out infinite;
-}
+.circuit-path { stroke-dasharray: 5 7; }
+.section-rule { background: #ff5f00; }
 
-@layer utilities {
-  .f1-glass-panel {
-    @apply rounded-xl border border-white/5 bg-tarmac-light/70 shadow-2xl backdrop-blur-md;
-  }
-}
+.custom-scrollbar::-webkit-scrollbar { width: 7px; height: 7px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #0b0c0e; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #3f4248; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #ff5f00; }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background: rgba(206, 41, 57, 0.24);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-hungary-red);
-}
+input[type="range"] { accent-color: #ff5f00; }
+select { color-scheme: dark; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

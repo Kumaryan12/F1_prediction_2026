@@ -6,105 +6,26 @@ type MetricCardProps = {
 };
 
 const accentMap = {
-  red: {
-    border: "border-l-hungary-red",
-    text: "text-hungary-red",
-    glow: "shadow-[0_0_20px_rgba(206,41,57,0.08)]",
-    dot: "bg-hungary-red shadow-[0_0_5px_rgba(206,41,57,0.8)]",
-  },
-  yellow: {
-    border: "border-l-hungary-ivory",
-    text: "text-hungary-ivory",
-    glow: "shadow-[0_0_20px_rgba(244,240,232,0.05)]",
-    dot: "bg-hungary-ivory shadow-[0_0_5px_rgba(244,240,232,0.5)]",
-  },
-  pink: {
-    border: "border-l-spielberg-red",
-    text: "text-spielberg-red",
-    glow: "shadow-[0_0_20px_rgba(206,41,57,0.08)]",
-    dot: "bg-spielberg-red shadow-[0_0_5px_rgba(206,41,57,0.8)]",
-  },
-  green: {
-    border: "border-l-hungary-green",
-    text: "text-hungary-green",
-    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
-    dot: "bg-hungary-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
-  },
-  cyan: {
-    border: "border-l-styrian-green",
-    text: "text-styrian-green",
-    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
-    dot: "bg-styrian-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
-  },
-  telemetry: {
-    border: "border-l-styrian-green",
-    text: "text-styrian-green",
-    glow: "shadow-[0_0_20px_rgba(92,154,104,0.08)]",
-    dot: "bg-styrian-green shadow-[0_0_5px_rgba(92,154,104,0.8)]",
-  },
+  red: "bg-dutch-orange",
+  yellow: "bg-dutch-sand",
+  pink: "bg-dutch-red",
+  green: "bg-dutch-blue",
+  cyan: "bg-dutch-blue",
+  telemetry: "bg-dutch-orange",
 };
 
-export default function MetricCard({
-  label,
-  value,
-  subtext,
-  accent = "telemetry",
-}: MetricCardProps) {
-  const style = accentMap[accent];
-
+export default function MetricCard({ label, value, subtext, accent = "telemetry" }: MetricCardProps) {
   return (
-    <div
-      className={`relative flex flex-col justify-between overflow-hidden rounded-r-xl rounded-l-sm bg-tarmac-light/90 backdrop-blur-md border-y border-r border-white/5 border-l-4 p-5 transition-all hover:bg-tarmac-light ${style.border} ${style.glow}`}
-    >
-      {/* Pure CSS Carbon Fiber Weave */}
-      <div 
-        className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply"
-        style={{
-          backgroundImage: `
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-          `,
-          backgroundPosition: `0 0, 4px 4px`,
-          backgroundSize: `8px 8px`
-        }}
-      />
-
-      {/* Live Data Pulse Dot */}
-      <div className="absolute top-4 right-4 flex h-3 w-3 items-center justify-center z-10">
-        <span className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${style.dot}`} />
-        <span className={`relative inline-flex h-2 w-2 rounded-full ${style.dot}`} />
+    <article className="relative min-h-36 bg-[#111315] p-5">
+      <span className={`absolute left-0 top-0 h-1 w-12 ${accentMap[accent]}`} />
+      <div className="flex h-full flex-col justify-between">
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-zinc-500">{label}</p>
+          <span className="font-mono text-[8px] text-zinc-700">DATA/26</span>
+        </div>
+        <h3 className="my-4 break-words text-3xl font-black uppercase italic leading-none tracking-[-0.05em] text-white">{value}</h3>
+        {subtext && <p className="border-t border-white/10 pt-2 font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-600">{subtext}</p>}
       </div>
-
-      {/* Content wrapper with z-10 so it sits on top of the carbon fiber */}
-      <div className="relative z-10">
-        <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 mb-1">
-          {label}
-        </p>
-        
-        <h3 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-white drop-shadow-sm">
-          {value}
-        </h3>
-        
-        {subtext ? (
-          <div className="mt-3 flex items-center gap-2 border-t border-white/10 pt-3">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ${style.text}`}>
-              <path fillRule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm8-6a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 4zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-            </svg>
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-wider">{subtext}</p>
-          </div>
-        ) : null}
-      </div>
-
-      {/* Subtle tech background pattern */}
-      <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none z-0">
-        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-          <g fill="none" fillRule="evenodd">
-            <g fill="currentColor" className={style.text}>
-              <path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
+    </article>
   );
 }

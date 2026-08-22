@@ -25,116 +25,123 @@ except Exception:
 try:
     from .config import HIGH_DF_TECHNICAL_GPS
 except Exception:
-    # Safe fallback until this set is added to config.py.
+    # Safe fallback if config.py has not yet been updated.
     HIGH_DF_TECHNICAL_GPS: set[str] = {
-        "Hungarian Grand Prix",
         "Monaco Grand Prix",
+        "Hungarian Grand Prix",
+        "Dutch Grand Prix",
     }
 
 
 # -------------------------------------------------------------------
 # Driver and team priors
 #
-# Hungarian GP / Hungaroring configuration
+# Dutch GP / Zandvoort configuration
 #
-# These are current pre-race competitiveness priors, not pure talent
-# ratings. They use:
+# These are CURRENT PRE-RACE COMPETITIVENESS priors rather than
+# immutable driver-talent ratings.
 #
-# - 2026 championship position and points
-# - recent races through the Belgian Grand Prix
-# - team package strength
-# - qualifying and race consistency
-# - Hungary suitability
-# - high-downforce and technical-circuit performance
-# - tyre management and traffic management
+# Information used:
+# - 2026 championship through Hungary
+# - Hungarian GP result
+# - recent Belgium / Hungary performance
+# - current constructor strength
+# - high-downforce / technical-track suitability
+# - qualifying consistency
+# - tyre management
 #
-# Freeze these before incorporating Hungarian GP qualifying or race data.
+# Do NOT update these using Dutch GP Sprint, qualifying or race data.
+# Weekend-session information belongs in live-strength features.
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
     # ---------------------------------------------------------------
-    # Leading championship group
+    # Current championship elite
     # ---------------------------------------------------------------
 
-    # Championship leader, six wins and Belgian GP winner.
-    # Mercedes is currently the strongest package.
+    # Championship leader: 219 pts.
+    # Hungary P3 despite starting outside the front row.
+    # Mercedes remains the benchmark package.
     "ANT": 1.00,
 
-    # Championship P2, multiple podiums and strong technical-track record.
-    # Finished fourth in Belgium after a time penalty.
+    # Championship P2 with 169 pts.
+    # Consistent top-five results and strong high-downforce ability.
     "HAM": 0.97,
 
-    # Championship P3. Austria winner and consistently competitive,
-    # although Belgium ended with a Lap 1 retirement.
-    "RUS": 0.95,
-
-    # Consecutive strong races: Silverstone win and Belgium P2.
-    # Ferrari's high-downforce pace gives him strong Hungary upside.
+    # Silverstone winner, Belgium P2, Hungary P4.
+    # Ferrari remains extremely competitive on aero-sensitive circuits.
     "LEC": 0.96,
 
+    # Championship P3. Austria winner and very consistent season.
+    # Hungary P7 was weaker than his usual level.
+    "RUS": 0.95,
+
     # ---------------------------------------------------------------
-    # Leading challengers
+    # Zandvoort-relevant front challengers
     # ---------------------------------------------------------------
 
-    # Championship P5. Strong overall consistency and technical-track pace.
-    "NOR": 0.91,
+    # Won Hungary from pole.
+    # McLaren showed excellent high-downforce / technical performance.
+    "NOR": 0.95,
 
-    # Championship P6 and Belgium P5.
-    # Hungary should suit McLaren better than Spa.
+    # Hungary P2 and strong recent form.
+    # Zandvoort is his home GP and historically suits his driving style,
+    # but current Red Bull package remains below Mercedes/Ferrari.
+    "VER": 0.94,
+
+    # Hungary DNF should not erase strong underlying McLaren pace.
+    # Qualified near the front and remains a genuine podium threat.
     "PIA": 0.90,
 
-    # Belgium podium and strong driver-level ability.
-    # Current Red Bull package is below Mercedes and Ferrari.
-    "VER": 0.92,
-
-    # Championship P8 and recovered from the back to P6 in Belgium.
+    # Hungary P6 and continues to be one of the strongest drivers
+    # outside Mercedes/Ferrari/McLaren.
     "HAD": 0.87,
 
     # ---------------------------------------------------------------
     # Upper midfield
     # ---------------------------------------------------------------
 
-    # Alpine's highest-ranked driver, though Belgium produced no points.
-    "GAS": 0.81,
+    # Hungary P8 and currently P9 in the championship.
+    "LAW": 0.82,
 
-    # Championship P10. Strong recent consistency before Belgium P12.
-    "LAW": 0.81,
-
-    # Rookie with consecutive points at Silverstone and Belgium.
+    # Hungary P10 and continues to score as a rookie.
     "LIN": 0.80,
 
-    # Belgium P10 and championship P12.
-    "COL": 0.78,
+    # Alpine's strongest championship performer.
+    # Hungary P12 slightly hurts short-term form.
+    "GAS": 0.79,
 
-    # Audi's only points scorer, with consecutive P8 finishes.
-    "BOR": 0.79,
+    # Consecutive strong races before Hungary; P11 in Budapest.
+    "BOR": 0.78,
 
-    # Championship P13, but Belgium P14 weakens recent form.
-    "BEA": 0.75,
-
-    # ---------------------------------------------------------------
-    # Lower midfield
-    # ---------------------------------------------------------------
-
-    "SAI": 0.72,
-    "ALB": 0.71,
-    "OCO": 0.69,
-    "HUL": 0.69,
-
-    # Aston Martin remains weak, but Hungary may suit Alonso's driving
-    # and the team's high-downforce upgrades better than Spa.
-    "ALO": 0.71,
+    # Hungary P9 gives Audi another points finish.
+    "HUL": 0.75,
 
     # ---------------------------------------------------------------
-    # Rear group
+    # Midfield
+    # ---------------------------------------------------------------
+
+    "COL": 0.74,
+    "BEA": 0.72,
+
+    "ALO": 0.70,
+
+    "SAI": 0.69,
+    "ALB": 0.68,
+    "OCO": 0.67,
+
+    # ---------------------------------------------------------------
+    # Lower current-performance group
     # ---------------------------------------------------------------
 
     "STR": 0.62,
-    "BOT": 0.64,
-    "PER": 0.61,
+
+    # Cadillac remains scoreless and both cars retired in Hungary.
+    "BOT": 0.59,
+    "PER": 0.58,
 }
 
-DEFAULT_DRIVER_PRIOR = 0.73
+DEFAULT_DRIVER_PRIOR = 0.72
 
 
 ROOKIE_DRIVERS = {
@@ -153,7 +160,7 @@ RETURNEE_DRIVERS = {
 # -------------------------------------------------------------------
 
 TEAM_ALIAS = {
-    # Audi and historical Sauber names
+    # Audi / historical Sauber identities
     "Audi": "Audi",
     "Audi F1 Team": "Audi",
     "Sauber": "Audi",
@@ -218,50 +225,53 @@ TEAM_ALIAS = {
 # -------------------------------------------------------------------
 # Team current-performance priors
 #
-# Championship order after Belgium:
-# Mercedes, Ferrari, McLaren, Red Bull, Alpine/Racing Bulls,
-# Haas, Williams, Audi, Aston Martin, Cadillac.
+# Official standings after Hungary:
 #
-# Hungary-specific suitability is only a small adjustment. Championship
-# and recent race evidence remain the main basis.
+# Mercedes     379
+# Ferrari      307
+# McLaren      220
+# Red Bull     177
+# Racing Bulls 66
+# Alpine       61
+# Haas         21
+# Audi         12
+# Williams     11
+# Aston Martin 1
+# Cadillac     0
+#
+# Zandvoort suitability is only a SMALL modifier.
 # -------------------------------------------------------------------
 
 TEAM_BASELINE_PRIOR = {
-    # 358 points and clear championship leader.
+    # Championship benchmark.
     "Mercedes": 1.00,
 
-    # 285 points and consecutive strong races.
-    # High-downforce Hungary should suit Ferrari.
+    # Second in championship and consistently competitive recently.
     "Ferrari": 0.96,
 
-    # 195 points. Hungary may suit McLaren better than Spa did.
-    "McLaren": 0.90,
+    # Hungary winner + strong qualifying.
+    # Zandvoort's aero/downforce requirements should suit McLaren.
+    "McLaren": 0.93,
 
-    # 151 points. Strong driver performance but inconsistent package.
-    "Red Bull Racing": 0.84,
+    # Strong Hungary with Verstappen P2 and Hadjar P6.
+    # Still clearly behind top three in championship points.
+    "Red Bull Racing": 0.89,
 
-    # Both teams have 61 points.
-    "Alpine": 0.73,
-    "Racing Bulls": 0.73,
+    # Racing Bulls moved ahead of Alpine after another points finish.
+    "Racing Bulls": 0.75,
+    "Alpine": 0.71,
 
-    # 21 points and inconsistent recent performance.
-    "Haas F1 Team": 0.64,
+    # Audi's recent trend is better than its raw season total suggests.
+    "Audi": 0.65,
 
-    # 11 points and weak recent races.
-    "Williams": 0.58,
+    "Haas F1 Team": 0.61,
+    "Williams": 0.57,
 
-    # 10 points, all from Bortoleto, with recent upward form.
-    "Audi": 0.60,
-
-    # Only one point, but Hungary-specific upgrades could improve the
-    # package relative to the raw championship position.
-    "Aston Martin": 0.53,
-
-    # Scoreless and two weak Belgian GP results.
-    "Cadillac": 0.46,
+    "Aston Martin": 0.51,
+    "Cadillac": 0.44,
 }
 
-DEFAULT_TEAM_PRIOR = 0.69
+DEFAULT_TEAM_PRIOR = 0.68
 
 
 # -------------------------------------------------------------------
@@ -344,9 +354,8 @@ def _latest_by_entity(
     Return the latest available non-null value for every entity-feature
     combination.
 
-    Each feature is resolved independently, which is important because
-    the latest technical-circuit observation may not be the latest race
-    overall.
+    Each feature is resolved independently because the latest
+    high-downforce race may not be the latest race overall.
     """
 
     if entity_col not in df.columns:
@@ -524,11 +533,19 @@ def add_live_strength_adjustments(
     - driver_strength_blend_2026
     - team_strength_blend_2026
 
-    Hungary is highly setup-sensitive, but practice results can be
-    distorted by fuel load, tyre age, engine mode and traffic.
+    Zandvoort is highly setup-sensitive because of:
+    - high aerodynamic load
+    - banking
+    - high lateral loads
+    - tyre preparation
+    - coastal wind
+    - narrow track
+    - qualifying importance
 
-    Live performance therefore receives 55%, rather than the more
-    aggressive 60-75% used previously.
+    The 2026 Dutch weekend is also a Sprint weekend, so there may be
+    additional live information available. However, session strength is
+    still limited to 55% because fuel load, tyre usage and Sprint/race
+    setup priorities may differ.
     """
 
     if not np.isclose(
@@ -704,7 +721,7 @@ def add_circuit_context_df(
         .reset_index(drop=True)
     )
 
-    # Prevent duplicate feature columns if context is added twice.
+    # Prevent duplicate context columns if this function is called twice.
     overlapping = [
         col
         for col in context.columns
@@ -867,8 +884,7 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # General team form
     #
-    # First reduce each team-race to one observation. Otherwise each
-    # team's two drivers would incorrectly count as separate races.
+    # Reduce each team-race to one observation before rolling.
     # ---------------------------------------------------------------
 
     team_events = (
@@ -938,7 +954,7 @@ def add_driver_team_form(
     )
 
     # ---------------------------------------------------------------
-    # Frozen pre-Hungary manual priors
+    # Frozen pre-Zandvoort manual priors
     # ---------------------------------------------------------------
 
     df["driver_skill_prior"] = (
@@ -976,7 +992,8 @@ def add_driver_team_form(
         window: int = 3,
     ) -> None:
         """
-        Add driver and team form using only events in one circuit group.
+        Add driver and team form using only races within one circuit
+        archetype.
         """
 
         df[driver_output_col] = np.nan
@@ -990,7 +1007,7 @@ def add_driver_team_form(
         if not mask.any():
             return
 
-        # Driver form within the selected archetype.
+        # Driver form inside the selected circuit group.
         driver_subset = (
             df.loc[
                 mask,
@@ -1038,7 +1055,7 @@ def add_driver_team_form(
             driver_output_col,
         ] = driver_subset[driver_output_col]
 
-        # Team form within the selected archetype.
+        # Team form inside the selected circuit group.
         team_subset = (
             df.loc[mask]
             .groupby(
@@ -1123,33 +1140,37 @@ def add_driver_team_form(
             team_output_col,
         ] = matched[team_output_col].to_numpy()
 
-    # Existing archetypes
+    # Low-downforce circuits.
     _add_archetype_forms(
         gps=LOW_DF_GPS,
         driver_output_col="lowdf_driver_form3",
         team_output_col="lowdf_team_form3",
     )
 
+    # Street circuits.
     _add_archetype_forms(
         gps=STREET_GPS,
         driver_output_col="street_driver_form3",
         team_output_col="street_team_form3",
     )
 
+    # Long-straight / power-sensitive circuits.
     _add_archetype_forms(
         gps=LONG_STRAIGHT_GPS,
         driver_output_col="longstraight_driver_form3",
         team_output_col="longstraight_team_form3",
     )
 
-    # Primary Hungarian GP archetype.
+    # Primary Zandvoort archetype:
+    # high-downforce / technical circuits.
     _add_archetype_forms(
         gps=HIGH_DF_TECHNICAL_GPS,
         driver_output_col="highdf_driver_form3",
         team_output_col="highdf_team_form3",
     )
 
-    # Use general form where an archetype-specific history is absent.
+    # Use general recent form wherever an archetype-specific observation
+    # is not available.
     driver_archetype_cols = [
         "lowdf_driver_form3",
         "street_driver_form3",
@@ -1188,8 +1209,8 @@ def merge_latest_forms(
     train_df_with_forms: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Merge latest general and archetype form into the Hungary prediction
-    dataframe.
+    Merge the latest general and circuit-archetype form into the Dutch
+    Grand Prix prediction dataframe.
     """
 
     required_predict = {
@@ -1286,7 +1307,7 @@ def merge_latest_forms(
     )
 
     # ---------------------------------------------------------------
-    # Driver archetype features
+    # Driver circuit-archetype features
     # ---------------------------------------------------------------
 
     driver_archetypes = [
@@ -1361,7 +1382,7 @@ def merge_latest_forms(
     )
 
     # ---------------------------------------------------------------
-    # Team archetype features
+    # Team circuit-archetype features
     # ---------------------------------------------------------------
 
     team_archetypes = [
@@ -1410,7 +1431,7 @@ def merge_latest_forms(
         )
 
     # ---------------------------------------------------------------
-    # Driver feature fallbacks
+    # Driver-feature fallback handling
     # ---------------------------------------------------------------
 
     driver_fill_specs = {
@@ -1430,7 +1451,7 @@ def merge_latest_forms(
             general_col=fallback_col,
         )
 
-    # Refresh priors rather than carrying old pre-Belgium values.
+    # Always refresh current priors for the target race.
     out["driver_skill_prior"] = (
         out["driver"]
         .map(DRIVER_SKILL_PRIOR)
@@ -1450,7 +1471,7 @@ def merge_latest_forms(
     )
 
     # ---------------------------------------------------------------
-    # Team feature fallbacks
+    # Team-feature fallback handling
     # ---------------------------------------------------------------
 
     team_fill_specs = {
@@ -1498,8 +1519,11 @@ def add_quali_proxy(
         driver_weight * recent driver qualifying average
         + (1 - driver_weight) * recent team qualifying average
 
-    This is only for pre-qualifying operation. Once the official
-    Hungary grid is available, use the real grid.
+    Zandvoort is particularly qualifying-sensitive because overtaking
+    is difficult.
+
+    Once the official Dutch GP starting grid is available, always use
+    the actual grid instead of this proxy.
     """
 
     if not 0.0 <= driver_weight <= 1.0:
@@ -1628,8 +1652,7 @@ def add_quali_proxy(
         })
     )
 
-    # Two drivers per team means roughly 2 * window rows correspond to
-    # the same number of recent race weekends.
+    # Two drivers per team means approximately two rows per race.
     team_proxy = (
         base
         .groupby(

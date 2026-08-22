@@ -28,7 +28,8 @@ FEATS = [
     # Sunday starting order
     # ---------------------------------------------------------------
 
-    # Valid because this is a post-qualifying prediction.
+    # Extremely important at Zandvoort because overtaking is difficult.
+    # Valid because this is a post-qualifying / pre-race prediction.
     "grid_pos",
 
     # ---------------------------------------------------------------
@@ -38,19 +39,29 @@ FEATS = [
     "sc_prob",
     "vsc_prob",
     "pit_loss",
+
     "expected_stops",
     "overtake_index",
     "tow_importance",
+
     "is_low_df",
     "is_street",
     "long_straight_index",
+
     "braking_intensity",
     "warmup_penalty",
     "deg_rate",
     "stint_len_typical",
 
     # ---------------------------------------------------------------
-    # Track characteristics
+    # Track / layout characteristics
+    #
+    # Particularly relevant at Zandvoort:
+    # - wind sensitivity
+    # - elevation changes
+    # - high lateral loading
+    # - narrow circuit
+    # - banked corners
     # ---------------------------------------------------------------
 
     "surface_bumpiness",
@@ -63,6 +74,8 @@ FEATS = [
 
     # ---------------------------------------------------------------
     # Weather
+    #
+    # Coastal weather and wind can change quickly at Zandvoort.
     # ---------------------------------------------------------------
 
     "rain_prob_race",
@@ -71,11 +84,12 @@ FEATS = [
     "mixed_conditions_risk",
 
     # ---------------------------------------------------------------
-    # Driver / Team priors
+    # Driver / team priors
     # ---------------------------------------------------------------
 
     "driver_skill_prior",
     "team_prior_strength",
+
     "rookie_flag",
     "returnee_flag",
 
@@ -87,27 +101,21 @@ FEATS = [
     "team_form3",
 
     # ---------------------------------------------------------------
-    # Primary Hungary archetype
+    # PRIMARY ZANDVOORT ARCHETYPE
     #
-    # Hungaroring is a high-downforce, technical circuit that rewards:
+    # High-downforce / technical-circuit performance.
+    #
+    # Zandvoort rewards:
+    # - aerodynamic stability
+    # - fast-corner confidence
     # - mechanical grip
-    # - medium-speed balance
     # - tyre management
-    # - qualifying pace
+    # - qualifying performance
+    # - consistency through linked corners
     # ---------------------------------------------------------------
 
     "highdf_driver_form3",
     "highdf_team_form3",
-
-    # ---------------------------------------------------------------
-    # Secondary archetype
-    #
-    # General high-speed performance still provides useful information,
-    # but is less important than high-downforce technical form.
-    # ---------------------------------------------------------------
-
-    "longstraight_driver_form3",
-    "longstraight_team_form3",
 
     # ---------------------------------------------------------------
     # Historical normalized strength
@@ -117,11 +125,16 @@ FEATS = [
     "team_hist_strength",
 
     # ---------------------------------------------------------------
-    # Live 2026 blended strength
+    # Current-season / live-session blended strength
     # ---------------------------------------------------------------
 
     "driver_strength_blend_2026",
     "team_strength_blend_2026",
+
+    # ---------------------------------------------------------------
+    # Categoricals
+    # ---------------------------------------------------------------
+
     "team",
     "driver",
 ]

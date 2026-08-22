@@ -36,15 +36,13 @@ export default function PredictionIntervalChart({
   }));
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(92,154,104,0.1)] backdrop-blur-md p-6 sm:p-8">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-styrian-green/5 to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-spielberg-red/5 to-transparent pointer-events-none" />
+    <div className="relative overflow-hidden border border-white/10 bg-tarmac-light p-6 sm:p-8">
 
       {/* Header */}
       <div className="mb-8 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-spielberg-red animate-pulse shadow-[0_0_10px_rgba(206,41,57,0.8)]" />
+            <span className="h-3 w-3 bg-spielberg-red" />
             Prediction Intervals
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
