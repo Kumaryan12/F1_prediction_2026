@@ -15,9 +15,6 @@ export type PredictionRow = {
   p_rank_pm1?: number | null;
   raw_pred_finish?: number | null;
   raw_pred_rank?: number | null;
-  calibrated_pred_finish?: number | null;
-  calibrated_pred_rank?: number | null;
-  blend_alpha?: number | null;
   ranking_mode_default?: string | null;
   pred_finish_model?: number | null;
   pred_rank_model?: number | null;

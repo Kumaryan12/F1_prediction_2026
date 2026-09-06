@@ -69,9 +69,8 @@ def load_predictions() -> pd.DataFrame:
     df = pd.read_csv(PREDICTIONS_PATH)
     df = df.where(pd.notnull(df), None)
 
-    rank_column = "calibrated_pred_rank" if "calibrated_pred_rank" in df.columns else "pred_rank"
-    if rank_column in df.columns:
-        df = df.sort_values(rank_column, ascending=True).reset_index(drop=True)
+    if "pred_rank" in df.columns:
+        df = df.sort_values("pred_rank", ascending=True).reset_index(drop=True)
 
     return df
 
@@ -187,8 +186,7 @@ def get_summary() -> SummaryResponse:
     if df.empty:
         raise HTTPException(status_code=404, detail="No predictions available")
 
-    rank_column = "calibrated_pred_rank" if "calibrated_pred_rank" in df.columns else "pred_rank"
-    podium_df = df.sort_values(rank_column).head(3)
+    podium_df = df.sort_values("pred_rank").head(3)
     winner = podium_df.iloc[0]["driver"]
 
     team_scores = (

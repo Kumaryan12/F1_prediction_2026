@@ -599,32 +599,23 @@ def main():
         use_sessions=(args.use_sessions and not args.preweekend),
         mc_samples=args.mc,
     )
-        # ---------------------------------------------------------------
-    # Grid-calibrated ranking mode
     # ---------------------------------------------------------------
-    FROZEN_BLEND_ALPHA = 0.65
-
+    # Authoritative raw-model ranking
+    # ---------------------------------------------------------------
+    # Grid position is already an input feature and the model predicts
+    # finish_pos - grid_pos. Do not blend the grid into the result again.
+    out = out.sort_values("pred_finish", ascending=True).reset_index(drop=True)
+    out["pred_rank"] = range(1, len(out) + 1)
     out["raw_pred_finish"] = pd.to_numeric(out["pred_finish"], errors="coerce")
     out["raw_pred_rank"] = out["pred_rank"]
-
-    out["calibrated_pred_finish"] = (
-        FROZEN_BLEND_ALPHA * out["raw_pred_finish"]
-        + (1.0 - FROZEN_BLEND_ALPHA) * pd.to_numeric(out["grid_pos"], errors="coerce")
-    )
-
-    out = out.sort_values("calibrated_pred_finish", ascending=True).reset_index(drop=True)
-    out["calibrated_pred_rank"] = range(1, len(out) + 1)
-
-    out["blend_alpha"] = FROZEN_BLEND_ALPHA
-    out["ranking_mode_default"] = "grid_calibrated"
+    out["ranking_mode_default"] = "raw_model"
 
     lo_col, hi_col = ("pi95_low", "pi95_high") if args.interval == 95 else ("pi68_low", "pi68_high")
 
     cols_to_print = [
     c for c in (
         "driver", "team", "grid_pos",
-        "calibrated_pred_finish", "calibrated_pred_rank",
-        "raw_pred_finish", "raw_pred_rank",
+        "pred_finish", "pred_rank",
         "pred_std",
         lo_col, hi_col,
         "p_win", "p_top10", "p_podium", "p_rank_pm1",
@@ -653,11 +644,9 @@ def main():
             f"Available columns: {logged_pred_df.columns.tolist()}"
         )
 
-    rank_col = "calibrated_pred_rank" if "calibrated_pred_rank" in logged_pred_df.columns else "pred_rank"
-
     predicted_winner = (
         logged_pred_df
-        .sort_values(rank_col)
+        .sort_values("pred_rank")
         .iloc[0]["driver"]
     )
 

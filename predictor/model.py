@@ -28,8 +28,8 @@ FEATS = [
     # Sunday starting order
     # ---------------------------------------------------------------
 
-    # Extremely important at Zandvoort because overtaking is difficult.
-    # Valid because this is a post-qualifying / pre-race prediction.
+    # Still important at Monza, but overtaking is more realistic than
+    # at Zandvoort / Monaco.
     "grid_pos",
 
     # ---------------------------------------------------------------
@@ -56,12 +56,12 @@ FEATS = [
     # ---------------------------------------------------------------
     # Track / layout characteristics
     #
-    # Particularly relevant at Zandvoort:
-    # - wind sensitivity
-    # - elevation changes
-    # - high lateral loading
-    # - narrow circuit
-    # - banked corners
+    # Monza is dominated by:
+    # - low drag
+    # - long straights
+    # - heavy braking
+    # - traction out of chicanes
+    # - high power-unit load
     # ---------------------------------------------------------------
 
     "surface_bumpiness",
@@ -74,8 +74,6 @@ FEATS = [
 
     # ---------------------------------------------------------------
     # Weather
-    #
-    # Coastal weather and wind can change quickly at Zandvoort.
     # ---------------------------------------------------------------
 
     "rain_prob_race",
@@ -101,21 +99,22 @@ FEATS = [
     "team_form3",
 
     # ---------------------------------------------------------------
-    # PRIMARY ZANDVOORT ARCHETYPE
+    # PRIMARY MONZA ARCHETYPE 1
     #
-    # High-downforce / technical-circuit performance.
-    #
-    # Zandvoort rewards:
-    # - aerodynamic stability
-    # - fast-corner confidence
-    # - mechanical grip
-    # - tyre management
-    # - qualifying performance
-    # - consistency through linked corners
+    # Low-downforce / power-sensitive performance.
     # ---------------------------------------------------------------
 
-    "highdf_driver_form3",
-    "highdf_team_form3",
+    "lowdf_driver_form3",
+    "lowdf_team_form3",
+
+    # ---------------------------------------------------------------
+    # PRIMARY MONZA ARCHETYPE 2
+    #
+    # Long-straight / high-speed / tow-sensitive performance.
+    # ---------------------------------------------------------------
+
+    "longstraight_driver_form3",
+    "longstraight_team_form3",
 
     # ---------------------------------------------------------------
     # Historical normalized strength

@@ -38,24 +38,24 @@ const driverNames: Record<string, string> = {
 export default function PredictionTable({ rows }: PredictionTableProps) {
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-white/10 bg-[#0b0c0e] px-4 py-3 font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">
-        <span>Complete calibrated model output</span>
+      <div className="flex items-center justify-between border-b border-white/10 bg-[#0b0c0e] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-400">
+        <span>Complete raw model output</span>
         <span className="sm:hidden">Swipe horizontally →</span>
       </div>
       <div className="custom-scrollbar w-full overflow-x-auto">
-        <table className="min-w-[1680px] border-collapse whitespace-nowrap text-left">
+        <table className="min-w-[1450px] border-collapse whitespace-nowrap text-left">
           <thead className="bg-tarmac font-mono uppercase">
-            <tr className="border-b border-white/10 text-[8px] tracking-[0.16em] text-zinc-600">
-              <th colSpan={3} className="sticky left-0 z-30 border-r border-white/10 bg-tarmac px-4 py-2 text-dutch-orange">Classification</th>
-              <th colSpan={4} className="border-r border-white/10 px-4 py-2 text-dutch-orange">Model output</th>
-              <th colSpan={3} className="border-r border-white/10 px-4 py-2 text-dutch-orange">Uncertainty</th>
-              <th colSpan={4} className="px-4 py-2 text-dutch-orange">Probability</th>
+            <tr className="border-b border-white/10 text-[10px] tracking-[0.16em] text-zinc-400">
+              <th colSpan={3} className="sticky left-0 z-30 border-r border-white/10 bg-tarmac px-4 py-2 text-racing-red">Classification</th>
+              <th colSpan={2} className="border-r border-white/10 px-4 py-2 text-racing-red">Model output</th>
+              <th colSpan={3} className="border-r border-white/10 px-4 py-2 text-racing-red">Uncertainty</th>
+              <th colSpan={4} className="px-4 py-2 text-racing-red">Probability</th>
             </tr>
-            <tr className="border-b border-white/15 text-[9px] tracking-[0.12em] text-zinc-400">
+            <tr className="border-b border-white/15 text-[10px] tracking-[0.12em] text-zinc-400">
               <Header className="sticky left-0 z-30 w-16 bg-tarmac">Rank</Header>
               <Header className="sticky left-16 z-30 w-52 bg-tarmac">Driver</Header>
               <Header className="border-r border-white/10">Team</Header>
-              <Header>Cal. finish</Header><Header>Cal. rank</Header><Header>Raw finish</Header><Header className="border-r border-white/10">Raw rank</Header>
+              <Header>Pred. finish</Header><Header className="border-r border-white/10">Pred. rank</Header>
               <Header>Std dev</Header><Header>68% low</Header><Header className="border-r border-white/10">68% high</Header>
               <Header>Win</Header><Header>Top 10</Header><Header>Podium</Header><Header>Rank ±1</Header>
             </tr>
@@ -65,16 +65,12 @@ export default function PredictionTable({ rows }: PredictionTableProps) {
               const teamStyle = teamColors[row.team] || "border-white/20 text-zinc-400";
               const borderColor = teamStyle.split(" ")[0];
               const textColor = teamStyle.split(" ")[1];
-              const calibratedRank = row.calibrated_pred_rank ?? row.pred_rank;
-              const calibratedFinish = row.calibrated_pred_finish ?? row.pred_finish;
-              const rawRank = row.raw_pred_rank ?? row.pred_rank;
-              const rawFinish = row.raw_pred_finish ?? row.pred_finish;
               return (
                 <tr key={row.driver} className="group font-mono text-[11px] text-zinc-400 hover:bg-white/[0.035]">
-                  <td className={`sticky left-0 z-20 w-16 border-l-4 bg-[#111315] px-4 py-4 group-hover:bg-[#191b1e] ${borderColor}`}><span className="text-base font-black italic text-white">P{calibratedRank}</span></td>
-                  <td className="sticky left-16 z-20 w-52 bg-[#111315] px-4 py-4 group-hover:bg-[#191b1e]"><div className="font-sans text-sm font-black uppercase italic tracking-tight text-white">{driverNames[row.driver] || row.driver}</div><span className="mt-1 block text-[8px] tracking-[0.2em] text-zinc-600">{row.driver}</span></td>
+                  <td className={`sticky left-0 z-20 w-16 border-l-4 bg-[#111315] px-4 py-4 group-hover:bg-[#191b1e] ${borderColor}`}><span className="text-base font-black italic text-white">P{row.pred_rank}</span></td>
+                  <td className="sticky left-16 z-20 w-52 bg-[#111315] px-4 py-4 group-hover:bg-[#191b1e]"><div className="font-sans text-sm font-black uppercase italic tracking-tight text-white">{driverNames[row.driver] || row.driver}</div><span className="mt-1 block text-[10px] tracking-[0.2em] text-zinc-400">{row.driver}</span></td>
                   <td className={`border-r border-white/10 px-4 py-4 font-sans text-xs font-bold uppercase ${textColor}`}>{row.team}</td>
-                  <DataCell strong>{decimal(calibratedFinish)}</DataCell><DataCell strong>P{calibratedRank}</DataCell><DataCell>{decimal(rawFinish)}</DataCell><DataCell className="border-r border-white/10">P{rawRank}</DataCell>
+                  <DataCell strong>{decimal(row.pred_finish)}</DataCell><DataCell className="border-r border-white/10" strong>P{row.pred_rank}</DataCell>
                   <DataCell>{decimal(row.pred_std)}</DataCell><DataCell>{decimal(row.pi68_low)}</DataCell><DataCell className="border-r border-white/10">{decimal(row.pi68_high)}</DataCell>
                   <Probability value={row.p_win} accent /><Probability value={row.p_top10} /><Probability value={row.p_podium} accent /><Probability value={row.p_rank_pm1} />
                 </tr>
@@ -96,5 +92,5 @@ function DataCell({ children, className = "", strong = false }: { children: Reac
 }
 
 function Probability({ value, accent = false }: { value?: number | null; accent?: boolean }) {
-  return <td className="px-4 py-4 tabular-nums"><span className={`inline-block min-w-14 border px-2 py-1 text-center font-bold ${accent ? "border-dutch-orange/40 bg-dutch-orange/10 text-dutch-orange" : "border-white/10 bg-white/[0.025] text-zinc-300"}`}>{pct(value)}</span></td>;
+  return <td className="px-4 py-4 tabular-nums"><span className={`inline-block min-w-14 border px-2 py-1 text-center font-bold ${accent ? "border-racing-red/40 bg-racing-red/10 text-racing-red" : "border-white/10 bg-white/[0.025] text-zinc-300"}`}>{pct(value)}</span></td>;
 }

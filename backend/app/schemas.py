@@ -32,9 +32,6 @@ class PredictionRow(BaseModel):
 
     raw_pred_finish: Optional[float] = None
     raw_pred_rank: Optional[int] = None
-    calibrated_pred_finish: Optional[float] = None
-    calibrated_pred_rank: Optional[int] = None
-    blend_alpha: Optional[float] = None
     ranking_mode_default: Optional[str] = None
 
     driver_2026_session_strength: Optional[float] = None

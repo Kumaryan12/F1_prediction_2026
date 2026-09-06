@@ -1,44 +1,26 @@
 "use client";
-
 import { useState } from "react";
+import { ArrowLeftRight, ArrowUpRight } from "lucide-react";
+import type { PredictionRow } from "@/lib/types";
+import { driverName, percent, position, teamColor } from "@/lib/presentation";
 
-type DriverData = { driver: string; team: string; pred_rank?: number; pred_finish?: number; grid_pos?: number; predicted_pos?: number; position?: number; grid?: number };
-type HeadToHeadProps = { predictions: DriverData[] };
-
-export default function HeadToHead({ predictions }: HeadToHeadProps) {
-  const [driverA, setDriverA] = useState(predictions[0]?.driver || "VER");
-  const [driverB, setDriverB] = useState(predictions[1]?.driver || "NOR");
-  const dataA = predictions.find((p) => p.driver === driverA) || predictions[0];
-  const dataB = predictions.find((p) => p.driver === driverB) || predictions[1];
-  const getPos = (d: DriverData) => d.pred_rank || (typeof d.pred_finish === "number" ? Math.round(d.pred_finish) : 0) || d.predicted_pos || d.position || 0;
-  const getGrid = (d: DriverData) => d.grid_pos || d.grid || 0;
-  const weightA = Math.max(20 - getPos(dataA), 1);
-  const weightB = Math.max(20 - getPos(dataB), 1);
-  const pctA = (weightA / (weightA + weightB)) * 100;
-
-  return (
-    <div className="border border-white/10 bg-[#111315]">
-      <header className="flex flex-col gap-2 border-b border-white/10 p-5 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-dutch-orange">Driver comparison</p><h2 className="mt-1 text-2xl font-black uppercase italic tracking-[-0.04em] text-white">Head to head</h2></div>
-        <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">Relative predicted race advantage</p>
-      </header>
-      <div className="grid md:grid-cols-[1fr_100px_1fr]">
-        <DriverPanel side="A" driver={driverA} data={dataA} predictions={predictions} getPos={getPos} getGrid={getGrid} onChange={setDriverA} />
-        <div className="grid place-items-center border-y border-white/10 bg-tarmac py-5 text-2xl font-black italic text-zinc-700 md:border-x md:border-y-0">VS</div>
-        <DriverPanel side="B" driver={driverB} data={dataB} predictions={predictions} getPos={getPos} getGrid={getGrid} onChange={setDriverB} />
-      </div>
-      <div className="border-t border-white/10 p-5">
-        <div className="mb-2 flex justify-between font-mono text-[8px] font-bold uppercase tracking-[0.16em]"><span className="text-dutch-orange">{driverA} advantage</span><span className="text-dutch-blue">{driverB} advantage</span></div>
-        <div className="flex h-2 bg-black"><div className="bg-dutch-orange transition-[width] duration-500" style={{ width: `${pctA}%` }} /><div className="flex-1 bg-dutch-blue" /></div>
-      </div>
-    </div>
-  );
+export default function HeadToHead({ predictions }: { predictions: PredictionRow[] }) {
+  const [driverA, setDriverA] = useState(predictions[0]?.driver || "");
+  const [driverB, setDriverB] = useState(predictions[1]?.driver || "");
+  const a = predictions.find((row) => row.driver === driverA);
+  const b = predictions.find((row) => row.driver === driverB);
+  if (!a || !b) return <div className="panel empty-state">At least two drivers are needed for a comparison.</div>;
+  const gap = Math.abs(a.pred_rank - b.pred_rank);
+  const favourite = a.pred_rank < b.pred_rank ? a : b;
+  return <div className="panel comparison-panel">
+    <div className="panel-heading"><span className="eyebrow">THE MATCHUP</span><button className="icon-button" aria-label="Swap drivers" onClick={() => { setDriverA(driverB); setDriverB(driverA); }}><ArrowLeftRight size={16} /></button></div>
+    <div className="matchup-selectors"><DriverSelect label="First driver" selected={driverA} other={driverB} predictions={predictions} onChange={setDriverA} /><span className="versus">VS</span><DriverSelect label="Second driver" selected={driverB} other={driverA} predictions={predictions} onChange={setDriverB} /></div>
+    <div className="matchup-names"><div><small>{driverName(a.driver).split(" ")[0]}</small><h3>{driverName(a.driver).split(" ").slice(1).join(" ")}</h3><span style={{ color: teamColor(a.team) }}>{a.team}</span></div><div><small>{driverName(b.driver).split(" ")[0]}</small><h3>{driverName(b.driver).split(" ").slice(1).join(" ")}</h3><span style={{ color: teamColor(b.team) }}>{b.team}</span></div></div>
+    <div className="comparison-stats"><Compare label="Starting grid" a={position(a.grid_pos)} b={position(b.grid_pos)} /><Compare label="Predicted finish" a={position(a.pred_rank)} b={position(b.pred_rank)} /><Compare label="Podium probability" a={percent(a.p_podium)} b={percent(b.p_podium)} /><Compare label="Win probability" a={percent(a.p_win)} b={percent(b.p_win)} /></div>
+    <div className="comparison-verdict" aria-live="polite"><ArrowUpRight size={18} /><p>{gap ? <><strong>{favourite.driver} has the edge.</strong> Projected {gap} {gap === 1 ? "position" : "positions"} ahead.</> : "The model projects the same finishing position."}<small>Based on predicted rank, not a head-to-head win probability.</small></p></div>
+  </div>;
 }
-
-function DriverPanel({ side, driver, data, predictions, getPos, getGrid, onChange }: { side: string; driver: string; data: DriverData; predictions: DriverData[]; getPos: (d: DriverData) => number; getGrid: (d: DriverData) => number; onChange: (value: string) => void }) {
-  return <div className="p-5 sm:p-7"><span className="font-mono text-[8px] text-zinc-600">DRIVER {side}</span><select className="mt-3 w-full border border-white/15 bg-tarmac px-3 py-3 text-lg font-black uppercase italic text-white outline-none focus:border-dutch-orange" value={driver} onChange={(e) => onChange(e.target.value)}>{predictions.map((p) => <option key={`${side}-${p.driver}`} value={p.driver}>{p.driver} · {p.team}</option>)}</select><div className="mt-6 grid grid-cols-2 gap-px bg-white/10"><Stat label="Grid" value={`P${getGrid(data)}`} /><Stat label="Forecast" value={`P${getPos(data)}`} /></div></div>;
+function DriverSelect({ label, selected, other, predictions, onChange }: { label: string; selected: string; other: string; predictions: PredictionRow[]; onChange: (value: string) => void }) {
+  return <label className="driver-select"><span>{label}</span><select value={selected} onChange={(event) => onChange(event.target.value)}>{predictions.map((row) => <option key={row.driver} value={row.driver} disabled={row.driver === other}>{row.driver} · {driverName(row.driver)}</option>)}</select></label>;
 }
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return <div className="bg-tarmac p-4"><p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">{label}</p><p className="mt-1 text-3xl font-black italic text-white">{value}</p></div>;
-}
+function Compare({ label, a, b }: { label: string; a: string; b: string }) { return <div><strong>{a}</strong><span>{label}</span><strong>{b}</strong></div>; }

@@ -1,134 +1,37 @@
-import MetricCard from "@/components/MetricCard";
+import Image from "next/image";
+import { ArrowDown, ArrowRight, ArrowUpRight, Activity, Flag, Gauge, Instagram, Layers3, Trophy, Wind, Zap } from "lucide-react";
 import PodiumCard from "@/components/PodiumCard";
-import PredictionTable from "@/components/PredictionTable";
 import HeadToHead from "@/components/HeadToHead";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import Simulator from "@/components/Simulator";
+import MonzaCircuit from "@/components/MonzaCircuit";
+import DashboardNav from "@/components/DashboardNav";
+import ForecastExplorer from "@/components/ForecastExplorer";
+import ShareForecast from "@/components/ShareForecast";
 import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
-
-const navItems = ["Overview", "Forecast", "H2H", "Simulator", "Model"];
+import type { PredictionRow, SummaryResponse, PredictionsResponse } from "@/lib/types";
+import { driverName } from "@/lib/presentation";
 
 export default async function HomePage() {
-  const [summary, top10, fullGrid, rawFeatures] = await Promise.all([
-    fetchSummary(), fetchTop10(), fetchLatestPredictions(), fetchFeatureImportance(),
-  ]);
-  const validFeatures = rawFeatures.filter(
-    (feature): feature is { name: string; value: number } => feature !== null
-  );
-
-  return (
-    <div className="relative">
-      <header className="mb-4 flex min-h-14 items-center justify-between border-b border-white/10 bg-tarmac px-1 pb-4">
-        <div className="flex items-center gap-4">
-          <div className="flex h-9 w-14 items-center justify-center bg-dutch-orange text-lg font-black italic tracking-[-0.08em] text-black">F1</div>
-          <div>
-            <p className="text-sm font-black uppercase tracking-[-0.02em] text-white">Race Intelligence</p>
-            <p className="font-mono text-[8px] uppercase tracking-[0.24em] text-zinc-500">Dutch GP · 2026</p>
-          </div>
-        </div>
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Dashboard sections">
-          {navItems.map((item, index) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className={`font-mono text-[9px] font-bold uppercase tracking-[0.2em] transition-colors hover:text-white ${index === 0 ? "text-dutch-orange" : "text-zinc-500"}`}>
-              {item}
-            </a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2 border border-white/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-300">
-          <span className="h-2 w-2 bg-[#31c46c]" /> Model ready
-        </div>
-      </header>
-
-      <section id="overview" className="mb-4 grid border border-white/10 bg-[#111315] lg:grid-cols-[minmax(0,1.5fr)_minmax(360px,.75fr)]">
-        <div className="relative min-h-[430px] overflow-hidden p-6 sm:p-9 lg:p-11">
-          <div className="absolute right-5 top-2 select-none text-[9rem] font-black leading-none tracking-[-0.12em] text-white/[0.025] sm:text-[13rem]">NL</div>
-          <div className="relative flex h-full flex-col justify-between">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] uppercase tracking-[0.22em]">
-              <span className="bg-dutch-orange px-2.5 py-1.5 font-bold text-black">Round 12</span>
-              <span className="text-zinc-500">Zandvoort · Netherlands</span>
-              <span className="text-zinc-500">21–23 August 2026</span>
-            </div>
-            <div className="py-10">
-              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.38em] text-dutch-orange">Race forecast / Circuit Zandvoort</p>
-              <h1 className="max-w-4xl text-5xl font-black uppercase italic leading-[0.84] tracking-[-0.065em] text-dutch-cream sm:text-7xl lg:text-[6.4rem]">Dutch<br />Grand Prix</h1>
-              <p className="mt-7 max-w-2xl border-l-2 border-dutch-orange pl-4 text-sm leading-6 text-zinc-400 sm:text-base">A narrow, banked sprint through the dunes. Grid position matters, but tyre load through Scheivlak and the final corner will decide who can attack.</p>
-            </div>
-            <div className="grid max-w-3xl grid-cols-2 border-y border-white/10 sm:grid-cols-4">
-              <TrackStat value="4.259" unit="km" label="Lap length" />
-              <TrackStat value="72" unit="laps" label="Race distance" />
-              <TrackStat value="14" unit="turns" label="Circuit layout" />
-              <TrackStat value="18" unit="deg" label="Max banking" />
-            </div>
-          </div>
-        </div>
-
-        <div className="relative flex min-h-[360px] flex-col justify-between border-t border-white/10 bg-dutch-cream p-7 text-[#111315] lg:border-l lg:border-t-0">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#6c685f]">Circuit profile</p>
-              <h2 className="mt-1 text-2xl font-black uppercase italic tracking-[-0.04em]">Zandvoort</h2>
-            </div>
-            <span className="border border-[#111315] px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.18em]">High downforce</span>
-          </div>
-          <svg viewBox="0 0 390 260" className="mx-auto w-full max-w-[430px]" role="img" aria-label="Stylised Circuit Zandvoort map">
-            <path d="M76 191 C52 181 43 155 58 133 C69 117 91 120 101 104 C111 88 95 70 107 53 C120 36 148 35 163 50 C178 65 161 86 174 100 C188 115 212 97 232 104 C252 111 254 133 271 143 C289 154 311 139 326 153 C343 169 334 197 312 204 C290 212 271 196 250 203 C225 211 218 232 192 231 C164 230 154 207 132 201 C111 196 94 199 76 191 Z" fill="none" stroke="#c8c1b3" strokeWidth="20" strokeLinecap="square" strokeLinejoin="round" />
-            <path d="M76 191 C52 181 43 155 58 133 C69 117 91 120 101 104 C111 88 95 70 107 53 C120 36 148 35 163 50 C178 65 161 86 174 100 C188 115 212 97 232 104 C252 111 254 133 271 143 C289 154 311 139 326 153 C343 169 334 197 312 204 C290 212 271 196 250 203 C225 211 218 232 192 231 C164 230 154 207 132 201 C111 196 94 199 76 191 Z" fill="none" stroke="#111315" strokeWidth="5" strokeLinecap="square" strokeLinejoin="round" />
-            <path d="M67 184l18 4-4 18-18-4z" fill="#ff5f00" />
-            <circle cx="76" cy="191" r="4" fill="#111315" />
-          </svg>
-          <div className="grid grid-cols-3 border-t border-[#111315]/20 pt-4 font-mono text-[8px] uppercase tracking-[0.14em] text-[#6c685f]">
-            <div><strong className="mb-1 block text-sm text-[#111315]">2</strong>DRS zones</div>
-            <div><strong className="mb-1 block text-sm text-[#111315]">Clockwise</strong>Direction</div>
-            <div><strong className="mb-1 block text-sm text-dutch-red">Dunes</strong>Surface risk</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mb-10 grid border-x border-b border-white/10 sm:grid-cols-3">
-        <Insight index="01" label="Track position" detail="Overtaking window is narrow" />
-        <Insight index="02" label="Tyre energy" detail="Sustained lateral loading" />
-        <Insight index="03" label="Race variable" detail="Coastal wind and sand" />
-      </section>
-
-      <section className="mb-12 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Predicted Winner" value={summary.predicted_winner} subtext="Highest model rank" accent="red" />
-        <MetricCard label="Constructor Edge" value={summary.best_team} subtext="Best aggregate pace" accent="green" />
-        <MetricCard label="Cars Modelled" value={`${summary.total_drivers}`} subtext="Full grid processed" accent="yellow" />
-        <MetricCard label="Forecast Spread" value={`±${Number(summary.avg_pred_std).toFixed(2)}`} subtext="Mean deviation" accent="telemetry" />
-      </section>
-
-      <section id="forecast" className="mb-14">
-        <SectionHeading index="01" title="Podium Outlook" subtitle="Highest probability top-three finishers" />
-        <div className="grid gap-px border border-white/10 bg-white/10 md:grid-cols-3">
-          <PodiumCard position={1} driver={summary.predicted_podium[0]} />
-          <PodiumCard position={2} driver={summary.predicted_podium[1]} />
-          <PodiumCard position={3} driver={summary.predicted_podium[2]} />
-        </div>
-      </section>
-
-      <section className="mb-14">
-        <SectionHeading index="02" title="Top 10 Forecast" subtitle="Predicted order · 68% confidence interval" />
-        <div className="overflow-hidden border border-white/10 bg-[#111315]"><PredictionTable rows={top10.rows} /></div>
-      </section>
-
-      <section id="h2h" className="mb-14"><HeadToHead predictions={fullGrid.rows} /></section>
-      <section id="simulator" className="mb-14"><Simulator predictions={fullGrid.rows} /></section>
-      <section id="model" className="mb-14"><FeatureImportanceChart features={validFeatures} /></section>
-
-      <footer className="flex flex-col gap-2 border-t border-white/10 py-7 font-mono text-[8px] uppercase tracking-[0.2em] text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
-        <span>Race Intelligence / Dutch GP 2026 / Zandvoort</span><span>Probabilistic forecast · not a guarantee of result</span>
-      </footer>
-    </div>
-  );
+  const [summary, top10, fullGrid, features]: [SummaryResponse, PredictionsResponse, PredictionsResponse, ({ name: string; value: number } | null)[]] = await Promise.all([fetchSummary(), fetchTop10(), fetchLatestPredictions(), fetchFeatureImportance()]);
+  const podium = summary.predicted_podium.map((code) => fullGrid.rows.find((row) => row.driver === code)).filter((row): row is PredictionRow => !!row);
+  const mismatch = !/italian|italy|monza/i.test(summary.race || "");
+  return <div className="ak-dashboard"><a className="skip-link" href="#forecast">Skip to predictions</a>
+    <header className="site-header"><a className="brand" href="#overview" aria-label="AK_predicts home"><span className="brand-symbol" aria-hidden="true">AK<span>↗</span></span><span className="wordmark">AK<span>_predicts</span><small>FORMULA 1. THROUGH DATA.</small></span></a><DashboardNav /><a className="instagram-link" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={15} /><span>Follow the predictions</span><ArrowUpRight size={13} /></a></header>
+    <main>
+      <div className="page-context"><span><i className="status-dot" />THE 2026 SEASON <span className="context-divider">/</span><b>ITALIAN GP</b></span><span className="context-note">INDEPENDENT INSIGHT. FULL-THROTTLE PASSION.</span></div>
+      <section id="overview" className="cinematic-hero"><Image src="/monza-cover.png" alt="Illustrative red open-wheel racing car at an Italian circuit at dusk" fill priority sizes="(max-width: 1400px) 100vw, 1400px" className="hero-art" /><div className="hero-shade" /><div className="hero-content"><div className="hero-kicker"><span className="italian-flag" aria-label="Italy" /><span>ROUND 13</span><i /><span>04—06 SEPTEMBER 2026</span></div><p className="hero-overline">THE TEMPLE OF SPEED.</p><h1>MONZA.<br /><span>NO ROOM</span><br />FOR DOUBT<span className="red-period">.</span></h1><p className="hero-copy">The passion is Italian. The perspective is data.<br />Get a different view of the race with AK_predicts.</p><a href="#forecast" className="button button-red hero-cta">Discover the predictions <ArrowDown size={16} /></a></div><div className="hero-edition"><span>GRAN PREMIO</span><strong>D’ITALIA</strong><span className="edition-rule" /><span>MONZA / 2026</span></div><div className="hero-bottom"><span><Flag size={13} />AUTODROMO NAZIONALE MONZA</span><span>5.793 KM <i />53 LAPS <i />11 TURNS</span><span className="art-label">AI-GENERATED COVER ART</span></div></section>
+      <div className="weekend-strip"><span className="weekend-label"><Flag size={15} />THE WEEKEND</span><div><span>FRI <b>04</b></span><p>Practice 1 & 2</p></div><div><span>SAT <b>05</b></span><p>Practice 3 & Qualifying</p></div><div><span>SUN <b>06</b></span><p>Italian Grand Prix <span className="race-badge">RACE DAY</span></p></div><a href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer" aria-label="Official Italian Grand Prix schedule"><ArrowUpRight size={19} /></a></div>
+      <div className="overview-stats"><OverviewStat icon={<Trophy size={17} />} label="MODEL FAVOURITE" value={driverName(summary.predicted_winner)} note="Highest predicted rank" /><OverviewStat icon={<Flag size={17} />} label="CONSTRUCTOR EDGE" value={summary.best_team} note="Best aggregate forecast" /><OverviewStat icon={<Layers3 size={17} />} label="DRIVERS ANALYSED" value={String(summary.total_drivers).padStart(2, "0")} note="In the loaded forecast" /><OverviewStat icon={<Activity size={17} />} label="AVERAGE UNCERTAINTY" value={`±${Number(summary.avg_pred_std).toFixed(2)}`} note="Predicted finishing positions" /></div>
+      <section id="forecast" className="dashboard-section"><SectionHeading number="01" eyebrow="THE FORECAST" title={<>The race. <em>Before the race.</em></>} description="The model has made its call. Here’s how the podium could look." /><div className={`dataset-banner ${mismatch ? "dataset-mismatch" : ""}`}><span><i className="status-dot" /><strong>Loaded forecast</strong> {summary.race || "Race not specified"}</span><span>{mismatch ? "Monza edition · Italian GP prediction data not loaded yet" : "Model estimates · Not live results"}</span></div><div className="podium-grid">{([1, 2, 3] as const).map((position) => <PodiumCard key={position} position={position} row={podium[position - 1]} />)}</div><div className="podium-share-row"><p><span className="small-square" />Your next race-day conversation starts here.</p><ShareForecast race={summary.race || "Latest forecast"} rows={podium} /></div></section>
+      <section className="dashboard-section"><SectionHeading number="02" eyebrow="THE CLASSIFICATION" title={<>Beyond <em>the podium.</em></>} description="Explore the predicted top ten. Find your driver. Read between the numbers." /><ForecastExplorer rows={top10.rows} /></section>
+      <section className="circuit-section"><MonzaCircuit /><div className="circuit-story"><span className="eyebrow">THE MONZA FACTOR</span><h2>Fast is a<br /><em>way of life.</em></h2><p>Long straights, unforgiving chicanes, and a crowd that lives every lap. At Monza, the smallest margins make the biggest difference.</p><div className="track-factors"><div><Wind size={18} /><span><strong>Low drag</strong>Speed on the straights</span></div><div><Gauge size={18} /><span><strong>Heavy braking</strong>Make the chicanes count</span></div><div><Zap size={18} /><span><strong>Energy deployment</strong>Make every straight work</span></div></div><a className="text-link" href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer">Explore the official circuit guide <ArrowUpRight size={15} /></a></div></section>
+      <div className="tools-grid"><section id="h2h" className="dashboard-section"><SectionHeading number="03" eyebrow="HEAD TO HEAD" title={<>Choose <em>your side.</em></>} description="Two drivers. The same model. A direct comparison." /><HeadToHead predictions={fullGrid.rows} /></section><section id="simulator" className="dashboard-section"><SectionHeading number="04" eyebrow="THE SIMULATION LAB" title={<>What if <em>you called it?</em></>} description="Change the grid. See how the forecast responds." /><Simulator predictions={fullGrid.rows} /></section></div>
+      <section id="model" className="dashboard-section"><SectionHeading number="05" eyebrow="UNDER THE HOOD" title={<>Less mystery. <em>More method.</em></>} description="A closer look at the signals behind the predictions." /><FeatureImportanceChart features={features.filter((feature): feature is { name: string; value: number } => feature !== null)} /></section>
+      <section className="community-banner"><div className="community-symbol" aria-hidden="true">AK↗</div><div><span className="eyebrow">THE CONVERSATION CONTINUES</span><h2>Same passion.<br /><em>A different perspective.</em></h2><p>Race predictions, model insights, and a reason to debate the grid.</p></div><a className="button button-light" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={17} />Follow @AK_predicts <ArrowUpRight size={15} /></a></section>
+      <footer className="site-footer"><a href="#overview" className="footer-brand">AK<span>_predicts</span></a><span>Independent F1 analytics. Not affiliated with Formula 1.<br />Forecasts are estimates, not guaranteed results.</span><a href="#overview">BACK TO THE TOP <ArrowRight size={13} className="back-arrow" /></a></footer>
+    </main>
+  </div>;
 }
-
-function TrackStat({ value, unit, label }: { value: string; unit: string; label: string }) {
-  return <div className="border-r border-white/10 px-3 py-3 last:border-r-0"><p className="text-2xl font-black italic tracking-[-0.04em] text-white">{value} <span className="text-xs text-dutch-orange">{unit}</span></p><p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600">{label}</p></div>;
-}
-
-function Insight({ index, label, detail }: { index: string; label: string; detail: string }) {
-  return <div className="flex items-center gap-4 border-r border-white/10 bg-[#111315] px-5 py-4 last:border-r-0"><span className="font-mono text-[9px] font-bold text-dutch-orange">{index}</span><div><p className="text-xs font-black uppercase italic text-white">{label}</p><p className="mt-1 font-mono text-[8px] uppercase tracking-[0.13em] text-zinc-600">{detail}</p></div></div>;
-}
-
-function SectionHeading({ index, title, subtitle }: { index: string; title: string; subtitle: string }) {
-  return <div className="mb-5 flex items-end gap-4 border-b border-white/10 pb-4"><span className="bg-dutch-orange px-2 py-1 font-mono text-[9px] font-bold text-black">{index}</span><div><h2 className="text-2xl font-black uppercase italic tracking-[-0.035em] text-white sm:text-3xl">{title}</h2><p className="mt-1 font-mono text-[8px] uppercase tracking-[0.2em] text-zinc-500">{subtitle}</p></div></div>;
-}
+function OverviewStat({ icon, label, value, note }: { icon: React.ReactNode; label: string; value: string; note: string }) { return <div className="overview-stat"><div><span>{label}</span>{icon}</div><strong>{value}</strong><small>{note}</small></div>; }
+function SectionHeading({ number, eyebrow, title, description }: { number: string; eyebrow: string; title: React.ReactNode; description: string }) { return <div className="section-heading"><div className="section-eyebrow"><span>{number}</span>{eyebrow}</div><h2>{title}</h2><p>{description}</p></div>; }

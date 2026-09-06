@@ -1,26 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import DutchAtmosphere from "@/components/DutchAtmosphere";
-
 export const metadata: Metadata = {
-  title: "Dutch Grand Prix 2026 | F1 Race Intelligence",
-  description:
-    "Race predictions, podium probabilities and performance insights for the 2026 Dutch Grand Prix at Zandvoort.",
+  title: "AK_predicts — The race. Before the race. | Italian GP 2026",
+  description: "A different perspective on Formula 1. Explore AK_predicts race forecasts, podium probabilities, driver comparisons, and what-if simulations. Monza 2026 edition.",
+  openGraph: { title: "AK_predicts — The race. Before the race.", description: "Data meets race-day passion. Explore the Monza edition of AK_predicts.", type: "website" },
 };
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body className="relative min-h-screen antialiased selection:bg-dutch-orange selection:text-black">
-        <DutchAtmosphere />
-        <main className="relative z-10 mx-auto max-w-[1500px] px-4 py-4 sm:px-6 lg:px-8">
-          {children}
-        </main>
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>{children}</body></html>;
 }
