@@ -41,7 +41,7 @@ METRICS_PATH = DATA_DIR / "model_metrics.json"
 MODEL_PATH = DATA_DIR / "random_forest_model.pkl"  # TODO: Update to your exact model filename
 FEATURES_PATH = DATA_DIR / "current_race_features.csv" # TODO: Update to the CSV containing your 41 features
 
-DEFAULT_RACE_NAME = "Australian Grand Prix 2026"
+DEFAULT_RACE_NAME = "Dutch Grand Prix 2026"
 
 
 # -------------------------------------------------------------------

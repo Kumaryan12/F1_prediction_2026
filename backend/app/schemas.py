@@ -27,7 +27,12 @@ class PredictionRow(BaseModel):
 
     p_top10: Optional[float] = None
     p_podium: Optional[float] = None
+    p_win: Optional[float] = None
     p_rank_pm1: Optional[float] = None
+
+    raw_pred_finish: Optional[float] = None
+    raw_pred_rank: Optional[int] = None
+    ranking_mode_default: Optional[str] = None
 
     driver_2026_session_strength: Optional[float] = None
     team_2026_strength: Optional[float] = None

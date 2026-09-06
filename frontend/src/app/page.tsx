@@ -1,204 +1,37 @@
-import Link from "next/link";
-import MetricCard from "@/components/MetricCard";
+import Image from "next/image";
+import { ArrowDown, ArrowRight, ArrowUpRight, Activity, Flag, Gauge, Instagram, Layers3, Trophy, Wind, Zap } from "lucide-react";
 import PodiumCard from "@/components/PodiumCard";
-import PredictionTable from "@/components/PredictionTable";
 import HeadToHead from "@/components/HeadToHead";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
-import TelemetryTicker from "@/components/TelemetryTicker";
 import Simulator from "@/components/Simulator";
+import MonzaCircuit from "@/components/MonzaCircuit";
+import DashboardNav from "@/components/DashboardNav";
+import ForecastExplorer from "@/components/ForecastExplorer";
+import ShareForecast from "@/components/ShareForecast";
 import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
+import type { PredictionRow, SummaryResponse, PredictionsResponse } from "@/lib/types";
+import { driverName } from "@/lib/presentation";
 
 export default async function HomePage() {
-  const summary = await fetchSummary();
-  const top10 = await fetchTop10();
-  const fullGrid = await fetchLatestPredictions();
-  // 1. Fetch the raw data
-  const rawFeatures = await fetchFeatureImportance();
-
-  // 2. Filter out any 'null' values so TypeScript knows it's 100% safe
-  const validFeatures = rawFeatures.filter(
-    (feature): feature is { name: string; value: number } => feature !== null
-  );
-
-  return (
-    <div className="mx-auto max-w-7xl relative">
-      
-      {/* Massive MON Area Code Watermark (Monaco) */}
-      <div 
-        className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
-      >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-riviera-blue drop-shadow-[0_0_50px_rgba(0,163,224,0.5)] italic tracking-tighter">
-          MON
-        </span>
-      </div>
-
-      {/* Hero Section - The Monte Carlo Vibe */}
-      <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
-        <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
-          
-          {/* Casino Gold Ambient Glow - Bottom left for luxurious contrast */}
-          <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-casino-gold)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
-          />
-          
-          {/* Deep Harbor Blue to Riviera Blue Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-riviera-blue/10" />
-          
-          {/* Glowing Monaco Track Minimap (Circuit de Monaco) */}
-          <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
-            <svg 
-              viewBox="0 0 200 200" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-riviera-blue drop-shadow-[0_0_15px_rgba(0,163,224,0.8)]"
-            >
-              {/* Stylized Circuit de Monaco Path (Tight streets, Sainte Devote, Hairpin, Tunnel) */}
-              <path 
-                d="M 140 160 L 50 160 C 30 160, 20 140, 30 120 L 70 50 C 80 30, 110 30, 120 50 L 140 80 C 150 90, 170 90, 180 110 C 190 130, 170 160, 140 160 Z" 
-                stroke="currentColor" 
-                strokeWidth="4" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-                className="animate-[dash_3s_linear_infinite]"
-              />
-              {/* Start/Finish Line Dot - Casino Gold (Main Straight) */}
-              <circle cx="140" cy="160" r="6" fill="#D4AF37" className="animate-pulse shadow-[0_0_15px_rgba(212,175,55,1)]" />
-            </svg>
-          </div>
-          
-          <div className="relative z-10">
-            <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              MONACO GRAND PRIX 2026
-            </h1>
-
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
-              AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the historic Circuit de Monaco.
-            </p>
-          </div>
-        </div>
-
-       {/* Model Architecture Specs Column */}
-        <div className="relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md">
-          {/* Pure CSS Carbon Fiber Weave */}
-          <div 
-            className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply"
-            style={{
-              backgroundImage: `
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-              `,
-              backgroundPosition: `0 0, 4px 4px`,
-              backgroundSize: `8px 8px`
-            }}
-          />
-
-          {/* Header */}
-          <div className="relative z-10 border-b border-white/10 bg-black/40 px-5 py-4 flex justify-between items-center">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-2">
-              Model Specs
-            </h3>
-          </div>
-
-          {/* Specs List */}
-          <div className="relative z-10 p-5 font-mono text-[11px] sm:text-xs flex flex-col gap-3 h-full text-zinc-300">
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Algorithm</span>
-              <span className="text-white font-bold text-right">Random Forest Reg.</span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold drop-shadow-[0_0_5px_rgba(0,163,224,0.4)]">1200 Trees</span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Features</span>
-              <span className="text-white text-right">41 <span className="text-zinc-500">(39 Num / 2 Cat)</span></span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Casino Gold */}
-              <span className="text-casino-gold font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.4)]">0.629 </span>
-            </div>
-
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold">2.35 </span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Min Samples/Leaf</span>
-              <span className="text-white">16</span>
-            </div>
-            
-            <div className="flex justify-between items-end pt-0.5">
-              <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right">3.20</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Podium Outlook - Stepped Layout */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-8 flex items-center gap-4">
-          <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-            Podium Outlook
-          </h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3 md:items-end md:h-64">
-          <div className="order-2 md:order-1 md:h-[85%]">
-            <PodiumCard position={2} driver={summary.predicted_podium[1]} />
-          </div>
-          {/* Changed shadow highlight to Riviera Blue */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-riviera-blue/20">
-            <PodiumCard position={1} driver={summary.predicted_podium[0]} />
-          </div>
-          <div className="order-3 md:order-3 md:h-[75%]">
-            <PodiumCard position={3} driver={summary.predicted_podium[2]} />
-          </div>
-        </div>
-      </section>
-
-      {/* Top 10 Prediction Table */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-              Top 10 Predictions
-            </h2>
-            <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
-              Finishing order probability view // Live Delta
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-tarmac-light/50 backdrop-blur-md overflow-hidden p-1 shadow-2xl shadow-black/50">
-          <PredictionTable rows={top10.rows} />
-        </div>
-      </section>
-
-      {/* Head-to-Head Combat Terminal */}
-      <section className="mb-16 relative z-10">
-        <HeadToHead predictions={fullGrid.rows} />
-      </section>
-
-      {/* The What-If Simulator */}
-      <section className="mb-16 relative z-10">
-        <Simulator predictions={fullGrid.rows} />
-      </section>
-
-      {/* Feature Importance Chart */}
-      <section className="mb-16 relative z-10">
-        <FeatureImportanceChart features={validFeatures} />
-      </section>
-      
-    </div>
-  );
+  const [summary, top10, fullGrid, features]: [SummaryResponse, PredictionsResponse, PredictionsResponse, ({ name: string; value: number } | null)[]] = await Promise.all([fetchSummary(), fetchTop10(), fetchLatestPredictions(), fetchFeatureImportance()]);
+  const podium = summary.predicted_podium.map((code) => fullGrid.rows.find((row) => row.driver === code)).filter((row): row is PredictionRow => !!row);
+  const mismatch = !/italian|italy|monza/i.test(summary.race || "");
+  return <div className="ak-dashboard"><a className="skip-link" href="#forecast">Skip to predictions</a>
+    <header className="site-header"><a className="brand" href="#overview" aria-label="AK_predicts home"><span className="brand-symbol" aria-hidden="true">AK<span>↗</span></span><span className="wordmark">AK<span>_predicts</span><small>FORMULA 1. THROUGH DATA.</small></span></a><DashboardNav /><a className="instagram-link" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={15} /><span>Follow the predictions</span><ArrowUpRight size={13} /></a></header>
+    <main>
+      <div className="page-context"><span><i className="status-dot" />THE 2026 SEASON <span className="context-divider">/</span><b>ITALIAN GP</b></span><span className="context-note">INDEPENDENT INSIGHT. FULL-THROTTLE PASSION.</span></div>
+      <section id="overview" className="cinematic-hero"><Image src="/monza-cover.png" alt="Illustrative red open-wheel racing car at an Italian circuit at dusk" fill priority sizes="(max-width: 1400px) 100vw, 1400px" className="hero-art" /><div className="hero-shade" /><div className="hero-content"><div className="hero-kicker"><span className="italian-flag" aria-label="Italy" /><span>ROUND 13</span><i /><span>04—06 SEPTEMBER 2026</span></div><p className="hero-overline">THE TEMPLE OF SPEED.</p><h1>MONZA.<br /><span>NO ROOM</span><br />FOR DOUBT<span className="red-period">.</span></h1><p className="hero-copy">The passion is Italian. The perspective is data.<br />Get a different view of the race with AK_predicts.</p><a href="#forecast" className="button button-red hero-cta">Discover the predictions <ArrowDown size={16} /></a></div><div className="hero-edition"><span>GRAN PREMIO</span><strong>D’ITALIA</strong><span className="edition-rule" /><span>MONZA / 2026</span></div><div className="hero-bottom"><span><Flag size={13} />AUTODROMO NAZIONALE MONZA</span><span>5.793 KM <i />53 LAPS <i />11 TURNS</span><span className="art-label">AI-GENERATED COVER ART</span></div></section>
+      <div className="weekend-strip"><span className="weekend-label"><Flag size={15} />THE WEEKEND</span><div><span>FRI <b>04</b></span><p>Practice 1 & 2</p></div><div><span>SAT <b>05</b></span><p>Practice 3 & Qualifying</p></div><div><span>SUN <b>06</b></span><p>Italian Grand Prix <span className="race-badge">RACE DAY</span></p></div><a href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer" aria-label="Official Italian Grand Prix schedule"><ArrowUpRight size={19} /></a></div>
+      <div className="overview-stats"><OverviewStat icon={<Trophy size={17} />} label="MODEL FAVOURITE" value={driverName(summary.predicted_winner)} note="Highest predicted rank" /><OverviewStat icon={<Flag size={17} />} label="CONSTRUCTOR EDGE" value={summary.best_team} note="Best aggregate forecast" /><OverviewStat icon={<Layers3 size={17} />} label="DRIVERS ANALYSED" value={String(summary.total_drivers).padStart(2, "0")} note="In the loaded forecast" /><OverviewStat icon={<Activity size={17} />} label="AVERAGE UNCERTAINTY" value={`±${Number(summary.avg_pred_std).toFixed(2)}`} note="Predicted finishing positions" /></div>
+      <section id="forecast" className="dashboard-section"><SectionHeading number="01" eyebrow="THE FORECAST" title={<>The race. <em>Before the race.</em></>} description="The model has made its call. Here’s how the podium could look." /><div className={`dataset-banner ${mismatch ? "dataset-mismatch" : ""}`}><span><i className="status-dot" /><strong>Loaded forecast</strong> {summary.race || "Race not specified"}</span><span>{mismatch ? "Monza edition · Italian GP prediction data not loaded yet" : "Model estimates · Not live results"}</span></div><div className="podium-grid">{([1, 2, 3] as const).map((position) => <PodiumCard key={position} position={position} row={podium[position - 1]} />)}</div><div className="podium-share-row"><p><span className="small-square" />Your next race-day conversation starts here.</p><ShareForecast race={summary.race || "Latest forecast"} rows={podium} /></div></section>
+      <section className="dashboard-section"><SectionHeading number="02" eyebrow="THE CLASSIFICATION" title={<>Beyond <em>the podium.</em></>} description="Explore the predicted top ten. Find your driver. Read between the numbers." /><ForecastExplorer rows={top10.rows} /></section>
+      <section className="circuit-section"><MonzaCircuit /><div className="circuit-story"><span className="eyebrow">THE MONZA FACTOR</span><h2>Fast is a<br /><em>way of life.</em></h2><p>Long straights, unforgiving chicanes, and a crowd that lives every lap. At Monza, the smallest margins make the biggest difference.</p><div className="track-factors"><div><Wind size={18} /><span><strong>Low drag</strong>Speed on the straights</span></div><div><Gauge size={18} /><span><strong>Heavy braking</strong>Make the chicanes count</span></div><div><Zap size={18} /><span><strong>Energy deployment</strong>Make every straight work</span></div></div><a className="text-link" href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer">Explore the official circuit guide <ArrowUpRight size={15} /></a></div></section>
+      <div className="tools-grid"><section id="h2h" className="dashboard-section"><SectionHeading number="03" eyebrow="HEAD TO HEAD" title={<>Choose <em>your side.</em></>} description="Two drivers. The same model. A direct comparison." /><HeadToHead predictions={fullGrid.rows} /></section><section id="simulator" className="dashboard-section"><SectionHeading number="04" eyebrow="THE SIMULATION LAB" title={<>What if <em>you called it?</em></>} description="Change the grid. See how the forecast responds." /><Simulator predictions={fullGrid.rows} /></section></div>
+      <section id="model" className="dashboard-section"><SectionHeading number="05" eyebrow="UNDER THE HOOD" title={<>Less mystery. <em>More method.</em></>} description="A closer look at the signals behind the predictions." /><FeatureImportanceChart features={features.filter((feature): feature is { name: string; value: number } => feature !== null)} /></section>
+      <section className="community-banner"><div className="community-symbol" aria-hidden="true">AK↗</div><div><span className="eyebrow">THE CONVERSATION CONTINUES</span><h2>Same passion.<br /><em>A different perspective.</em></h2><p>Race predictions, model insights, and a reason to debate the grid.</p></div><a className="button button-light" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={17} />Follow @AK_predicts <ArrowUpRight size={15} /></a></section>
+      <footer className="site-footer"><a href="#overview" className="footer-brand">AK<span>_predicts</span></a><span>Independent F1 analytics. Not affiliated with Formula 1.<br />Forecasts are estimates, not guaranteed results.</span><a href="#overview">BACK TO THE TOP <ArrowRight size={13} className="back-arrow" /></a></footer>
+    </main>
+  </div>;
 }
+function OverviewStat({ icon, label, value, note }: { icon: React.ReactNode; label: string; value: string; note: string }) { return <div className="overview-stat"><div><span>{label}</span>{icon}</div><strong>{value}</strong><small>{note}</small></div>; }
+function SectionHeading({ number, eyebrow, title, description }: { number: string; eyebrow: string; title: React.ReactNode; description: string }) { return <div className="section-heading"><div className="section-eyebrow"><span>{number}</span>{eyebrow}</div><h2>{title}</h2><p>{description}</p></div>; }

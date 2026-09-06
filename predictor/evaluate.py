@@ -1,54 +1,68 @@
-import numpy as np
-from scipy.stats import kendalltau, spearmanr
+from pathlib import Path
+import argparse
+import pandas as pd
 
-def order_to_pos(order):
-    # order: list of driver ids/abbr; returns dict driver->position (1..n)
-    return {d: i+1 for i, d in enumerate(order)}
+from predictor.evaluation.metrics import summarize_metrics
+from predictor.evaluation.baselines import (
+    grid_baseline,
+    pole_sitter_baseline,
+    constructor_strength_baseline,
+)
 
-def ndcg_at_k(true_order, pred_order, k=20):
-    # relevance = inverse of true rank (higher = better)
-    rel = {d: (len(true_order) - i) for i, d in enumerate(true_order)}
-    def dcg(order):
-        return sum(rel[d] / np.log2(i+2) for i, d in enumerate(order[:k]))
-    ideal = dcg(true_order)
-    return dcg(pred_order) / ideal if ideal > 0 else 0.0
 
-def kendall_tau(true_order, pred_order):
-    # compare permutations
-    # convert both to index arrays on the union set
-    idx = {d:i for i,d in enumerate(true_order)}
-    a = np.array([idx[d] for d in pred_order if d in idx])
-    b = np.arange(len(a))
-    tau, _ = kendalltau(a, b)
-    return float(tau)
+def main():
+    parser = argparse.ArgumentParser()
 
-def spearman_rho(true_order, pred_order):
-    pos_t = order_to_pos(true_order)
-    pos_p = order_to_pos(pred_order)
-    common = [d for d in pos_t if d in pos_p]
-    t = [pos_t[d] for d in common]
-    p = [pos_p[d] for d in common]
-    rho, _ = spearmanr(t, p)
-    return float(rho)
+    parser.add_argument(
+        "--predictions",
+        required=True,
+        help="CSV containing model predictions with actual finish_pos.",
+    )
 
-def position_weighted_mae(true_pos, pred_pos):
-    # penalize mistakes up front more
-    wsum = err = 0.0
-    for d, r in true_pos.items():
-        if d not in pred_pos: continue
-        w = 1.0 / r
-        err += w * abs(pred_pos[d] - r)
-        wsum += w
-    return err / wsum if wsum > 0 else np.nan
+    parser.add_argument(
+        "--output",
+        default="reports/backtests/evaluation_summary.csv",
+        help="Output CSV path.",
+    )
 
-def evaluate_full(true_order, pred_order):
-    true_pos = order_to_pos(true_order)
-    pred_pos = order_to_pos(pred_order)
-    return {
-        "kendall_tau": kendall_tau(true_order, pred_order),
-        "spearman_rho": spearman_rho(true_order, pred_order),
-        "ndcg@3": ndcg_at_k(true_order, pred_order, 3),
-        "ndcg@10": ndcg_at_k(true_order, pred_order, 10),
-        "ndcg@20": ndcg_at_k(true_order, pred_order, 20),
-        "pw_mae": position_weighted_mae(true_pos, pred_pos),
-    }
+    args = parser.parse_args()
+
+    df = pd.read_csv(args.predictions)
+
+    required_cols = {"year", "gp", "driver", "grid_pos", "finish_pos", "pred_finish", "pred_rank"}
+    missing = required_cols - set(df.columns)
+
+    if missing:
+        raise KeyError(f"Missing required columns: {sorted(missing)}")
+
+    rows = []
+
+    rows.append(summarize_metrics(df, model_name="model"))
+
+    grid_df = grid_baseline(df)
+    rows.append(summarize_metrics(grid_df, model_name="grid_baseline"))
+
+    pole_df = pole_sitter_baseline(df)
+    rows.append(summarize_metrics(pole_df, model_name="pole_sitter_baseline"))
+
+    try:
+        constructor_df = constructor_strength_baseline(df)
+        rows.append(summarize_metrics(constructor_df, model_name="constructor_strength_baseline"))
+    except Exception as exc:
+        print(f"[WARN] Constructor baseline skipped: {exc}")
+
+    summary = pd.DataFrame(rows)
+
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    summary.to_csv(output_path, index=False)
+
+    print("\nEvaluation summary:")
+    print(summary.to_string(index=False))
+
+    print(f"\n[INFO] Saved evaluation summary to {output_path}")
+
+
+if __name__ == "__main__":
+    main()

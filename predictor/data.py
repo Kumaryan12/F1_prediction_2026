@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Dict, Tuple, Optional
+from typing import Dict, List, Optional
 import pandas as pd
 import fastf1
 
@@ -9,56 +9,43 @@ from .config import CACHE_DIR, FALLBACK_EVENTS, EXCLUDE_EVENTS
 fastf1.Cache.enable_cache(CACHE_DIR)
 
 
+TARGET_DRIVER_COLUMNS = ["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]
 
-HARDCODED_ENTRYLISTS: Dict[Tuple[int, str], List[Dict[str, object]]] = {
-    (2026, "Monaco Grand Prix"): [
-        {"driver": "VER", "team": "Red Bull Racing", "grid_pos": 2, "DriverNumber": "3"},
-        {"driver": "HAD", "team": "Red Bull Racing", "grid_pos": 6, "DriverNumber": "6"},
-
-        {"driver": "NOR", "team": "McLaren", "grid_pos": 8, "DriverNumber": "1"},
-        {"driver": "PIA", "team": "McLaren", "grid_pos": 7, "DriverNumber": "81"},
-
-        {"driver": "LEC", "team": "Ferrari", "grid_pos": 4, "DriverNumber": "16"},
-        {"driver": "HAM", "team": "Ferrari", "grid_pos": 3, "DriverNumber": "44"},
-
-        {"driver": "RUS", "team": "Mercedes", "grid_pos": 6, "DriverNumber": "63"},
-        {"driver": "ANT", "team": "Mercedes", "grid_pos": 1, "DriverNumber": "12"},
-
-        {"driver": "ALO", "team": "Aston Martin", "grid_pos": 21, "DriverNumber": "14"},
-        {"driver": "STR", "team": "Aston Martin", "grid_pos": 22, "DriverNumber": "18"},
-
-        {"driver": "GAS", "team": "Alpine", "grid_pos": 9, "DriverNumber": "10"},
-        {"driver": "COL", "team": "Alpine", "grid_pos": 14, "DriverNumber": "43"},
-
-        {"driver": "SAI", "team": "Williams", "grid_pos": 12, "DriverNumber": "55"},
-        {"driver": "ALB", "team": "Williams", "grid_pos": 11, "DriverNumber": "23"},
-
-        {"driver": "LAW", "team": "Racing Bulls", "grid_pos": 115, "DriverNumber": "30"},
-        {"driver": "LIN", "team": "Racing Bulls", "grid_pos": 9, "DriverNumber": "41"},
-
-        {"driver": "HUL", "team": "Audi", "grid_pos": 13, "DriverNumber": "27"},
-        {"driver": "BOR", "team": "Audi", "grid_pos": 16, "DriverNumber": "5"},
-
-        {"driver": "PER", "team": "Cadillac", "grid_pos": 18, "DriverNumber": "11"},
-        {"driver": "BOT", "team": "Cadillac", "grid_pos": 20, "DriverNumber": "77"},
-
-        {"driver": "OCO", "team": "Haas F1 Team", "grid_pos": 17, "DriverNumber": "87"},
-        {"driver": "BEA", "team": "Haas F1 Team", "grid_pos": 19, "DriverNumber": "31"},
-    ],
+GP_NAME_ALIASES = {
+    "Austria Grand Prix": "Austrian Grand Prix",
 }
 
 
-
-
-STARTING_GRIDS: Dict[Tuple[int, str], Dict[str, int]] = {
-    (2025, "Abu Dhabi Grand Prix"): {
-        "PIA": 3, "NOR": 2, "VER": 20, "HAD": 9, "RUS": 4, "LEC": 5, "HAM": 16,
-        "LAW": 13, "SAI": 12, "ALO": 6, "ANT": 14, "TSU": 10, "BOR": 7, "GAS": 19,
-        "ALB": 17, "COL": 20, "HUL": 18, "OCO": 8, "BEA": 11, "STR": 15
-    },
+MANUAL_GRID_YEAR = 2026
+MANUAL_GRID_GP = "Italian Grand Prix"
+MANUAL_STARTING_GRID: Dict[str, int] = {
+    "RUS": 2,
+    "LEC": 3,
+    "HAM": 4,
+    "ANT": 20,
+    "VER": 5,
+    "NOR": 8,
+    "PIA": 6,
+    "HAD": 99,
+    "LAW": 22,
+    "LIN": 9,
+    "GAS": 1,
+    "BOR": 10,
+    "BEA": 11,
+    "HUL": 12,
+    "OCO": 14,
+    "COL": 7,
+    "SAI": 13,
+    "ALB": 21,
+    "PER": 17,
+    "BOT": 16,
+    "ALO": 18,
+    "STR": 19,
 }
 
 
+def _canonical_gp_name(gp_name: str) -> str:
+    return GP_NAME_ALIASES.get(gp_name, gp_name)
 
 
 def _event_schedule(year: int) -> pd.DataFrame:
@@ -81,6 +68,7 @@ def list_gp_events(year: int) -> List[str]:
 
 
 def list_before_target(year: int, target_gp: str) -> List[str]:
+    target_gp = _canonical_gp_name(target_gp)
     sch = _event_schedule(year)
     if target_gp not in sch["gp"].values:
         raise ValueError(f"Target gp {target_gp} not found in {year} schedule")
@@ -89,13 +77,52 @@ def list_before_target(year: int, target_gp: str) -> List[str]:
 
 
 def _event_date(year: int, gp_name: str):
+    gp_name = _canonical_gp_name(gp_name)
     sch = _event_schedule(year)
     row = sch.loc[sch["gp"] == gp_name]
     if row.empty:
         return None
     return row["date"].iloc[0]
 
+
+def _active_manual_starting_grid(year: int, gp_name: str) -> Optional[Dict[str, int]]:
+    if year != MANUAL_GRID_YEAR:
+        return None
+    if _canonical_gp_name(gp_name) != _canonical_gp_name(MANUAL_GRID_GP):
+        return None
+    return MANUAL_STARTING_GRID
+
+
+def _format_target_driver_frame(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
+    out = df.copy()
+
+    if "driver" not in out.columns:
+        raise KeyError("Target driver frame missing required column: driver")
+    if "team" not in out.columns:
+        out["team"] = pd.NA
+    if "grid_pos" not in out.columns:
+        out["grid_pos"] = pd.NA
+    if "DriverNumber" not in out.columns:
+        out["DriverNumber"] = pd.NA
+
+    gp_name = _canonical_gp_name(gp_name)
+    out.loc[:, "year"] = year
+    out.loc[:, "gp"] = gp_name
+    out.loc[:, "date"] = _event_date(year, gp_name)
+    out.loc[:, "driver"] = out["driver"].astype(str).str.upper()
+    out.loc[:, "team"] = out["team"].astype(str)
+    out.loc[:, "DriverNumber"] = (
+        out["DriverNumber"]
+        .astype(str)
+        .str.strip()
+        .replace({"nan": pd.NA, "None": pd.NA, "<NA>": pd.NA})
+    )
+
+    return out[TARGET_DRIVER_COLUMNS].copy()
+
+
 def _race_has_results(year: int, gp: str) -> bool:
+    gp = _canonical_gp_name(gp)
     try:
         ses = fastf1.get_session(year, gp, "R")
         ses.load(telemetry=False, laps=False, weather=False, messages=False)
@@ -109,6 +136,7 @@ def _load_results_only(year: int, gp: str, sess_name: str) -> pd.DataFrame:
     """
     Load session results only, robustly.
     """
+    gp = _canonical_gp_name(gp)
     ses = fastf1.get_session(year, gp, sess_name)
     try:
         ses.load(telemetry=False, laps=False, weather=False, messages=False)
@@ -123,82 +151,7 @@ def _load_results_only(year: int, gp: str, sess_name: str) -> pd.DataFrame:
         raise ValueError(f"{sess_name} results empty for {gp} {year}")
     return res
 
-def _get_live_driver_map(
-    year: int,
-    gp_name: str,
-    session_codes: tuple[str, ...] = ("FP2", "FP1", "Q"),
-) -> pd.DataFrame:
-    """
-    Build current-event driver -> DriverNumber -> team map from live sessions.
-    Priority: FP2, then FP1, then Q.
-    """
-    for code in session_codes:
-        try:
-            sess = fastf1.get_session(year, gp_name, code)
-            sess.load()
 
-            laps = getattr(sess, "laps", None)
-            if laps is None or laps.empty:
-                continue
-
-            need = {"Driver", "DriverNumber"}
-            if not need.issubset(laps.columns):
-                continue
-
-            cols = ["Driver", "DriverNumber"]
-            if "Team" in laps.columns:
-                cols.append("Team")
-
-            tmp = laps[cols].dropna(subset=["Driver", "DriverNumber"]).copy()
-            if tmp.empty:
-                continue
-
-            tmp["driver"] = tmp["Driver"].astype(str).str.upper()
-            tmp["DriverNumber_live"] = tmp["DriverNumber"].astype(str).str.strip()
-            if "Team" in tmp.columns:
-                tmp["team_live"] = tmp["Team"].astype(str)
-            else:
-                tmp["team_live"] = pd.NA
-
-            tmp = (
-                tmp[["driver", "DriverNumber_live", "team_live"]]
-                .drop_duplicates(subset=["driver"])
-                .reset_index(drop=True)
-            )
-            return tmp
-
-        except Exception:
-            continue
-
-    return pd.DataFrame(columns=["driver", "DriverNumber_live", "team_live"])
-
-
-def _hydrate_entrylist_driver_numbers(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
-    out = df.copy()
-    if "driver" not in out.columns:
-        return out
-
-    live_map = _get_live_driver_map(year, gp_name)
-    if live_map.empty:
-        return out
-
-    out = out.merge(live_map, on="driver", how="left")
-
-    if "DriverNumber" not in out.columns:
-        out["DriverNumber"] = pd.NA
-
-    out["DriverNumber"] = (
-        out["DriverNumber_live"]
-        .fillna(out["DriverNumber"])
-        .astype(str)
-        .replace("nan", pd.NA)
-    )
-
-    if "team_live" in out.columns:
-        out["team"] = out["team"].fillna(out["team_live"])
-
-    out = out.drop(columns=["DriverNumber_live", "team_live"], errors="ignore")
-    return out
 def _last_completed_event(year: int, target_gp: str) -> Optional[str]:
     try:
         prior = list_before_target(year, target_gp)
@@ -212,6 +165,7 @@ def _last_completed_event(year: int, target_gp: str) -> Optional[str]:
 
 
 def _get_roster_map(year: int, target_gp: str) -> pd.DataFrame:
+    target_gp = _canonical_gp_name(target_gp)
     last_gp = _last_completed_event(year, target_gp)
     if not last_gp:
         raise RuntimeError(f"No completed race found before {target_gp} {year} to build roster map.")
@@ -235,34 +189,7 @@ def _get_roster_map(year: int, target_gp: str) -> pd.DataFrame:
 def _build_from_roster(year: int, gp_name: str) -> pd.DataFrame:
     roster = _get_roster_map(year, gp_name).copy()
     roster.loc[:, "grid_pos"] = pd.NA
-    roster.loc[:, "year"] = year
-    roster.loc[:, "gp"] = gp_name
-    roster.loc[:, "date"] = _event_date(year, gp_name)
-
-    return roster[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]]
-
-
-def _build_from_hardcoded_entrylist(year: int, gp_name: str) -> pd.DataFrame:
-    rows = HARDCODED_ENTRYLISTS[(year, gp_name)]
-    df = pd.DataFrame(rows).copy()
-
-    df.loc[:, "driver"] = df["driver"].astype(str).str.upper()
-    df.loc[:, "team"] = df["team"].astype(str)
-
-    if "grid_pos" not in df.columns:
-        df.loc[:, "grid_pos"] = pd.NA
-    if "DriverNumber" not in df.columns:
-        df.loc[:, "DriverNumber"] = pd.NA
-
-    df.loc[:, "year"] = year
-    df.loc[:, "gp"] = gp_name
-    df.loc[:, "date"] = _event_date(year, gp_name)
-
-    df = df[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]].copy()
-
-    df = _hydrate_entrylist_driver_numbers(df, year, gp_name)
-
-    return df
+    return _format_target_driver_frame(roster, year, gp_name)
 
 
 def _canonicalize_pred_entrylist(pred_df: pd.DataFrame, year: int, target_gp: str) -> pd.DataFrame:
@@ -290,10 +217,30 @@ def _canonicalize_pred_entrylist(pred_df: pd.DataFrame, year: int, target_gp: st
     out.loc[:, "driver"] = out["driver"].astype(str).str.upper()
 
     return out
-def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
-    mapping = STARTING_GRIDS.get((year, gp_name))
+
+
+def _validate_manual_starting_grid(mapping: Dict[str, int], year: int, gp_name: str) -> None:
+    positions = list(mapping.values())
+    duplicate_positions = sorted({pos for pos in positions if positions.count(pos) > 1})
+    invalid_positions = sorted(pos for pos in positions if int(pos) < 1)
+
+    if duplicate_positions:
+        raise ValueError(
+            f"Manual starting grid for {gp_name} {year} has duplicate positions: {duplicate_positions}"
+        )
+    if invalid_positions:
+        raise ValueError(
+            f"Manual starting grid for {gp_name} {year} has invalid positions: {invalid_positions}"
+        )
+
+
+def _apply_manual_starting_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataFrame:
+    gp_name = _canonical_gp_name(gp_name)
+    mapping = _active_manual_starting_grid(year, gp_name)
     if not mapping:
         return df
+
+    _validate_manual_starting_grid(mapping, year, gp_name)
 
     out = df.copy()
     out.loc[:, "driver"] = out["driver"].astype(str).str.upper()
@@ -301,7 +248,7 @@ def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataF
     before = len(out)
     out = out[out["driver"].isin(mapping.keys())].copy()
     kept = len(out)
-    print(f"[INFO] Hardcoded grid applied for {gp_name} {year}: kept {kept}/{before} drivers")
+    print(f"[INFO] Manual starting grid applied for {gp_name} {year}: kept {kept}/{before} drivers")
 
     out.loc[:, "grid_pos"] = out["driver"].map(mapping).astype("Int64")
 
@@ -310,11 +257,13 @@ def _apply_hardcoded_grid(df: pd.DataFrame, year: int, gp_name: str) -> pd.DataF
 
     missing = sorted(set(mapping.keys()) - set(out["driver"].unique()))
     if missing:
-        print(f"[WARN] Drivers in hardcoded grid not found in entry list: {missing}")
+        print(f"[WARN] Drivers in manual starting grid not found in roster: {missing}")
 
     return out
 
+
 def extract_event_qr(year: int, gp_name: str) -> pd.DataFrame:
+    gp_name = _canonical_gp_name(gp_name)
     r_res = _load_results_only(year, gp_name, "R")
     if r_res is None or len(r_res) == 0:
         raise RuntimeError("race results empty")
@@ -461,45 +410,44 @@ def build_training_until(
 
     return full
 
-def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
-    # 1) Prefer hardcoded full entry list
-    if (year, gp_name) in HARDCODED_ENTRYLISTS:
-        df = _build_from_hardcoded_entrylist(year, gp_name)
-        df = _apply_hardcoded_grid(df, year, gp_name)
-        return df
 
-    # 2) Prefer hardcoded Sunday grid if present
-    if (year, gp_name) in STARTING_GRIDS:
+def get_target_drivers(
+    year: int,
+    gp_name: str,
+    use_qualifying: bool = True,
+    use_manual_grid: bool = True,
+) -> pd.DataFrame:
+    gp_name = _canonical_gp_name(gp_name)
+
+    # 1) If the active manual grid matches this race, combine it with the latest season roster.
+    if use_manual_grid and _active_manual_starting_grid(year, gp_name):
         try:
             df = _build_from_roster(year, gp_name)
-            df = _apply_hardcoded_grid(df, year, gp_name)
+            df = _apply_manual_starting_grid(df, year, gp_name)
             return df
         except Exception as e:
-            print(f"[WARN] Failed to build target drivers from hardcoded grid for {gp_name} {year}: {e}")
+            print(f"[WARN] Failed to build target drivers from manual grid for {gp_name} {year}: {e}")
             print("[INFO] Falling back to dynamic entry-list logic.")
 
     df: Optional[pd.DataFrame] = None
 
-    # 3) Try Qualifying
-    try:
-        q_res = _load_results_only(year, gp_name, "Q").copy()
-        q_res.loc[:, "DriverNumber"] = q_res["DriverNumber"].astype(str).str.strip()
-        grid_col = "GridPosition" if "GridPosition" in q_res.columns else "Position"
+    # 2) Try Qualifying
+    if use_qualifying:
+        try:
+            q_res = _load_results_only(year, gp_name, "Q").copy()
+            q_res.loc[:, "DriverNumber"] = q_res["DriverNumber"].astype(str).str.strip()
+            grid_col = "GridPosition" if "GridPosition" in q_res.columns else "Position"
 
-        need = ["DriverNumber", "Abbreviation", "TeamName", grid_col]
-        if all(c in q_res.columns for c in need):
-            df = q_res[need].rename(
-                columns={grid_col: "grid_pos", "Abbreviation": "driver", "TeamName": "team"}
-            ).copy()
-            df.loc[:, "driver"] = df["driver"].astype(str).str.upper()
-            df.loc[:, "year"] = year
-            df.loc[:, "gp"] = gp_name
-            df.loc[:, "date"] = _event_date(year, gp_name)
-            df = df[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]]
-    except Exception:
-        df = None
+            need = ["DriverNumber", "Abbreviation", "TeamName", grid_col]
+            if all(c in q_res.columns for c in need):
+                df = q_res[need].rename(
+                    columns={grid_col: "grid_pos", "Abbreviation": "driver", "TeamName": "team"}
+                ).copy()
+                df = _format_target_driver_frame(df, year, gp_name)
+        except Exception:
+            df = None
 
-    # 4) Fallback: latest completed race before target
+    # 3) Fallback: latest completed race before target
     if df is None:
         ref = None
         try:
@@ -526,14 +474,11 @@ def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
 
         if ref is None or ref.empty:
             raise RuntimeError(
-                f"No entry list available for {gp_name} {year}: no hardcoded entrylist/grid, Q unavailable, and no prior race roster."
+                f"No roster available for {gp_name} {year}: manual grid could not be matched, Q unavailable, and no prior race roster."
             )
 
         ref.loc[:, "grid_pos"] = pd.NA
-        ref.loc[:, "year"] = year
-        ref.loc[:, "gp"] = gp_name
-        ref.loc[:, "date"] = _event_date(year, gp_name)
-        df = ref[["year", "gp", "date", "driver", "team", "grid_pos", "DriverNumber"]]
+        df = _format_target_driver_frame(ref, year, gp_name)
 
     # Canonicalize to season roster if possible
     try:
@@ -541,6 +486,7 @@ def get_target_drivers(year: int, gp_name: str) -> pd.DataFrame:
     except Exception as e:
         print(f"[WARN] Could not canonicalize roster for {gp_name} {year}: {e}")
 
-    # Apply hardcoded grid if available
-    df = _apply_hardcoded_grid(df, year, gp_name)
+    # Apply manual grid if available
+    if use_manual_grid:
+        df = _apply_manual_starting_grid(df, year, gp_name)
     return df
