@@ -1,0 +1,2 @@
+model,races,winner_accuracy,podium_overlap_accuracy,podium_exact_order_accuracy,top10_overlap_accuracy,mae_finish_position,spearman,alpha,selected_on
+rank_blend_0.50,24,0.5,0.75,0.08333333333333333,0.8166666666666668,2.318396226415094,0.7483275614564314,0.5,years <= 2024

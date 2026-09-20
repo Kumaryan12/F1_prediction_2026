@@ -178,6 +178,7 @@ def train_ensemble(
     train_df: pd.DataFrame,
     model_weights: Dict[str, float] | None = None,
     random_state: int = 42,
+    n_estimators: int = 800,
 ) -> RaceEnsemble:
     """Train three deliberately different regressors on leakage-safe features."""
     clean = train_df.dropna(subset=["finish_pos", "grid_pos"]).copy()
@@ -198,7 +199,7 @@ def train_ensemble(
                 (
                     "regressor",
                     RandomForestRegressor(
-                        n_estimators=800,
+                        n_estimators=n_estimators,
                         min_samples_leaf=8,
                         max_features=0.70,
                         bootstrap=True,
@@ -214,7 +215,7 @@ def train_ensemble(
                 (
                     "regressor",
                     ExtraTreesRegressor(
-                        n_estimators=800,
+                        n_estimators=n_estimators,
                         min_samples_leaf=6,
                         max_features=0.80,
                         bootstrap=False,
