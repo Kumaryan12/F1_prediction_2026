@@ -1,115 +1,15 @@
-type PodiumCardProps = {
-  position: 1 | 2 | 3;
-  driver: string;
-};
+import type { CSSProperties } from "react";
+import { ArrowUpRight, Crown } from "lucide-react";
+import type { PredictionRow } from "@/lib/types";
+import { driverName, percent, teamColor } from "@/lib/presentation";
 
-const podiumStyle = {
-  1: {
-    // Kept the massive Imperial Gold glow, but swapped the bottom reflection to Monaco Riviera Blue
-    glow: "shadow-[0_0_50px_rgba(255,215,0,0.15)] z-10",
-    border: "border-t-4 border-t-[#FFD700] border-x-white/5 border-b-2 border-b-[#00A3E0]/50",
-    badge: "bg-gradient-to-r from-[#FFD700] to-yellow-400 text-black shadow-[0_0_15px_rgba(255,215,0,0.4)]",
-    text: "text-white",
-    bgNumber: "text-[#FFD700]/15",
-  },
-  2: {
-    glow: "shadow-[0_0_20px_rgba(192,192,192,0.05)]",
-    border: "border-t-4 border-t-[#C0C0C0] border-x-white/5 border-b-white/5",
-    badge: "bg-gradient-to-r from-[#C0C0C0] to-gray-300 text-black",
-    text: "text-zinc-200",
-    bgNumber: "text-[#C0C0C0]/10",
-  },
-  3: {
-    glow: "shadow-[0_0_20px_rgba(205,127,50,0.05)]",
-    border: "border-t-4 border-t-[#CD7F32] border-x-white/5 border-b-white/5",
-    badge: "bg-gradient-to-r from-[#CD7F32] to-orange-400 text-black",
-    text: "text-zinc-300",
-    bgNumber: "text-[#CD7F32]/10",
-  },
-};
-
-// Map 3-letter initials to Full Driver Names
-const driverNames: Record<string, string> = {
-  "VER": "Max Verstappen",
-  "PER": "Sergio Perez",
-  "HAM": "Lewis Hamilton",
-  "RUS": "George Russell",
-  "LEC": "Charles Leclerc",
-  "SAI": "Carlos Sainz",
-  "NOR": "Lando Norris",
-  "PIA": "Oscar Piastri",
-  "ALO": "Fernando Alonso",
-  "STR": "Lance Stroll",
-  "GAS": "Pierre Gasly",
-  "OCO": "Esteban Ocon",
-  "ALB": "Alexander Albon",
-  "TSU": "Yuki Tsunoda",
-  "HUL": "Nico Hulkenberg",
-  "MAG": "Kevin Magnussen",
-  "BOT": "Valtteri Bottas",
-  "ZHO": "Zhou Guanyu",
-  "BEA": "Oliver Bearman",
-  "ANT": "Kimi Antonelli",
-  "DOO": "Jack Doohan",
-  "LAW": "Liam Lawson",
-  "COL": "Franco Colapinto",
-  "BOR": "Gabriel Bortoleto"
-};
-
-export default function PodiumCard({ position, driver }: PodiumCardProps) {
-  const style = podiumStyle[position];
-  const fullName = driverNames[driver] || driver;
-
-  return (
-    <div
-      className={`relative h-full w-full flex flex-col justify-between overflow-hidden rounded-xl bg-tarmac-light/90 backdrop-blur-xl p-6 transition-transform duration-300 hover:-translate-y-2 ${style.border} ${style.glow}`}
-    >
-      {/* Pure CSS Carbon Fiber Weave */}
-      <div 
-        className="absolute inset-0 opacity-[0.15] pointer-events-none mix-blend-multiply"
-        style={{
-          backgroundImage: `
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-            linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-          `,
-          backgroundPosition: `0 0, 4px 4px`,
-          backgroundSize: `8px 8px`
-        }}
-      />
-
-      {/* Massive Background Number for Depth */}
-      <div 
-        className={`absolute -bottom-8 -right-4 text-[12rem] font-black italic leading-none select-none pointer-events-none ${style.bgNumber}`}
-      >
-        {position}
-      </div>
-
-      {/* Top: Position Badge */}
-      <div className="relative z-10">
-        <div
-          className={`inline-flex items-center justify-center rounded-sm px-4 py-1 text-sm font-black italic tracking-widest ${style.badge}`}
-        >
-          P{position}
-        </div>
-      </div>
-
-      {/* Bottom: Driver Info */}
-      <div className="relative z-10 mt-auto pt-10">
-        <div className="flex items-center gap-2 mb-1">
-          <p className="text-xs font-mono uppercase tracking-[0.3em] text-zinc-500">
-            Predicted Finisher
-          </p>
-          {/* Telemetry Tag for the 3-letter initial */}
-          <span className="rounded bg-black/50 px-1.5 py-0.5 text-[0.6rem] font-mono text-zinc-400 not-italic tracking-widest border border-white/10 shadow-inner">
-            {driver}
-          </span>
-        </div>
-        <h3 
-          className={`text-3xl md:text-4xl font-black uppercase italic tracking-tighter drop-shadow-lg leading-none mt-1 ${style.text}`}
-        >
-          {fullName}
-        </h3>
-      </div>
-    </div>
-  );
+export default function PodiumCard({ position, row }: { position: 1 | 2 | 3; row?: PredictionRow }) {
+  const name = driverName(row?.driver || "Awaiting data");
+  const [first, ...last] = name.split(" ");
+  return <article className={`podium-card podium-${position}`} style={{ "--team-color": teamColor(row?.team || "") } as CSSProperties}>
+    <div className="podium-top"><span className="podium-place">{position === 1 ? <Crown size={14} /> : <span className="small-square" />} {position === 1 ? "THE MODEL’S FAVOURITE" : position === 2 ? "THE CHALLENGER" : "THE PODIUM CONTENDER"}</span><span className="podium-rank">P{position}</span></div>
+    <span className="podium-watermark" aria-hidden="true">0{position}</span>
+    <div className="podium-driver"><span className="team-label"><i />{row?.team || "Team unavailable"}</span><h3><span>{first}</span>{last.join(" ")}</h3><span className="driver-tag">{row?.driver || "—"}<ArrowUpRight size={14} /></span></div>
+    <div className="podium-footer"><span>Podium probability <strong>{percent(row?.p_podium)}</strong></span><span>Win probability <strong>{percent(row?.p_win)}</strong></span></div>
+  </article>;
 }

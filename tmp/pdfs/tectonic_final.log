@@ -1,0 +1,15 @@
+note: "version 2" Tectonic command-line interface activated
+note: Running TeX ...
+warning: accessing absolute path `/System/Library/Fonts/Supplemental/Arial.ttf`; build may not be reproducible in other environments
+warning: accessing absolute path `/System/Library/Fonts/Supplemental/Arial Italic.ttf`; build may not be reproducible in other environments
+warning: accessing absolute path `/System/Library/Fonts/Supplemental/Arial Bold.ttf`; build may not be reproducible in other environments
+warning: accessing absolute path `/System/Library/Fonts/Supplemental/Arial Bold Italic.ttf`; build may not be reproducible in other environments
+warning: aryan_kumar_f1_resume.tex:72: Underfull \hbox (badness 2521) in paragraph at lines 71--72
+warning: aryan_kumar_f1_resume.tex:82: Underfull \hbox (badness 1701) in paragraph at lines 81--82
+note: Rerunning TeX because "aryan_kumar_f1_resume.aux" changed ...
+warning: aryan_kumar_f1_resume.tex:72: Underfull \hbox (badness 2521) in paragraph at lines 71--72
+warning: aryan_kumar_f1_resume.tex:82: Underfull \hbox (badness 1701) in paragraph at lines 81--82
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `output/pdf/aryan_kumar_f1_resume.pdf` (70.24609375 KiB)
+note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)

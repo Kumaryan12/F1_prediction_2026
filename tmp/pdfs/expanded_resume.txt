@@ -1,0 +1,56 @@
+                                                 ARYAN SATYENDRA KUMAR
+                                   Machine Learning | Motorsport Analytics | Full-Stack Data Products
+                         kumararyan66472@gmail.com | +91-9834494193 | LinkedIn | Portfolio | GitHub
+
+EDUCATION
+B.Tech, Electronics and Communication Engineering; Minor in Computer Science                                             Expected 2027
+National Institute of Technology Goa - CGPA: 8.23/10                                                                         Goa, India
+MOTORSPORT ANALYTICS
+F1 Race Intelligence - Probabilistic Race Forecasting Platform                                                         Aug 2025 - Present
+Python, FastF1, scikit-learn, Pandas, FastAPI, Next.js, TypeScript                                                   GitHub | Predictions
+• Engineered a post-qualifying forecasting pipeline from FastF1 data; trained a 1,200-tree Random Forest on finish-position delta with
+  median imputation, one-hot encoding, out-of-bag evaluation, and per-race retraining.
+• Designed leakage-safe rolling driver/constructor form and circuit-archetype features, blending historical priors with
+  FP1/FP2/FP3/qualifying signals, weather, tyre degradation, pit loss, and SC/VSC likelihood.
+• Backtested 70 Grands Prix from 2023-2025, achieving 58.6% winner accuracy and 79.7% top-10 overlap while reducing
+  finish-position MAE by 5.2% versus a grid-order baseline (3.14 vs. 3.31 positions).
+• Published 2026 pre-race winner forecasts with only two incorrect calls to date; built baseline comparisons, Brier-score calibration,
+  leakage audits, grid-model blend search, and versioned prediction logging.
+• Generated 68% and 95% intervals plus Monte Carlo win, podium, top-10, and rank probabilities; served forecasts, feature
+  importance, driver comparisons, and a grid simulator through FastAPI and Next.js.
+EXPERIENCE
+Project Intern - Mobile Air Quality Intelligence                                                                May 2026 - Jul 2026
+Indian Institute of Technology Madras - Prof. Raghunathan Rengaswamy                                                 Chennai, India
+• Developed a multimodal roadside PM2.5 pipeline combining mobile sensors, OPC particle bins, MERRA-2/CAMS atmospheric
+  variables, meteorology, GPS/OSM context, and camera imagery.
+• Fine-tuned YOLO vehicle detectors and applied SegFormer road segmentation to derive traffic counts, road exposure, texture,
+  brownness, and dust-related visual proxies.
+• Built ResNet50-GRU and tree-based models for background pollution and local roadside increments using leakage-aware
+  whole-date validation; designed filter-sampling and XRF validation against physical particulate measurements.
+Signalling and Telecommunications Intern                                                                            May 2025 - Jul 2025
+South Western Railways, RVNL                                                                                                  Goa, India
+• Analysed Kyosan Electronic Interlocking in a safety-critical railway environment, tracing system feedback paths, interlocking logic,
+  relay interfaces, and failure-mode handling.
+SELECTED PROJECTS
+NyayaSetu - Multilingual ML-RAG Assistant for Legal Aid                                                                        Jun 2026
+FastAPI, Next.js, XLM-R, Sentence Transformers, ChromaDB, Groq API                                                               GitHub
+• Fine-tuned XLM-R classifiers for legal issue and urgency detection; built an official-source RAG workflow with citation-grounded
+  answers, guardrails, explainability, and retrieval evaluation using Recall@1/3/5 and MRR.
+HostelMitra - Hostel Complaint Management Portal                                                                                  2025
+Firebase, Firestore, Google OAuth                                                                                 GitHub | Live Demo
+• Built and deployed a portal used by NIT Goa students with role-based access, real-time complaint tracking, voting, admin resolution,
+  and timestamped audit trails.
+TECHNICAL SKILLS
+Languages: Python, SQL, C, C++, Java, TypeScript ML/Data: PyTorch, scikit-learn, Pandas, NumPy, Random Forests, feature
+engineering, temporal backtesting, model calibration, uncertainty modelling
+Vision/NLP: YOLO, SegFormer, CNNs, GRUs, transformers, XLM-R, embeddings, RAG, ChromaDB Engineering: FastAPI, REST
+APIs, Next.js, Firebase, PostgreSQL, Git, Docker
+ACHIEVEMENTS & LEADERSHIP
+• Selected for Amazon ML Summer School 2026; ranked 251 of 7,000+ teams in the Amazon ML Challenge 2025.
+• Finalist at India Innovates 2026 and in national case-study competitions hosted across IIM, IIT, and NIT platforms.
+• GDG Organizer and AI/ML Lead; led a 100-participant hackathon and delivered ML and DSA workshops.
+• Captain, Institute Badminton Team; former national-level badminton player.
+CERTIFICATIONS
+Machine Learning Specialization - Andrew Ng | Deep Learning Specialization - Andrew Ng | Google Data Analytics Professional
+Certificate
+

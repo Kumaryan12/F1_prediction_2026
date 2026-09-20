@@ -1,0 +1,5 @@
+year,gp,driver,team,grid_pos,finish_pos,pred_finish,pred_rank,p_top10,p_podium
+2026,Canadian Grand Prix,ANT,Mercedes,1,1,1.8,1,1.0,0.99
+2026,Canadian Grand Prix,VER,Red Bull Racing,2,2,2.5,2,1.0,0.85
+2026,Canadian Grand Prix,LEC,Ferrari,4,3,3.4,3,1.0,0.48
+2026,Canadian Grand Prix,HAM,Ferrari,3,4,4.2,4,0.99,0.44

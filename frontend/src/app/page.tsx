@@ -1,204 +1,70 @@
-import Link from "next/link";
-import MetricCard from "@/components/MetricCard";
-import PodiumCard from "@/components/PodiumCard";
-import PredictionTable from "@/components/PredictionTable";
-import HeadToHead from "@/components/HeadToHead";
+import { ArrowDown, BarChart3, Flag } from "lucide-react";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
-import TelemetryTicker from "@/components/TelemetryTicker";
-import Simulator from "@/components/Simulator";
-import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
+import PredictionTable from "@/components/PredictionTable";
+import { fetchFeatureImportance, fetchLatestPredictions } from "@/lib/api";
+import type { PredictionsResponse } from "@/lib/types";
+
+type Feature = { name: string; value: number };
 
 export default async function HomePage() {
-  const summary = await fetchSummary();
-  const top10 = await fetchTop10();
-  const fullGrid = await fetchLatestPredictions();
-  // 1. Fetch the raw data
-  const rawFeatures = await fetchFeatureImportance();
+  const [forecast, rawFeatures]: [PredictionsResponse, (Feature | null)[]] =
+    await Promise.all([fetchLatestPredictions(), fetchFeatureImportance()]);
 
-  // 2. Filter out any 'null' values so TypeScript knows it's 100% safe
-  const validFeatures = rawFeatures.filter(
-    (feature): feature is { name: string; value: number } => feature !== null
+  const features = rawFeatures.filter(
+    (feature): feature is Feature => feature !== null,
   );
 
   return (
-    <div className="mx-auto max-w-7xl relative">
-      
-      {/* Massive MON Area Code Watermark (Monaco) */}
-      <div 
-        className="absolute top-10 right-0 flex flex-col items-center opacity-[0.03] pointer-events-none z-0 select-none font-sans"
-      >
-        <span className="text-[20rem] md:text-[25rem] font-black leading-none text-riviera-blue drop-shadow-[0_0_50px_rgba(0,163,224,0.5)] italic tracking-tighter">
-          MON
-        </span>
-      </div>
+    <div className="dashboard-shell">
+      <a className="skip-link" href="#predictions">Skip to predictions</a>
 
-      {/* Hero Section - The Monte Carlo Vibe */}
-      <section className="mb-12 grid gap-6 lg:grid-cols-[2fr_1fr] relative z-10">
-        <div className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light p-8 shadow-2xl min-h-[360px] group">
-          
-          {/* Casino Gold Ambient Glow - Bottom left for luxurious contrast */}
-          <div 
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-casino-gold)_0%,_transparent_60%)] opacity-20 mix-blend-screen transition-transform duration-1000 group-hover:scale-105 group-hover:opacity-30" 
-          />
-          
-          {/* Deep Harbor Blue to Riviera Blue Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-tarmac via-tarmac/90 to-riviera-blue/10" />
-          
-          {/* Glowing Monaco Track Minimap (Circuit de Monaco) */}
-          <div className="absolute top-8 right-8 w-64 h-64 opacity-30 pointer-events-none transition-opacity duration-700 group-hover:opacity-70">
-            <svg 
-              viewBox="0 0 200 200" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="w-full h-full text-riviera-blue drop-shadow-[0_0_15px_rgba(0,163,224,0.8)]"
-            >
-              {/* Stylized Circuit de Monaco Path (Tight streets, Sainte Devote, Hairpin, Tunnel) */}
-              <path 
-                d="M 140 160 L 50 160 C 30 160, 20 140, 30 120 L 70 50 C 80 30, 110 30, 120 50 L 140 80 C 150 90, 170 90, 180 110 C 190 130, 170 160, 140 160 Z" 
-                stroke="currentColor" 
-                strokeWidth="4" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-                className="animate-[dash_3s_linear_infinite]"
-              />
-              {/* Start/Finish Line Dot - Casino Gold (Main Straight) */}
-              <circle cx="140" cy="160" r="6" fill="#D4AF37" className="animate-pulse shadow-[0_0_15px_rgba(212,175,55,1)]" />
-            </svg>
-          </div>
-          
-          <div className="relative z-10">
-            <h1 className="mb-2 max-w-3xl text-5xl font-black uppercase italic tracking-tighter text-white md:text-7xl drop-shadow-lg">
-              MONACO GRAND PRIX 2026
-            </h1>
+      <header className="topbar">
+        <a className="brand" href="#predictions" aria-label="AK Predicts home">
+          <span className="brand-mark">AK</span>
+          <span className="brand-name">AK<span>_predicts</span></span>
+        </a>
+        <nav className="primary-nav" aria-label="Dashboard sections">
+          <a href="#predictions">Predictions</a>
+          <a href="#importance">Feature importance</a>
+        </nav>
+        <span className="model-status"><i aria-hidden="true" /> Model online</span>
+      </header>
 
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-zinc-300">
-              AI-powered telemetry dashboard featuring podium probabilities, 
-              confidence intervals, and team-level race outlook for the historic Circuit de Monaco.
-            </p>
-          </div>
-        </div>
-
-       {/* Model Architecture Specs Column */}
-        <div className="relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-2xl backdrop-blur-md">
-          {/* Pure CSS Carbon Fiber Weave */}
-          <div 
-            className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply"
-            style={{
-              backgroundImage: `
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)
-              `,
-              backgroundPosition: `0 0, 4px 4px`,
-              backgroundSize: `8px 8px`
-            }}
-          />
-
-          {/* Header */}
-          <div className="relative z-10 border-b border-white/10 bg-black/40 px-5 py-4 flex justify-between items-center">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white flex items-center gap-2">
-              Model Specs
-            </h3>
-          </div>
-
-          {/* Specs List */}
-          <div className="relative z-10 p-5 font-mono text-[11px] sm:text-xs flex flex-col gap-3 h-full text-zinc-300">
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Algorithm</span>
-              <span className="text-white font-bold text-right">Random Forest Reg.</span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Estimators</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold drop-shadow-[0_0_5px_rgba(0,163,224,0.4)]">1200 Trees</span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Features</span>
-              <span className="text-white text-right">41 <span className="text-zinc-500">(39 Num / 2 Cat)</span></span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">OOB Score (R²)</span>
-              {/* Changed to Casino Gold */}
-              <span className="text-casino-gold font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.4)]">0.629 </span>
-            </div>
-
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Mean Abs Error</span>
-              {/* Changed to Riviera Blue */}
-              <span className="text-riviera-blue font-bold">2.35 </span>
-            </div>
-            
-            <div className="flex justify-between items-end border-b border-white/5 pb-1.5">
-              <span className="text-zinc-500 uppercase tracking-widest">Min Samples/Leaf</span>
-              <span className="text-white">16</span>
-            </div>
-            
-            <div className="flex justify-between items-end pt-0.5">
-              <span className="text-zinc-500 uppercase tracking-widest">RMSE</span>
-              <span className="text-white text-right">3.20</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Podium Outlook - Stepped Layout */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-8 flex items-center gap-4">
-          <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-            Podium Outlook
-          </h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3 md:items-end md:h-64">
-          <div className="order-2 md:order-1 md:h-[85%]">
-            <PodiumCard position={2} driver={summary.predicted_podium[1]} />
-          </div>
-          {/* Changed shadow highlight to Riviera Blue */}
-          <div className="order-1 md:order-2 md:h-full z-10 shadow-2xl shadow-riviera-blue/20">
-            <PodiumCard position={1} driver={summary.predicted_podium[0]} />
-          </div>
-          <div className="order-3 md:order-3 md:h-[75%]">
-            <PodiumCard position={3} driver={summary.predicted_podium[2]} />
-          </div>
-        </div>
-      </section>
-
-      {/* Top 10 Prediction Table */}
-      <section className="mb-16 relative z-10">
-        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <main>
+        <section className="page-intro" aria-labelledby="page-title">
           <div>
-            <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
-              Top 10 Predictions
-            </h2>
-            <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
-              Finishing order probability view // Live Delta
-            </p>
+            <p className="eyebrow"><Flag size={13} /> 2026 race forecast</p>
+            <h1 id="page-title">The grid, decoded.</h1>
+            <p className="intro-copy">One model. One finishing order. Every signal exposed.</p>
           </div>
-        </div>
+          <a className="jump-link" href="#importance">See what drives the model <ArrowDown size={15} /></a>
+        </section>
 
-        <div className="rounded-xl border border-white/10 bg-tarmac-light/50 backdrop-blur-md overflow-hidden p-1 shadow-2xl shadow-black/50">
-          <PredictionTable rows={top10.rows} />
-        </div>
-      </section>
+        <section id="predictions" className="content-section" aria-labelledby="predictions-title">
+          <div className="section-header">
+            <div>
+              <p className="section-index">01 / Predictions</p>
+              <h2 id="predictions-title">Predicted classification</h2>
+            </div>
+            <div className="dataset-meta">
+              <span>{forecast.race || "Latest forecast"}</span>
+              <strong>{forecast.total_rows} drivers</strong>
+            </div>
+          </div>
+          <div className="data-surface"><PredictionTable rows={forecast.rows} /></div>
+        </section>
 
-      {/* Head-to-Head Combat Terminal */}
-      <section className="mb-16 relative z-10">
-        <HeadToHead predictions={fullGrid.rows} />
-      </section>
-
-      {/* The What-If Simulator */}
-      <section className="mb-16 relative z-10">
-        <Simulator predictions={fullGrid.rows} />
-      </section>
-
-      {/* Feature Importance Chart */}
-      <section className="mb-16 relative z-10">
-        <FeatureImportanceChart features={validFeatures} />
-      </section>
-      
+        <section id="importance" className="content-section importance-section" aria-labelledby="importance-title">
+          <div className="section-header">
+            <div>
+              <p className="section-index">02 / Model</p>
+              <h2 id="importance-title">Feature importance</h2>
+            </div>
+            <div className="section-icon" aria-hidden="true"><BarChart3 size={19} /></div>
+          </div>
+          <FeatureImportanceChart features={features} />
+        </section>
+      </main>
     </div>
   );
 }

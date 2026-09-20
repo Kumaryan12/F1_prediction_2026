@@ -1,0 +1,2 @@
+model,races,winner_accuracy,podium_overlap_accuracy,podium_exact_order_accuracy,top10_overlap_accuracy,mae_finish_position,brier_podium,brier_top10,brier_win
+frozen_blend_alpha_0.65,6,0.8333333333333334,0.5555555555555555,0.0,0.6833333333333332,4.655530179492811,0.08952878787878789,0.2408681818181818,0.01854191919191919

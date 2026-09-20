@@ -1,12 +1,11 @@
 # main.py  (package: F1_prediction_system)
 from __future__ import annotations
-
+from predictor.evaluation.prediction_logger import log_prediction_run
 import argparse
 from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-import fastf1
 
 from .config import HIST_YEARS
 from .data import build_training_until as build_until_data, get_target_drivers
@@ -25,6 +24,11 @@ from .model import (
     _make_target,
     tree_importance_series,
     permutation_importance_series,
+)
+from .ensemble import (
+    ensemble_feature_importance,
+    predict_event_with_ensemble,
+    train_ensemble,
 )
 
 # Optional live-session feature builder
@@ -51,8 +55,15 @@ def build_predict_frame(
     target_gp: str,
     train_df_with_forms: pd.DataFrame,
     use_sessions: bool = False,
+    use_qualifying_grid: bool = True,
+    use_manual_grid: bool = True,
 ) -> pd.DataFrame:
-    pred_df = get_target_drivers(target_year, target_gp)
+    pred_df = get_target_drivers(
+        target_year,
+        target_gp,
+        use_qualifying=use_qualifying_grid,
+        use_manual_grid=use_manual_grid,
+    )
     pred_df = add_circuit_context_df(pred_df)
     pred_df = merge_latest_forms(pred_df, train_df_with_forms)
 
@@ -181,6 +192,7 @@ def _recompute_rank_probs(out: pd.DataFrame, mc_samples: int = 0, random_state: 
 
         out["p_top10"] = (ranks <= min(10, n)).mean(axis=1)
         out["p_podium"] = (ranks <= min(3, n)).mean(axis=1)
+        out["p_win"] = (ranks == 1).mean(axis=1)
 
         pr = out["pred_rank"].to_numpy()[:, None]
         out["p_rank_pm1"] = ((ranks >= (pr - 1)) & (ranks <= (pr + 1))).mean(axis=1)
@@ -371,7 +383,7 @@ def main():
         "--alpha",
         type=float,
         default=0.20,
-        help="Conformal alpha (default 0.20 ~ 80% PI).",
+        help="Conformal alpha (default 0.20, approximately 80 percent PI).",
     )
     parser.add_argument(
         "--delta_target",
@@ -390,6 +402,18 @@ def main():
         type=int,
         default=None,
         help="Override recency half-life in days (exponential decay).",
+    )
+
+    parser.add_argument(
+        "--ensemble",
+        action="store_true",
+        help="Use the RF + Extra Trees + Elastic Net ensemble and frozen grid blend.",
+    )
+    parser.add_argument(
+        "--ensemble_grid_alpha",
+        type=float,
+        default=0.65,
+        help="Weight on the ML ensemble; the remainder is starting-grid weight.",
     )
 
     # Feature importance
@@ -543,34 +567,23 @@ def main():
     # Build prediction frame
     # ---------------------------------------------------------------
     print(f"[INFO] Building prediction frame for {target_gp} {target_year}…")
+    use_starting_grid = not (args.preq or args.preweekend)
     pred_df = build_predict_frame(
         target_year,
         target_gp,
         train_df,
         use_sessions=(args.use_sessions and not args.preweekend),
+        use_qualifying_grid=use_starting_grid,
+        use_manual_grid=use_starting_grid,
     )
 
     # ---------------------------------------------------------------
-    # Qualifying / grid handling
+    # Pre-qualifying grid handling
     # ---------------------------------------------------------------
-    if args.preq:
-        try:
-            session = fastf1.get_session(args.year, args.gp, "Q")
-            session.load()
-
-            if session.laps.empty:
-                raise ValueError(f"No qualifying data available for {args.gp} {args.year}.")
-
-            pred_df = pred_df.copy()
-            pred_df["grid_pos"] = pred_df["driver"].map(
-                dict(zip(session.laps["Driver"], session.laps["GridPosition"]))
-            )
-
-        except Exception as e:
-            print(f"[WARNING] Failed to load qualifying data for {args.gp} {args.year}. Error: {e}")
-            print(f"[INFO] Using qualifying proxy for {args.gp} {args.year}.")
-            proxy_base = train_df[["driver", "team", "date", "grid_pos"]].dropna()
-            pred_df = add_quali_proxy(pred_df, proxy_base, window=args.proxy_window)
+    if args.preq or args.preweekend:
+        print(f"[INFO] Using qualifying proxy for {args.gp} {args.year}.")
+        proxy_base = train_df[["driver", "team", "date", "grid_pos"]].dropna()
+        pred_df = add_quali_proxy(pred_df, proxy_base, window=args.proxy_window)
 
     # ---------------------------------------------------------------
     # Sanity checks
@@ -586,12 +599,41 @@ def main():
     # Predict
     # ---------------------------------------------------------------
     print("[INFO] Predicting order…")
-    out = predict_event_with_uncertainty(
-        model,
-        pred_df,
-        add_intervals=True,
-        mc_samples=args.mc,
-    )
+    if args.ensemble:
+        print("[INFO] Training diverse race ensemble on temporally safe features…")
+        BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        pred_df.to_csv(BACKEND_DATA_DIR / "current_race_features.csv", index=False)
+        race_ensemble = train_ensemble(train_df)
+        importance_report = ensemble_feature_importance(
+            race_ensemble,
+            grid_alpha=args.ensemble_grid_alpha,
+        )
+        FRONTEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        importance_report[["importance"]].to_csv(
+            FRONTEND_DATA_DIR / "feature_importance_tree.csv"
+        )
+        importance_report[["importance"]].to_csv(
+            BACKEND_DATA_DIR / "feature_importance_tree.csv"
+        )
+        report_path = Path("reports/model_cards/ensemble_feature_importance.csv")
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        importance_report.to_csv(report_path)
+        print("\n[ENSEMBLE FEATURE IMPORTANCE] (top 12)")
+        print(importance_report["importance"].head(12).to_string())
+        out = predict_event_with_ensemble(
+            race_ensemble,
+            pred_df,
+            grid_alpha=args.ensemble_grid_alpha,
+            mc_samples=args.mc,
+        )
+    else:
+        out = predict_event_with_uncertainty(
+            model,
+            pred_df,
+            add_intervals=True,
+            mc_samples=args.mc,
+        )
 
     # ---------------------------------------------------------------
     # Australia-2026 live FP1/FP2 adjustment layer
@@ -604,20 +646,33 @@ def main():
         use_sessions=(args.use_sessions and not args.preweekend),
         mc_samples=args.mc,
     )
+    # ---------------------------------------------------------------
+    # Authoritative final ranking
+    # ---------------------------------------------------------------
+    # In standard mode this is the raw RF order. In ensemble mode it is the
+    # frozen model/grid blend produced by predict_event_with_ensemble().
+    out = out.sort_values("pred_finish", ascending=True).reset_index(drop=True)
+    out["pred_rank"] = range(1, len(out) + 1)
+    out["raw_pred_finish"] = pd.to_numeric(out["pred_finish"], errors="coerce")
+    out["raw_pred_rank"] = out["pred_rank"]
+    out["ranking_mode_default"] = (
+        "ensemble_grid_blend" if args.ensemble else "raw_model"
+    )
 
     lo_col, hi_col = ("pi95_low", "pi95_high") if args.interval == 95 else ("pi68_low", "pi68_high")
 
     cols_to_print = [
-        c for c in (
-            "driver", "team", "grid_pos",
-            "pred_finish", "pred_rank", "pred_std",
-            lo_col, hi_col,
-            "p_top10", "p_podium", "p_rank_pm1",
-            "session_boost",
-            "pred_finish_model",
-            "pred_rank_model",
-        ) if c in out.columns
-    ]
+    c for c in (
+        "driver", "team", "grid_pos",
+        "pred_finish", "pred_rank",
+        "pred_std",
+        lo_col, hi_col,
+        "p_win", "p_top10", "p_podium", "p_rank_pm1",
+        "session_boost",
+        "pred_finish_model",
+        "pred_rank_model",
+    ) if c in out.columns
+]
 
     print("\nPredicted Top 10:")
     print(out[cols_to_print].head(10).to_string(index=False))
@@ -629,6 +684,34 @@ def main():
     predictions_path = BACKEND_DATA_DIR / "predicted_order.csv"
     out.to_csv(predictions_path, index=False)
     print(f"\n[INFO] Saved full predictions to {predictions_path}")
+    # Log timestamped prediction using the final saved prediction file
+    logged_pred_df = pd.read_csv("backend/app/data/predicted_order.csv")
+
+    if "pred_rank" not in logged_pred_df.columns:
+        raise KeyError(
+            f"'pred_rank' missing from saved prediction file. "
+            f"Available columns: {logged_pred_df.columns.tolist()}"
+        )
+
+    predicted_winner = (
+        logged_pred_df
+        .sort_values("pred_rank")
+        .iloc[0]["driver"]
+    )
+
+    log_prediction_run(
+        year=args.year,
+        gp=args.gp,
+        stage="pre_race",
+        model_version="race_ensemble_v1" if args.ensemble else "random_forest_v1",
+        feature_set_version="temporal_safe_v1" if args.ensemble else "f1_features_v1",
+        data_cutoff="manual_current_run",
+        predicted_winner=predicted_winner,
+        prediction_file_path=str("backend/app/data/predicted_order.csv"),
+        dashboard_url="",
+    )
+
+    print(f"[INFO] Logged timestamped prediction. Predicted winner: {predicted_winner}")
 
 
 if __name__ == "__main__":

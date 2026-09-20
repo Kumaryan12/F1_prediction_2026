@@ -24,16 +24,49 @@ DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/
 # Feature list (China-ready, Australia-specific features removed)
 # -------------------------------------------------------------------
 FEATS = [
+    # ---------------------------------------------------------------
     # Sunday starting order
+    # ---------------------------------------------------------------
+
+    # Grid is an ordinary predictor for the absolute finishing-position
+    # target. It is not added to the model output after prediction.
     "grid_pos",
 
-    # Core circuit priors
-    "sc_prob", "vsc_prob", "pit_loss",
-    "expected_stops", "overtake_index", "tow_importance",
-    "is_low_df", "is_street", "long_straight_index",
-    "braking_intensity", "warmup_penalty", "deg_rate", "stint_len_typical",
+    # ---------------------------------------------------------------
+    # Core circuit characteristics
+    # ---------------------------------------------------------------
 
-    # Track / layout extras
+    "sc_prob",
+    "vsc_prob",
+    "pit_loss",
+
+    "expected_stops",
+    "overtake_index",
+    "tow_importance",
+
+    # Madrid is not a true low-downforce circuit.
+    # is_street may be fractional in config because Madring is hybrid.
+    "is_low_df",
+    "is_street",
+    "long_straight_index",
+
+    "braking_intensity",
+    "warmup_penalty",
+    "deg_rate",
+    "stint_len_typical",
+
+    # ---------------------------------------------------------------
+    # Track / layout characteristics
+    #
+    # Madring combines:
+    # - long/high-speed sections
+    # - 22 corners
+    # - elevation changes
+    # - technical medium/low-speed sections
+    # - heavy braking
+    # - banked high-load corners
+    # ---------------------------------------------------------------
+
     "surface_bumpiness",
     "wind_sensitivity",
     "track_limits_risk",
@@ -42,44 +75,100 @@ FEATS = [
     "corner_count",
     "avg_speed_kph",
 
+    # ---------------------------------------------------------------
     # Weather
+    # ---------------------------------------------------------------
+
     "rain_prob_race",
     "wet_lap_fraction",
     "wet_start_prob",
     "mixed_conditions_risk",
 
+    # ---------------------------------------------------------------
     # Driver / team priors
+    # ---------------------------------------------------------------
+
     "driver_skill_prior",
     "team_prior_strength",
+
     "rookie_flag",
     "returnee_flag",
 
+    # ---------------------------------------------------------------
     # General recent form
+    # ---------------------------------------------------------------
+
     "drv_form3",
     "team_form3",
 
-    # Monaco-relevant circuit-archetype form
-    "street_driver_form3",
-    "street_team_form3",
+    # ---------------------------------------------------------------
+    # PRIMARY MADRID ARCHETYPE 1
+    #
+    # High-downforce / technical performance.
+    #
+    # Useful because Madring contains:
+    # - significant lateral loading
+    # - technical corner sequences
+    # - mechanical-grip requirements
+    # - banking
+    # - aero-sensitive sections
+    # ---------------------------------------------------------------
 
-    # Historical-strength helper columns
+    "highdf_driver_form3",
+    "highdf_team_form3",
+
+    # ---------------------------------------------------------------
+    # PRIMARY MADRID ARCHETYPE 2
+    #
+    # Long-straight / high-speed / energy-sensitive performance.
+    #
+    # Useful because Madrid also contains:
+    # - long straights
+    # - high top speeds
+    # - strong energy deployment requirements
+    # - tow relevance
+    # - major braking zones
+    # ---------------------------------------------------------------
+
+    "longstraight_driver_form3",
+    "longstraight_team_form3",
+
+    # ---------------------------------------------------------------
+    # Historical normalized strength
+    # ---------------------------------------------------------------
+
     "driver_hist_strength",
     "team_hist_strength",
 
-    # Blended 2026-adjusted strength
+    # ---------------------------------------------------------------
+    # Current-season / live-session blended strength
+    #
+    # Particularly valuable at a brand-new circuit because there is
+    # no direct Madring historical F1 race data.
+    # ---------------------------------------------------------------
+
     "driver_strength_blend_2026",
     "team_strength_blend_2026",
 
+    # ---------------------------------------------------------------
     # Categoricals
+    # ---------------------------------------------------------------
+
     "team",
     "driver",
 ]
-
 CAT_COLS = ["team", "driver"]
 NUM_COLS = [c for c in FEATS if c not in CAT_COLS]
 
-# Train on finish_pos - grid_pos
-USE_DELTA_TARGET = True
+# Train directly on absolute finishing position. Grid position remains an
+# input feature, allowing the forest to learn its weight without a fixed
+# one-for-one anchor in the final prediction.
+USE_DELTA_TARGET = False
+
+# Limit the candidate features available at each split. This regularizes the
+# forest's reliance on grid_pos and gives independent pace/form signals more
+# opportunities to determine the tree structure.
+RF_MAX_FEATURES = 0.70
 
 
 # -------------------------------------------------------------------
@@ -132,7 +221,7 @@ def _make_target(df: pd.DataFrame) -> Tuple[pd.Series, pd.Series | None]:
 # Training
 # -------------------------------------------------------------------
 
-def train_model(train_df: pd.DataFrame) -> Pipeline:
+def train_model(train_df: pd.DataFrame, save_model: bool = True) -> Pipeline:
     """
     Fit a RandomForest pipeline with imputation + one-hot for categoricals.
     """
@@ -152,6 +241,7 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
         n_estimators=1200,
         min_samples_leaf=8,
         max_depth=None,
+        max_features=RF_MAX_FEATURES,
         random_state=42,
         n_jobs=-1,
         oob_score=True,
@@ -169,10 +259,11 @@ def train_model(train_df: pd.DataFrame) -> Pipeline:
     model.use_delta_target_ = USE_DELTA_TARGET
     model.target_name_ = "finish_minus_grid" if USE_DELTA_TARGET else "finish_pos"
 
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    model_path = DATA_DIR / "random_forest_model.pkl"
-    joblib.dump(model, model_path)
-    print(f"✅ Model successfully saved to: {model_path}")
+    if save_model:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        model_path = DATA_DIR / "random_forest_model.pkl"
+        joblib.dump(model, model_path)
+        print(f"✅ Model successfully saved to: {model_path}")
 
     return model
 
@@ -227,14 +318,16 @@ def predict_event_with_uncertainty(
     add_intervals: bool = True,
     mc_samples: int = 0,
     random_state: int = 42,
+    save_features: bool = True,
 ) -> pd.DataFrame:
     """
     Predict finish positions and uncertainty bands.
     """
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    features_path = DATA_DIR / "current_race_features.csv"
-    features_df.to_csv(features_path, index=False)
-    print(f"✅ Features successfully saved to: {features_path}")
+    if save_features:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        features_path = DATA_DIR / "current_race_features.csv"
+        features_df.to_csv(features_path, index=False)
+        print(f"✅ Features successfully saved to: {features_path}")
 
     X_raw, _ = _prep_fe_matrix(features_df.copy())
     prep = model.named_steps["prep"]
@@ -309,8 +402,9 @@ def predict_event_with_uncertainty(
         ranks = np.empty_like(idx_sorted)
         ranks[idx_sorted, np.arange(mc_samples)] = np.arange(1, n + 1)[:, None]
 
-        out["p_top10"] = (ranks <= 10).mean(axis=1)
-        out["p_podium"] = (ranks <= 3).mean(axis=1)
+        out["p_win"] = (ranks <= 1).mean(axis=1)
+        out["p_top10"] = (ranks <= min(10, n)).mean(axis=1)
+        out["p_podium"] = (ranks <= min(3, n)).mean(axis=1)
 
         pr = out["pred_rank"].to_numpy()[:, None]
         out["p_rank_pm1"] = ((ranks >= (pr - 1)) & (ranks <= (pr + 1))).mean(axis=1)

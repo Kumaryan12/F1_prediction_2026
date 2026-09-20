@@ -1,0 +1,4 @@
+model,races,winner_accuracy,podium_overlap_accuracy,podium_exact_order_accuracy,top10_overlap_accuracy,mae_finish_position,brier_podium,brier_top10,brier_win
+model,1,1.0,1.0,1.0,1.0,0.47500000000000003,0.12165000000000001,2.5000000000000045e-05,
+grid_baseline,1,1.0,0.6666666666666666,0.0,1.0,0.5,0.5,0.0,0.0
+pole_sitter_baseline,1,1.0,0.6666666666666666,0.0,1.0,0.5,0.5,0.0,0.0

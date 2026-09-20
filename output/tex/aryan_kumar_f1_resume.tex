@@ -1,0 +1,130 @@
+% One-page ATS-friendly resume focused on motorsport analytics and ML.
+% Compile with: tectonic aryan_kumar_f1_resume.tex
+\documentclass[9pt,a4paper]{extarticle}
+
+\usepackage[a4paper,top=0.85cm,bottom=0.85cm,left=1.05cm,right=1.05cm]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{iftex}
+\usepackage{microtype}
+
+\ifPDFTeX
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{tgheros}
+  \renewcommand{\familydefault}{\sfdefault}
+\else
+  \usepackage{fontspec}
+  \defaultfontfeatures{Ligatures=NoCommon}
+  \setmainfont{Arial}
+\fi
+
+\hypersetup{colorlinks=true,urlcolor=black,linkcolor=black}
+\pagenumbering{gobble}
+\RaggedRight
+\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{1.01}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=2em
+
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}[\vspace{-0.5pt}\titlerule]
+\titlespacing*{\section}{0pt}{4.8pt}{3.8pt}
+\setlist[itemize]{leftmargin=*,itemsep=1.3pt,topsep=1.4pt,parsep=0pt,partopsep=0pt}
+
+\newcommand{\subhdr}[2]{\textbf{#1}\hfill #2}
+\newcommand{\roleline}[2]{\textit{#1}\hfill \textit{#2}}
+\newcommand{\entryspace}{\vspace{2.0pt}}
+
+\begin{document}
+
+\begin{center}
+  {\Large\textbf{ARYAN SATYENDRA KUMAR}}\\[1.5pt]
+  {\small\textbf{Machine Learning \textbar{} Motorsport Analytics \textbar{} Full-Stack Data Products}}\\[2.2pt]
+  \href{mailto:kumararyan66472@gmail.com}{kumararyan66472@gmail.com}
+  \;|\; +91-9834494193
+  \;|\; \href{https://www.linkedin.com/in/kumaryan12}{LinkedIn}
+  \;|\; \href{https://my-portfolio-ecru-ten-mpqh534zz4.vercel.app}{Portfolio}
+  \;|\; \href{https://github.com/Kumaryan12}{GitHub}
+\end{center}
+
+\vspace{-2pt}
+
+\section*{EDUCATION}
+\subhdr{B.Tech, Electronics and Communication Engineering, Minor in Computer Science}{Expected 2027}\\[-0.5pt]
+\roleline{National Institute of Technology Goa - CGPA: 8.23/10}{Goa, India}
+
+\section*{MOTORSPORT ANALYTICS}
+\subhdr{F1 Race Intelligence - Probabilistic Race Forecasting Platform}{Aug 2025 - Present}\\[-0.5pt]
+\textit{Python, FastF1, scikit-learn, Pandas, FastAPI, Next.js, TypeScript}
+\hfill
+\textit{\href{https://github.com/Kumaryan12/F1_prediction_2026}{GitHub} \;|\; \href{https://instagram.com/ak_predicts}{Predictions}}
+
+\begin{itemize}
+  \item Engineered a post-qualifying forecasting pipeline from FastF1 data. Trained a 1,200-tree Random Forest on finish-position delta with median imputation, one-hot encoding, out-of-bag evaluation, and per-race retraining.
+  \item Designed leakage-safe rolling driver/constructor form and circuit-archetype features, blending historical priors with FP1/FP2/FP3/qualifying signals, weather, tyre degradation, pit loss, and SC/VSC likelihood.
+  \item Backtested 70 Grands Prix from 2023-2025, achieving 58.6\% winner accuracy and 79.7\% top-10 overlap while reducing finish-position MAE by 5.2\% versus a grid-order baseline (3.14 vs. 3.31 positions).
+  \item Published 2026 pre-race winner forecasts with only two incorrect calls to date. Built baseline comparisons, Brier scoring, calibration analysis, leakage audits, grid-model blend search, and versioned prediction logging.
+  \item Generated 68\% and 95\% intervals plus Monte Carlo win, podium, top-10, and rank probabilities. Served forecasts, feature importance, driver comparisons, and a grid simulator through FastAPI and Next.js.
+\end{itemize}
+
+\section*{EXPERIENCE}
+\subhdr{Project Intern - Mobile Air Quality Intelligence}{May 2026 - Jul 2026}\\[-0.5pt]
+\roleline{Indian Institute of Technology Madras - Prof. Raghunathan Rengaswamy}{Chennai, India}
+\begin{itemize}
+  \item Developed a multimodal roadside PM$_{2.5}$ pipeline combining mobile sensors, OPC particle bins, MERRA-2/CAMS atmospheric variables, meteorology, GPS/OSM context, and camera imagery.
+  \item Fine-tuned YOLO vehicle detectors and applied SegFormer road segmentation to derive traffic counts, road exposure, texture, brownness, and dust-related visual proxies.
+  \item Built ResNet50-GRU and tree-based models for background pollution and local roadside increments using leakage-aware whole-date validation, with filter-sampling and XRF validation against physical particulate measurements.
+\end{itemize}
+
+\entryspace
+\subhdr{Signalling and Telecommunications Intern}{May 2025 - Jul 2025}\\[-0.5pt]
+\roleline{South Western Railways, RVNL}{Goa, India}
+\begin{itemize}
+  \item Analysed Kyosan Electronic Interlocking in a safety-critical railway environment, tracing system feedback paths, interlocking logic, relay interfaces, and failure-mode handling.
+\end{itemize}
+
+\section*{SELECTED PROJECTS}
+\subhdr{NyayaSetu - Multilingual ML-RAG Assistant for Legal Aid}{Jun 2026}\\[-0.5pt]
+\textit{FastAPI, Next.js, XLM-R, Sentence Transformers, ChromaDB, Groq API}
+\hfill \textit{\href{https://github.com/Kumaryan12/nyaysetu}{GitHub}}
+\begin{itemize}
+  \item Fine-tuned XLM-R classifiers for legal issue and urgency detection. Built an official-source RAG workflow with citation-grounded answers, guardrails, explainability, and retrieval evaluation using Recall@1/3/5 and MRR.
+\end{itemize}
+
+\entryspace
+\subhdr{HostelMitra - Hostel Complaint Management Portal}{2025}\\[-0.5pt]
+\textit{Firebase, Firestore, Google OAuth}
+\hfill \textit{\href{https://github.com/Kumaryan12/HostelMitra}{GitHub} \;|\; \href{https://hostelmitra-81b7d.web.app/}{Live Demo}}
+\begin{itemize}
+  \item Built and deployed a portal used by NIT Goa students with role-based access, real-time complaint tracking, voting, admin resolution, and timestamped audit trails.
+\end{itemize}
+
+\section*{TECHNICAL SKILLS}
+\textbf{Languages:} Python, SQL, C, C++, Java, TypeScript \quad
+\textbf{ML/Data:} PyTorch, scikit-learn, Pandas, NumPy, Random Forests, feature engineering, temporal backtesting, model calibration, uncertainty modelling\\[1.2pt]
+\textbf{Vision/NLP:} YOLO, SegFormer, CNNs, GRUs, transformers, XLM-R, embeddings, RAG, ChromaDB \quad
+\textbf{Engineering:} FastAPI, REST APIs, Next.js, Firebase, PostgreSQL, Git, Docker
+
+\section*{ACHIEVEMENTS \& LEADERSHIP}
+\begin{itemize}
+  \item Selected for Amazon ML Summer School 2026 and ranked 251 of 7,000+ teams in the Amazon ML Challenge 2025.
+  \item Finalist at India Innovates 2026 and in national case-study competitions hosted across IIM, IIT, and NIT platforms.
+  \item GDG Organizer and AI/ML Lead, leading a 100-participant hackathon and delivering ML and DSA workshops.
+  \item Captain, Institute Badminton Team, and former national-level badminton player.
+\end{itemize}
+
+\section*{CERTIFICATIONS}
+\href{https://coursera.org/share/511694705d0c1469932469d414a1ecf8}{Machine Learning Specialization} - Andrew Ng
+\;|\;
+\href{https://coursera.org/share/1a69a528708b69bd212760cf799adc44}{Deep Learning Specialization} - Andrew Ng
+\;|\;
+\href{https://coursera.org/share/accadfe20f17ba63ad1d025391ce92eb}{Google Data Analytics Professional Certificate}
+
+\end{document}

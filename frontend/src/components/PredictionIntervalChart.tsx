@@ -36,16 +36,13 @@ export default function PredictionIntervalChart({
   }));
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-tarmac-light/90 shadow-[0_0_30px_rgba(212,175,55,0.1)] backdrop-blur-md p-6 sm:p-8">
-      {/* Background Monaco Glow */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-casino-gold/5 to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-riviera-blue/5 to-transparent pointer-events-none" />
+    <div className="relative overflow-hidden border border-white/10 bg-tarmac-light p-6 sm:p-8">
 
       {/* Header */}
       <div className="mb-8 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-riviera-blue animate-pulse shadow-[0_0_10px_rgba(0,163,224,0.8)]" />
+            <span className="h-3 w-3 bg-spielberg-red" />
             Prediction Intervals
           </h2>
           <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
@@ -71,7 +68,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED RANK",
                 position: "insideBottom",
                 offset: -10,
-                fill: "#00A3E0", // Riviera Blue
+                fill: "#CE2939",
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -90,7 +87,7 @@ export default function PredictionIntervalChart({
                 value: "PREDICTED FINISH",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#D4AF37", // Casino Gold
+                fill: "#5C9A68",
                 fontSize: 10,
                 fontFamily: "monospace",
                 letterSpacing: "0.2em",
@@ -98,12 +95,12 @@ export default function PredictionIntervalChart({
             />
             
             <Tooltip
-              cursor={{ stroke: "rgba(0,163,224,0.15)", strokeWidth: 2 }}
+              cursor={{ stroke: "rgba(206,41,57,0.15)", strokeWidth: 2 }}
               contentStyle={{
-                background: "#060B13", // Deep Midnight Harbor Blue
-                border: "1px solid rgba(0,163,224,0.3)", // Riviera Blue Border
+                background: "#08090B",
+                border: "1px solid rgba(206,41,57,0.3)",
                 borderRadius: "8px",
-                boxShadow: "0 0 15px rgba(0,163,224,0.2)",
+                boxShadow: "0 0 15px rgba(206,41,57,0.2)",
                 color: "white",
                 fontFamily: "monospace",
                 textTransform: "uppercase",
@@ -111,37 +108,35 @@ export default function PredictionIntervalChart({
               }}
               formatter={(value, name) => [
                 typeof value === "number" ? (
-                  <span style={{ color: "#D4AF37", fontWeight: "bold" }}>{value.toFixed(2)}</span>
+                  <span key="value" style={{ color: "#5C9A68", fontWeight: "bold" }}>{value.toFixed(2)}</span>
                 ) : (
                   String(value ?? "-")
                 ),
-                <span style={{ color: "#a1a1aa" }}>{String(name)}</span>,
+                <span key="name" style={{ color: "#a1a1aa" }}>{String(name)}</span>,
               ]}
               labelFormatter={(_, payload) => {
                 if (!payload || !payload.length) return "";
                 return (
-                  <div style={{ color: "#00A3E0", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
+                  <div style={{ color: "#CE2939", fontWeight: "900", marginBottom: "4px", fontSize: "14px" }}>
                     {payload[0].payload.driver}
                   </div>
                 );
               }}
             />
             
-            {/* The Dots: Riviera Blue */}
-            <Scatter data={chartData} fill="#00A3E0">
-              {/* The Error Bars: Casino Gold */}
+            <Scatter data={chartData} fill="#CE2939">
               <ErrorBar 
                 dataKey="lowError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#D4AF37" 
+                stroke="#5C9A68"
                 direction="y" 
               />
               <ErrorBar 
                 dataKey="highError" 
                 width={4} 
                 strokeWidth={2} 
-                stroke="#D4AF37" 
+                stroke="#5C9A68"
                 direction="y" 
               />
             </Scatter>

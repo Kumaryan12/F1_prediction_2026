@@ -1,152 +1,34 @@
 "use client";
-
 import { useState } from "react";
+import { ArrowRight, FlaskConical, LoaderCircle, RotateCcw } from "lucide-react";
+import type { PredictionRow } from "@/lib/types";
+import { driverName, position } from "@/lib/presentation";
 
-// 1. Moved the fetch function here so it safely runs in the browser!
-async function runSimulation(driver: string, gridPos: number) {
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-  
-  const res = await fetch(`${API_BASE}/simulate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ driver: driver, grid_pos: gridPos }),
-  });
-
-  if (!res.ok) {
-    // This grabs the exact error message from FastAPI
-    const errorData = await res.json().catch(() => ({}));
-    console.error("Backend Error:", errorData);
-    throw new Error(errorData.detail || "Simulation failed");
-  }
-  
-  return res.json();
-}
-
-type DriverData = {
-  driver: string;
-  team: string;
-  pred_rank?: number;
-  grid_pos?: number;
-};
-
-type SimulatorProps = {
-  predictions: DriverData[];
-};
-
-export default function Simulator({ predictions }: SimulatorProps) {
-  const [selectedDriver, setSelectedDriver] = useState(predictions[0]?.driver || "VER");
-  const [customGrid, setCustomGrid] = useState<number>(10);
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [simResult, setSimResult] = useState<{ new_predicted_rank: number; simulated_grid: number } | null>(null);
-
-  const currentData = predictions.find((p) => p.driver === selectedDriver) || predictions[0];
-  const originalRank = currentData?.pred_rank || 0;
-  const originalGrid = currentData?.grid_pos || 0;
-
-  const handleSimulate = async () => {
-    setIsSimulating(true);
-    setSimResult(null);
+type SimulationResult = { new_predicted_rank: number; simulated_grid: number };
+export default function Simulator({ predictions }: { predictions: PredictionRow[] }) {
+  const [driver, setDriver] = useState(predictions[0]?.driver || "");
+  const [grid, setGrid] = useState(Math.min(10, predictions.length || 1));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<SimulationResult | null>(null);
+  const baseline = predictions.find((row) => row.driver === driver);
+  function clearResult() { setResult(null); setError(""); }
+  async function run() {
+    setLoading(true); clearResult();
     try {
-      // 2. Calls the function we defined at the top of this file
-      const result = await runSimulation(selectedDriver, customGrid);
-      setSimResult(result);
-    } catch (error) {
-      console.error("Failed to run simulation", error);
-    } finally {
-      setIsSimulating(false);
-    }
-  };
-
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-riviera-blue/20 bg-tarmac-light/90 shadow-[0_0_30px_rgba(0,163,224,0.1)] backdrop-blur-md p-6 sm:p-8 group">
-      {/* Tech Background Grid */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-
-      <div className="mb-6 border-b border-white/10 pb-4 relative z-10 flex justify-between items-end">
-        <div>
-          <h2 className="text-2xl font-black uppercase italic tracking-tight text-white flex items-center gap-3">
-            <span className="h-3 w-3 rounded-full bg-riviera-blue animate-pulse shadow-[0_0_10px_rgba(0,163,224,0.8)]" />
-            "What-If" Engine
-          </h2>
-          <p className="mt-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">Live ML Prediction Sandbox</p>
-        </div>
-      </div>
-
-      <div className="grid gap-8 md:grid-cols-2 relative z-10">
-        {/* Left Column: Controls */}
-        <div className="flex flex-col gap-6">
-          
-          {/* Driver Select */}
-          <div>
-            <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest mb-2">Target Driver</label>
-            <select 
-              className="w-full rounded border border-white/20 bg-black/60 px-4 py-3 text-lg font-bold italic uppercase text-white outline-none focus:border-riviera-blue transition-colors"
-              value={selectedDriver}
-              onChange={(e) => setSelectedDriver(e.target.value)}
-            >
-              {predictions.map((p) => (
-                <option key={p.driver} value={p.driver}>{p.driver} - {p.team}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Grid Slider - Upgraded to Casino Gold for luxury contrast */}
-          <div>
-            <div className="flex justify-between items-end mb-2">
-              <label className="block text-xs font-mono text-zinc-500 uppercase tracking-widest">Simulate Grid Position</label>
-              <span className="text-xl font-black text-casino-gold italic drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]">P{customGrid}</span>
-            </div>
-            <input 
-              type="range" 
-              min="1" max="20" 
-              value={customGrid} 
-              onChange={(e) => setCustomGrid(Number(e.target.value))}
-              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-casino-gold"
-            />
-            <div className="flex justify-between text-[10px] text-zinc-600 mt-1 font-mono font-bold">
-              <span>POLE (P1)</span>
-              <span>BACK (P20)</span>
-            </div>
-          </div>
-
-          {/* Run Button - Riviera Blue Glow */}
-          <button 
-            onClick={handleSimulate}
-            disabled={isSimulating}
-            className="mt-2 w-full rounded border border-riviera-blue bg-riviera-blue/10 py-4 font-black uppercase italic tracking-widest text-riviera-blue transition-all hover:bg-riviera-blue hover:text-black disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(0,163,224,0.2)] hover:shadow-[0_0_25px_rgba(0,163,224,0.6)]"
-          >
-            {isSimulating ? "Running Telemetry..." : "Run Simulation"}
-          </button>
-        </div>
-
-        {/* Right Column: Results Panel */}
-        <div className="rounded-xl border border-white/5 bg-black/40 p-6 flex flex-col justify-center shadow-inner">
-          <h3 className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Simulation Results</h3>
-          
-          <div className="grid grid-cols-2 gap-4">
-            {/* Original Stats */}
-            <div className="flex flex-col gap-1 opacity-50">
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono">Original Grid</span>
-              <span className="text-xl font-black text-white italic">P{originalGrid}</span>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-mono mt-2">Original Finish</span>
-              <span className="text-2xl font-black text-white italic">P{originalRank}</span>
-            </div>
-
-            {/* Simulated Stats - Highlighted in Casino Gold */}
-            <div className="flex flex-col gap-1 border-l border-white/10 pl-4">
-              <span className="text-[10px] uppercase tracking-wider text-casino-gold font-mono">Simulated Grid</span>
-              <span className="text-xl font-black text-white italic">{simResult ? `P${simResult.simulated_grid}` : "--"}</span>
-              <span className="text-[10px] uppercase tracking-wider text-casino-gold font-mono mt-2">New Predicted Finish</span>
-              <span className={`text-4xl font-black italic drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] ${simResult ? 'text-white' : 'text-zinc-700'}`}>
-                {simResult ? `P${simResult.new_predicted_rank}` : "--"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"}/simulate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ driver, grid_pos: grid }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "The simulation could not complete. Please try again.");
+      setResult(data);
+    } catch (error) { setError(error instanceof Error ? error.message : "Simulation unavailable. Please try again."); }
+    finally { setLoading(false); }
+  }
+  return <div className="panel simulator-panel"><div className="panel-heading"><span className="eyebrow">YOUR STRATEGY CALL</span><FlaskConical size={17} /></div>
+    <p className="tool-intro">A different start. A different finish?<br /><span>Move a driver on the grid and rerun the forecast.</span></p>
+    <fieldset disabled={loading || !predictions.length} className="simulation-inputs"><label className="driver-select"><span>Choose your driver</span><select value={driver} onChange={(event) => { setDriver(event.target.value); clearResult(); }}>{predictions.map((row) => <option key={row.driver} value={row.driver}>{driverName(row.driver)} · {row.team}</option>)}</select></label>
+    <label className="grid-slider"><span>New starting position <strong>P{grid}</strong></span><input type="range" min="1" max={predictions.length || 1} value={grid} onChange={(event) => { setGrid(Number(event.target.value)); clearResult(); }} style={{ background: `linear-gradient(to right, #f34b43 ${((grid - 1) / Math.max(1, predictions.length - 1)) * 100}%, #30323b 0%)` }} /><span className="slider-labels"><span>POLE POSITION</span><span>BACK OF THE GRID</span></span></label>
+    <div className="simulation-buttons"><button className="button button-red" onClick={run}>{loading ? <LoaderCircle size={15} className="spin" /> : <FlaskConical size={15} />}{loading ? "Running the numbers…" : "Run simulation"}<ArrowRight size={15} /></button><button className="icon-button" aria-label="Reset simulation" onClick={() => { setGrid(Math.min(10, predictions.length || 1)); setDriver(predictions[0]?.driver || ""); clearResult(); }}><RotateCcw size={16} /></button></div></fieldset>
+    {error && <p className="error-message" role="alert">{error}</p>}
+    <div className={`simulation-output ${result ? "has-result" : ""}`} aria-live="polite" aria-busy={loading}><div><span>Baseline forecast</span><strong>{position(baseline?.pred_rank)}</strong><small>Grid {position(baseline?.grid_pos)}</small></div><ArrowRight size={21} /><div><span>Simulated forecast</span><strong>{result ? position(result.new_predicted_rank) : "—"}</strong><small>{result ? `From grid P${result.simulated_grid}` : "Your result appears here"}</small></div></div>
+  </div>;
 }
