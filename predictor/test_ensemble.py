@@ -53,4 +53,8 @@ def test_ensemble_probabilities_form_one_race():
     assert np.isclose(out["p_win"].sum(), 1.0)
     assert np.isclose(out["p_podium"].sum(), 3.0)
     assert np.isclose(out["p_top10"].sum(), 10.0)
+    assert (out["pred_finish"] == out["blend_rank_score"]).all()
+    assert sorted(out["pred_rank_model_ensemble"].tolist()) == list(
+        range(1, len(out) + 1)
+    )
     assert (out["ranking_mode_default"] == "ensemble_grid_blend").all()

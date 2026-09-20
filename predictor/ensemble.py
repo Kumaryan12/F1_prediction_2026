@@ -369,16 +369,31 @@ def predict_event_with_ensemble(
         fallback = np.nanmax(grid) + 1 if np.isfinite(grid).any() else len(grid)
         grid = np.where(np.isfinite(grid), grid, fallback)
 
-    final_prediction = grid_alpha * model_prediction + (1.0 - grid_alpha) * grid
     n = len(features_df)
-    max_position = max(n, 20)
+
+    # Blend comparable within-race ranks, not raw position estimates. Tree
+    # regressors shrink predictions toward the field mean, while the grid spans
+    # the complete field; blending those raw values makes even a modest grid
+    # weight dominate the final order.
+    model_order = np.argsort(model_prediction, kind="mergesort")
+    model_ranks = np.empty(n, dtype=int)
+    model_ranks[model_order] = np.arange(1, n + 1)
+    grid_order = np.argsort(grid, kind="mergesort")
+    grid_ranks = np.empty(n, dtype=int)
+    grid_ranks[grid_order] = np.arange(1, n + 1)
+    blend_score = grid_alpha * model_ranks + (1.0 - grid_alpha) * grid_ranks
 
     out = features_df[["driver", "team", "grid_pos"]].copy()
     out["pred_finish_rf"] = components["random_forest"]
     out["pred_finish_extra_trees"] = components["extra_trees"]
     out["pred_finish_elastic_net"] = components["elastic_net"]
     out["pred_finish_model_ensemble"] = model_prediction
-    out["pred_finish"] = np.clip(final_prediction, 1, max_position)
+    out["pred_rank_model_ensemble"] = model_ranks
+    out["grid_rank_component"] = grid_ranks
+    out["blend_rank_score"] = blend_score
+    # Keep the established column name for API/backtest compatibility. This is
+    # now a rank score on the finishing-position scale.
+    out["pred_finish"] = blend_score
 
     rng = np.random.default_rng(random_state)
     draws = max(int(mc_samples), 1)
@@ -393,24 +408,31 @@ def predict_event_with_ensemble(
         else:
             simulated_model += weight * components[name][:, None]
 
-    samples = grid_alpha * simulated_model + (1.0 - grid_alpha) * grid[:, None]
-    samples = np.clip(samples, 1, max_position)
-    out["pred_std"] = samples.std(axis=1, ddof=1) if draws > 1 else 0.0
-    out["pi68_low"] = np.quantile(samples, 0.16, axis=1)
-    out["pi68_high"] = np.quantile(samples, 0.84, axis=1)
-    out["pi95_low"] = np.quantile(samples, 0.025, axis=1)
-    out["pi95_high"] = np.quantile(samples, 0.975, axis=1)
-    out["pred_low"] = out["pi68_low"]
-    out["pred_high"] = out["pi68_high"]
+    simulated_model_order = np.argsort(simulated_model, axis=0, kind="mergesort")
+    simulated_model_ranks = np.empty_like(simulated_model_order)
+    simulated_model_ranks[
+        simulated_model_order, np.arange(draws)
+    ] = np.arange(1, n + 1)[:, None]
+    simulated_blend_scores = (
+        grid_alpha * simulated_model_ranks
+        + (1.0 - grid_alpha) * grid_ranks[:, None]
+    )
 
-    order = np.argsort(out["pred_finish"].to_numpy())
+    order = np.argsort(blend_score, kind="mergesort")
     ranks = np.empty(n, dtype=int)
     ranks[order] = np.arange(1, n + 1)
     out["pred_rank"] = ranks
 
-    sample_order = np.argsort(samples, axis=0)
+    sample_order = np.argsort(simulated_blend_scores, axis=0, kind="mergesort")
     sample_ranks = np.empty_like(sample_order)
     sample_ranks[sample_order, np.arange(draws)] = np.arange(1, n + 1)[:, None]
+    out["pred_std"] = sample_ranks.std(axis=1, ddof=1) if draws > 1 else 0.0
+    out["pi68_low"] = np.quantile(sample_ranks, 0.16, axis=1)
+    out["pi68_high"] = np.quantile(sample_ranks, 0.84, axis=1)
+    out["pi95_low"] = np.quantile(sample_ranks, 0.025, axis=1)
+    out["pi95_high"] = np.quantile(sample_ranks, 0.975, axis=1)
+    out["pred_low"] = out["pi68_low"]
+    out["pred_high"] = out["pi68_high"]
     out["p_win"] = (sample_ranks == 1).mean(axis=1)
     out["p_podium"] = (sample_ranks <= min(3, n)).mean(axis=1)
     out["p_top10"] = (sample_ranks <= min(10, n)).mean(axis=1)
