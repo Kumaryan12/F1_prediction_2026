@@ -62,6 +62,16 @@ def _feature_frame(df: pd.DataFrame) -> pd.DataFrame:
     return out[ENSEMBLE_FEATS]
 
 
+def _mask_features(df: pd.DataFrame, excluded_features: set[str]) -> pd.DataFrame:
+    out = df.copy()
+    for col in excluded_features:
+        if col in ENSEMBLE_CAT_COLS:
+            out[col] = "__excluded__"
+        elif col in ENSEMBLE_FEATS:
+            out[col] = 0.0
+    return out
+
+
 def _add_dynamic_driver_skill(
     df: pd.DataFrame,
     span: int = 12,
@@ -159,6 +169,7 @@ class RaceEnsemble:
     feature_list_: list[str]
     driver_skill_map_: Dict[str, float]
     default_driver_skill_: float
+    excluded_features_: set[str]
 
     def component_predictions(self, df: pd.DataFrame) -> Dict[str, np.ndarray]:
         enriched = df.copy()
@@ -166,6 +177,7 @@ class RaceEnsemble:
             enriched["driver"].astype(str).map(self.driver_skill_map_)
             .fillna(self.default_driver_skill_)
         )
+        enriched = _mask_features(enriched, self.excluded_features_)
         X = _feature_frame(enriched)
         return {name: model.predict(X) for name, model in self.models.items()}
 
@@ -179,10 +191,16 @@ def train_ensemble(
     model_weights: Dict[str, float] | None = None,
     random_state: int = 42,
     n_estimators: int = 800,
+    excluded_features: set[str] | None = None,
 ) -> RaceEnsemble:
     """Train three deliberately different regressors on leakage-safe features."""
     clean = train_df.dropna(subset=["finish_pos", "grid_pos"]).copy()
     clean, driver_skill_map, default_driver_skill = _add_dynamic_driver_skill(clean)
+    excluded = set(excluded_features or set())
+    unknown_exclusions = excluded - set(ENSEMBLE_FEATS)
+    if unknown_exclusions:
+        raise ValueError(f"Unknown excluded features: {sorted(unknown_exclusions)}")
+    clean = _mask_features(clean, excluded)
     X = _feature_frame(clean)
     y = pd.to_numeric(clean["finish_pos"], errors="coerce").astype(float)
 
@@ -254,6 +272,7 @@ def train_ensemble(
         feature_list_=list(ENSEMBLE_FEATS),
         driver_skill_map_=driver_skill_map,
         default_driver_skill_=default_driver_skill,
+        excluded_features_=excluded,
     )
 
 
@@ -360,6 +379,7 @@ def predict_event_with_ensemble(
         enriched["driver"].astype(str).map(ensemble.driver_skill_map_)
         .fillna(ensemble.default_driver_skill_)
     )
+    enriched = _mask_features(enriched, ensemble.excluded_features_)
     X = _feature_frame(enriched)
     components = ensemble.component_predictions(features_df)
     model_prediction = sum(

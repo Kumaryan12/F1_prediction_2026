@@ -60,10 +60,15 @@ def build_walk_forward_predictions(
     min_train_races: int = 12,
     n_estimators: int = 250,
     mc_samples: int = 250,
+    excluded_features: set[str] | None = None,
+    featured_df: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Generate predictions where every model sees only earlier race dates."""
-    raw = build_training_min(years)
-    featured = add_circuit_context_df(add_driver_team_form(raw))
+    if featured_df is None:
+        raw = build_training_min(years)
+        featured = add_circuit_context_df(add_driver_team_form(raw))
+    else:
+        featured = featured_df.copy()
     featured["date"] = pd.to_datetime(featured["date"], errors="coerce")
 
     events = (
@@ -84,7 +89,11 @@ def build_walk_forward_predictions(
         if train.empty or test.empty:
             continue
 
-        model = train_ensemble(train, n_estimators=n_estimators)
+        model = train_ensemble(
+            train,
+            n_estimators=n_estimators,
+            excluded_features=excluded_features,
+        )
         forecast = predict_event_with_ensemble(
             model,
             test.drop(columns=["finish_pos"], errors="ignore"),
