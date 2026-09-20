@@ -62,11 +62,12 @@ npm run dev
 - **Algorithm:** RandomForestRegressor (sklearn)
 - **Estimators:** 1200 trees
 - **Max Depth:** None
-- **Min Samples Leaf:** 16
+- **Features per Split:** 70% (regularizes grid-position dominance)
+- **Min Samples Leaf:** 8
 - **Bootstrap:** True
 - **OOB Score:** True
-- **Target:** `finish_pos - grid_pos` (delta target)
-- **Features:** Grid position, circuit priors, driver/team priors, historical form, blended 2026-adjusted strengths, weather, track layout, driver/team archetype forms.
+- **Target:** `finish_pos` (absolute finishing position)
+- **Features:** Grid position, circuit priors, driver/team priors, historical form, blended 2026-adjusted strengths, weather, track layout, and driver/team archetype forms. Grid position is learned as an ordinary feature and is not added to the model output.
 - **Permutation & Tree-Based Feature Importance:** Available for top predictors.
 
 ## Circuit Features
@@ -94,4 +95,3 @@ Circuit-specific parameters are stored in `config.py` and used in feature engine
 
 ## Authors
 Aryan Kumar - NIT Goa - Electronics & AI/ML enthusiast
-

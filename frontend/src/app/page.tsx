@@ -1,37 +1,70 @@
-import Image from "next/image";
-import { ArrowDown, ArrowRight, ArrowUpRight, Activity, Flag, Gauge, Instagram, Layers3, Trophy, Wind, Zap } from "lucide-react";
-import PodiumCard from "@/components/PodiumCard";
-import HeadToHead from "@/components/HeadToHead";
+import { ArrowDown, BarChart3, Flag } from "lucide-react";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
-import Simulator from "@/components/Simulator";
-import MonzaCircuit from "@/components/MonzaCircuit";
-import DashboardNav from "@/components/DashboardNav";
-import ForecastExplorer from "@/components/ForecastExplorer";
-import ShareForecast from "@/components/ShareForecast";
-import { fetchSummary, fetchTop10, fetchLatestPredictions, fetchFeatureImportance } from "@/lib/api";
-import type { PredictionRow, SummaryResponse, PredictionsResponse } from "@/lib/types";
-import { driverName } from "@/lib/presentation";
+import PredictionTable from "@/components/PredictionTable";
+import { fetchFeatureImportance, fetchLatestPredictions } from "@/lib/api";
+import type { PredictionsResponse } from "@/lib/types";
+
+type Feature = { name: string; value: number };
 
 export default async function HomePage() {
-  const [summary, top10, fullGrid, features]: [SummaryResponse, PredictionsResponse, PredictionsResponse, ({ name: string; value: number } | null)[]] = await Promise.all([fetchSummary(), fetchTop10(), fetchLatestPredictions(), fetchFeatureImportance()]);
-  const podium = summary.predicted_podium.map((code) => fullGrid.rows.find((row) => row.driver === code)).filter((row): row is PredictionRow => !!row);
-  const mismatch = !/italian|italy|monza/i.test(summary.race || "");
-  return <div className="ak-dashboard"><a className="skip-link" href="#forecast">Skip to predictions</a>
-    <header className="site-header"><a className="brand" href="#overview" aria-label="AK_predicts home"><span className="brand-symbol" aria-hidden="true">AK<span>↗</span></span><span className="wordmark">AK<span>_predicts</span><small>FORMULA 1. THROUGH DATA.</small></span></a><DashboardNav /><a className="instagram-link" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={15} /><span>Follow the predictions</span><ArrowUpRight size={13} /></a></header>
-    <main>
-      <div className="page-context"><span><i className="status-dot" />THE 2026 SEASON <span className="context-divider">/</span><b>ITALIAN GP</b></span><span className="context-note">INDEPENDENT INSIGHT. FULL-THROTTLE PASSION.</span></div>
-      <section id="overview" className="cinematic-hero"><Image src="/monza-cover.png" alt="Illustrative red open-wheel racing car at an Italian circuit at dusk" fill priority sizes="(max-width: 1400px) 100vw, 1400px" className="hero-art" /><div className="hero-shade" /><div className="hero-content"><div className="hero-kicker"><span className="italian-flag" aria-label="Italy" /><span>ROUND 13</span><i /><span>04—06 SEPTEMBER 2026</span></div><p className="hero-overline">THE TEMPLE OF SPEED.</p><h1>MONZA.<br /><span>NO ROOM</span><br />FOR DOUBT<span className="red-period">.</span></h1><p className="hero-copy">The passion is Italian. The perspective is data.<br />Get a different view of the race with AK_predicts.</p><a href="#forecast" className="button button-red hero-cta">Discover the predictions <ArrowDown size={16} /></a></div><div className="hero-edition"><span>GRAN PREMIO</span><strong>D’ITALIA</strong><span className="edition-rule" /><span>MONZA / 2026</span></div><div className="hero-bottom"><span><Flag size={13} />AUTODROMO NAZIONALE MONZA</span><span>5.793 KM <i />53 LAPS <i />11 TURNS</span><span className="art-label">AI-GENERATED COVER ART</span></div></section>
-      <div className="weekend-strip"><span className="weekend-label"><Flag size={15} />THE WEEKEND</span><div><span>FRI <b>04</b></span><p>Practice 1 & 2</p></div><div><span>SAT <b>05</b></span><p>Practice 3 & Qualifying</p></div><div><span>SUN <b>06</b></span><p>Italian Grand Prix <span className="race-badge">RACE DAY</span></p></div><a href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer" aria-label="Official Italian Grand Prix schedule"><ArrowUpRight size={19} /></a></div>
-      <div className="overview-stats"><OverviewStat icon={<Trophy size={17} />} label="MODEL FAVOURITE" value={driverName(summary.predicted_winner)} note="Highest predicted rank" /><OverviewStat icon={<Flag size={17} />} label="CONSTRUCTOR EDGE" value={summary.best_team} note="Best aggregate forecast" /><OverviewStat icon={<Layers3 size={17} />} label="DRIVERS ANALYSED" value={String(summary.total_drivers).padStart(2, "0")} note="In the loaded forecast" /><OverviewStat icon={<Activity size={17} />} label="AVERAGE UNCERTAINTY" value={`±${Number(summary.avg_pred_std).toFixed(2)}`} note="Predicted finishing positions" /></div>
-      <section id="forecast" className="dashboard-section"><SectionHeading number="01" eyebrow="THE FORECAST" title={<>The race. <em>Before the race.</em></>} description="The model has made its call. Here’s how the podium could look." /><div className={`dataset-banner ${mismatch ? "dataset-mismatch" : ""}`}><span><i className="status-dot" /><strong>Loaded forecast</strong> {summary.race || "Race not specified"}</span><span>{mismatch ? "Monza edition · Italian GP prediction data not loaded yet" : "Model estimates · Not live results"}</span></div><div className="podium-grid">{([1, 2, 3] as const).map((position) => <PodiumCard key={position} position={position} row={podium[position - 1]} />)}</div><div className="podium-share-row"><p><span className="small-square" />Your next race-day conversation starts here.</p><ShareForecast race={summary.race || "Latest forecast"} rows={podium} /></div></section>
-      <section className="dashboard-section"><SectionHeading number="02" eyebrow="THE CLASSIFICATION" title={<>Beyond <em>the podium.</em></>} description="Explore the predicted top ten. Find your driver. Read between the numbers." /><ForecastExplorer rows={top10.rows} /></section>
-      <section className="circuit-section"><MonzaCircuit /><div className="circuit-story"><span className="eyebrow">THE MONZA FACTOR</span><h2>Fast is a<br /><em>way of life.</em></h2><p>Long straights, unforgiving chicanes, and a crowd that lives every lap. At Monza, the smallest margins make the biggest difference.</p><div className="track-factors"><div><Wind size={18} /><span><strong>Low drag</strong>Speed on the straights</span></div><div><Gauge size={18} /><span><strong>Heavy braking</strong>Make the chicanes count</span></div><div><Zap size={18} /><span><strong>Energy deployment</strong>Make every straight work</span></div></div><a className="text-link" href="https://www.formula1.com/en/racing/2026/italy" target="_blank" rel="noreferrer">Explore the official circuit guide <ArrowUpRight size={15} /></a></div></section>
-      <div className="tools-grid"><section id="h2h" className="dashboard-section"><SectionHeading number="03" eyebrow="HEAD TO HEAD" title={<>Choose <em>your side.</em></>} description="Two drivers. The same model. A direct comparison." /><HeadToHead predictions={fullGrid.rows} /></section><section id="simulator" className="dashboard-section"><SectionHeading number="04" eyebrow="THE SIMULATION LAB" title={<>What if <em>you called it?</em></>} description="Change the grid. See how the forecast responds." /><Simulator predictions={fullGrid.rows} /></section></div>
-      <section id="model" className="dashboard-section"><SectionHeading number="05" eyebrow="UNDER THE HOOD" title={<>Less mystery. <em>More method.</em></>} description="A closer look at the signals behind the predictions." /><FeatureImportanceChart features={features.filter((feature): feature is { name: string; value: number } => feature !== null)} /></section>
-      <section className="community-banner"><div className="community-symbol" aria-hidden="true">AK↗</div><div><span className="eyebrow">THE CONVERSATION CONTINUES</span><h2>Same passion.<br /><em>A different perspective.</em></h2><p>Race predictions, model insights, and a reason to debate the grid.</p></div><a className="button button-light" href="https://www.instagram.com/AK_predicts/" target="_blank" rel="noreferrer"><Instagram size={17} />Follow @AK_predicts <ArrowUpRight size={15} /></a></section>
-      <footer className="site-footer"><a href="#overview" className="footer-brand">AK<span>_predicts</span></a><span>Independent F1 analytics. Not affiliated with Formula 1.<br />Forecasts are estimates, not guaranteed results.</span><a href="#overview">BACK TO THE TOP <ArrowRight size={13} className="back-arrow" /></a></footer>
-    </main>
-  </div>;
+  const [forecast, rawFeatures]: [PredictionsResponse, (Feature | null)[]] =
+    await Promise.all([fetchLatestPredictions(), fetchFeatureImportance()]);
+
+  const features = rawFeatures.filter(
+    (feature): feature is Feature => feature !== null,
+  );
+
+  return (
+    <div className="dashboard-shell">
+      <a className="skip-link" href="#predictions">Skip to predictions</a>
+
+      <header className="topbar">
+        <a className="brand" href="#predictions" aria-label="AK Predicts home">
+          <span className="brand-mark">AK</span>
+          <span className="brand-name">AK<span>_predicts</span></span>
+        </a>
+        <nav className="primary-nav" aria-label="Dashboard sections">
+          <a href="#predictions">Predictions</a>
+          <a href="#importance">Feature importance</a>
+        </nav>
+        <span className="model-status"><i aria-hidden="true" /> Model online</span>
+      </header>
+
+      <main>
+        <section className="page-intro" aria-labelledby="page-title">
+          <div>
+            <p className="eyebrow"><Flag size={13} /> 2026 race forecast</p>
+            <h1 id="page-title">The grid, decoded.</h1>
+            <p className="intro-copy">One model. One finishing order. Every signal exposed.</p>
+          </div>
+          <a className="jump-link" href="#importance">See what drives the model <ArrowDown size={15} /></a>
+        </section>
+
+        <section id="predictions" className="content-section" aria-labelledby="predictions-title">
+          <div className="section-header">
+            <div>
+              <p className="section-index">01 / Predictions</p>
+              <h2 id="predictions-title">Predicted classification</h2>
+            </div>
+            <div className="dataset-meta">
+              <span>{forecast.race || "Latest forecast"}</span>
+              <strong>{forecast.total_rows} drivers</strong>
+            </div>
+          </div>
+          <div className="data-surface"><PredictionTable rows={forecast.rows} /></div>
+        </section>
+
+        <section id="importance" className="content-section importance-section" aria-labelledby="importance-title">
+          <div className="section-header">
+            <div>
+              <p className="section-index">02 / Model</p>
+              <h2 id="importance-title">Feature importance</h2>
+            </div>
+            <div className="section-icon" aria-hidden="true"><BarChart3 size={19} /></div>
+          </div>
+          <FeatureImportanceChart features={features} />
+        </section>
+      </main>
+    </div>
+  );
 }
-function OverviewStat({ icon, label, value, note }: { icon: React.ReactNode; label: string; value: string; note: string }) { return <div className="overview-stat"><div><span>{label}</span>{icon}</div><strong>{value}</strong><small>{note}</small></div>; }
-function SectionHeading({ number, eyebrow, title, description }: { number: string; eyebrow: string; title: React.ReactNode; description: string }) { return <div className="section-heading"><div className="section-eyebrow"><span>{number}</span>{eyebrow}</div><h2>{title}</h2><p>{description}</p></div>; }

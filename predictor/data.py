@@ -17,30 +17,30 @@ GP_NAME_ALIASES = {
 
 
 MANUAL_GRID_YEAR = 2026
-MANUAL_GRID_GP = "Italian Grand Prix"
+MANUAL_GRID_GP = "Spanish Grand Prix"
 MANUAL_STARTING_GRID: Dict[str, int] = {
-    "RUS": 2,
-    "LEC": 3,
+    "RUS": 6,
+    "LEC": 5,
     "HAM": 4,
-    "ANT": 20,
-    "VER": 5,
-    "NOR": 8,
-    "PIA": 6,
+    "ANT": 2,
+    "VER": 3,
+    "NOR": 1,
+    "PIA": 7,
     "HAD": 99,
-    "LAW": 22,
-    "LIN": 9,
-    "GAS": 1,
-    "BOR": 10,
-    "BEA": 11,
-    "HUL": 12,
-    "OCO": 14,
-    "COL": 7,
-    "SAI": 13,
-    "ALB": 21,
-    "PER": 17,
-    "BOT": 16,
+    "LAW": 8,
+    "LIN": 10,
+    "GAS": 14,
+    "BOR": 12,
+    "BEA": 21,
+    "HUL": 11,
+    "OCO": 13,
+    "COL": 9,
+    "SAI": 17,
+    "ALB": 16,
+    "PER": 19,
+    "BOT": 20,
     "ALO": 18,
-    "STR": 19,
+    "STR": 22,
 }
 
 
@@ -353,6 +353,11 @@ def build_training_until(
 
     # Historical years
     for y in hist_years:
+        # A historical season is only eligible when it is fully before the
+        # target season. The target season is added separately, race by race,
+        # below. This is essential for honest walk-forward backtests.
+        if y >= target_year:
+            continue
         try:
             events_all = list_gp_events(y)
             events = [gp for gp in events_all if _not_excluded(y, gp)]
@@ -406,6 +411,10 @@ def build_training_until(
     full = full.drop_duplicates(subset=["year", "gp", "DriverNumber"])
 
     if "date" in full.columns:
+        target_date = pd.to_datetime(_event_date(target_year, target_gp), errors="coerce")
+        full_dates = pd.to_datetime(full["date"], errors="coerce")
+        if pd.notna(target_date):
+            full = full.loc[full_dates < target_date].copy()
         full = full.sort_values(["date", "year", "gp", "DriverNumber"]).reset_index(drop=True)
 
     return full

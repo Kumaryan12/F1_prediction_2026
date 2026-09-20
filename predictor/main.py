@@ -25,6 +25,11 @@ from .model import (
     tree_importance_series,
     permutation_importance_series,
 )
+from .ensemble import (
+    ensemble_feature_importance,
+    predict_event_with_ensemble,
+    train_ensemble,
+)
 
 # Optional live-session feature builder
 try:
@@ -187,6 +192,7 @@ def _recompute_rank_probs(out: pd.DataFrame, mc_samples: int = 0, random_state: 
 
         out["p_top10"] = (ranks <= min(10, n)).mean(axis=1)
         out["p_podium"] = (ranks <= min(3, n)).mean(axis=1)
+        out["p_win"] = (ranks == 1).mean(axis=1)
 
         pr = out["pred_rank"].to_numpy()[:, None]
         out["p_rank_pm1"] = ((ranks >= (pr - 1)) & (ranks <= (pr + 1))).mean(axis=1)
@@ -377,7 +383,7 @@ def main():
         "--alpha",
         type=float,
         default=0.20,
-        help="Conformal alpha (default 0.20 ~ 80% PI).",
+        help="Conformal alpha (default 0.20, approximately 80 percent PI).",
     )
     parser.add_argument(
         "--delta_target",
@@ -396,6 +402,18 @@ def main():
         type=int,
         default=None,
         help="Override recency half-life in days (exponential decay).",
+    )
+
+    parser.add_argument(
+        "--ensemble",
+        action="store_true",
+        help="Use the RF + Extra Trees + Elastic Net ensemble and frozen grid blend.",
+    )
+    parser.add_argument(
+        "--ensemble_grid_alpha",
+        type=float,
+        default=0.65,
+        help="Weight on the ML ensemble; the remainder is starting-grid weight.",
     )
 
     # Feature importance
@@ -581,12 +599,41 @@ def main():
     # Predict
     # ---------------------------------------------------------------
     print("[INFO] Predicting order…")
-    out = predict_event_with_uncertainty(
-        model,
-        pred_df,
-        add_intervals=True,
-        mc_samples=args.mc,
-    )
+    if args.ensemble:
+        print("[INFO] Training diverse race ensemble on temporally safe features…")
+        BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        pred_df.to_csv(BACKEND_DATA_DIR / "current_race_features.csv", index=False)
+        race_ensemble = train_ensemble(train_df)
+        importance_report = ensemble_feature_importance(
+            race_ensemble,
+            grid_alpha=args.ensemble_grid_alpha,
+        )
+        FRONTEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        importance_report[["importance"]].to_csv(
+            FRONTEND_DATA_DIR / "feature_importance_tree.csv"
+        )
+        importance_report[["importance"]].to_csv(
+            BACKEND_DATA_DIR / "feature_importance_tree.csv"
+        )
+        report_path = Path("reports/model_cards/ensemble_feature_importance.csv")
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        importance_report.to_csv(report_path)
+        print("\n[ENSEMBLE FEATURE IMPORTANCE] (top 12)")
+        print(importance_report["importance"].head(12).to_string())
+        out = predict_event_with_ensemble(
+            race_ensemble,
+            pred_df,
+            grid_alpha=args.ensemble_grid_alpha,
+            mc_samples=args.mc,
+        )
+    else:
+        out = predict_event_with_uncertainty(
+            model,
+            pred_df,
+            add_intervals=True,
+            mc_samples=args.mc,
+        )
 
     # ---------------------------------------------------------------
     # Australia-2026 live FP1/FP2 adjustment layer
@@ -600,15 +647,17 @@ def main():
         mc_samples=args.mc,
     )
     # ---------------------------------------------------------------
-    # Authoritative raw-model ranking
+    # Authoritative final ranking
     # ---------------------------------------------------------------
-    # Grid position is already an input feature and the model predicts
-    # finish_pos - grid_pos. Do not blend the grid into the result again.
+    # In standard mode this is the raw RF order. In ensemble mode it is the
+    # frozen model/grid blend produced by predict_event_with_ensemble().
     out = out.sort_values("pred_finish", ascending=True).reset_index(drop=True)
     out["pred_rank"] = range(1, len(out) + 1)
     out["raw_pred_finish"] = pd.to_numeric(out["pred_finish"], errors="coerce")
     out["raw_pred_rank"] = out["pred_rank"]
-    out["ranking_mode_default"] = "raw_model"
+    out["ranking_mode_default"] = (
+        "ensemble_grid_blend" if args.ensemble else "raw_model"
+    )
 
     lo_col, hi_col = ("pi95_low", "pi95_high") if args.interval == 95 else ("pi68_low", "pi68_high")
 
@@ -654,8 +703,8 @@ def main():
         year=args.year,
         gp=args.gp,
         stage="pre_race",
-        model_version="random_forest_v1",
-        feature_set_version="f1_features_v1",
+        model_version="race_ensemble_v1" if args.ensemble else "random_forest_v1",
+        feature_set_version="temporal_safe_v1" if args.ensemble else "f1_features_v1",
         data_cutoff="manual_current_run",
         predicted_winner=predicted_winner,
         prediction_file_path=str("backend/app/data/predicted_order.csv"),

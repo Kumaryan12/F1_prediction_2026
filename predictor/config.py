@@ -30,24 +30,43 @@ DEFAULT_PIT_LOSS = 21.0
 #     estimated pit-loss seconds,
 # )
 #
-# Official 2026 Monza race-week statistics:
-# SC  = 50%
-# VSC = 38%
-# Pit loss = 24.14 s
+# IMPORTANT:
+# Madring is a brand-new circuit in 2026.
+#
+# Official historical values are therefore unavailable:
+# - Safety Car probability: N/A
+# - VSC probability: N/A
+# - Pit-loss history: N/A
+#
+# The values below are MODEL PRIORS, not historical statistics.
+# They reflect:
+# - first-year circuit uncertainty
+# - hybrid street/permanent layout
+# - several wall-lined / confined sections
+# - new low-grip asphalt
+# - relatively high incident uncertainty
 # -------------------------------------------------------------------
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
-    "Italian Grand Prix": (0.50, 0.38, 24.14),
+    "Spanish Grand Prix": (0.55, 0.35, 21.5),
 }
 
 
 # -------------------------------------------------------------------
-# Completed 2026 races available for training/form generation
+# Completed 2026 races available for training / recent-form generation
 #
-# Dutch GP is now completed and may be included.
+# Italian GP is now completed and can be included.
 #
-# Italian GP is the ACTIVE prediction target, therefore it must NOT
-# be added here until the race has finished.
+# Spanish GP at Madring is the ACTIVE prediction event and therefore
+# must NOT be included here until the race has actually finished.
+#
+# IMPORTANT NAMING:
+#
+# June:
+#     Barcelona-Catalunya Grand Prix
+#
+# September:
+#     Spanish Grand Prix (Madrid / Madring)
 # -------------------------------------------------------------------
 
 FALLBACK_EVENTS: Dict[int, list[str]] = {
@@ -58,12 +77,16 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Miami Grand Prix",
         "Canadian Grand Prix",
         "Monaco Grand Prix",
-        "Spanish Grand Prix",
+
+        # June Catalunya race
+        "Barcelona-Catalunya Grand Prix",
+
         "Austrian Grand Prix",
         "British Grand Prix",
         "Belgian Grand Prix",
         "Hungarian Grand Prix",
         "Dutch Grand Prix",
+        "Italian Grand Prix",
     ],
 }
 
@@ -78,8 +101,9 @@ EXCLUDE_EVENTS: Dict[int, set[str]] = {}
 # ---------------------------------------------------------------
 # Low-downforce / power-sensitive circuits
 #
-# Monza is the strongest example of this archetype in the current
-# feature system.
+# Madrid has long straights, but it is NOT a Monza-style low-downforce
+# track. The circuit also contains high-energy aero sections,
+# La Monumental and numerous medium-speed corners.
 # ---------------------------------------------------------------
 
 LOW_DF_GPS = {
@@ -92,7 +116,17 @@ LOW_DF_GPS = {
 # ---------------------------------------------------------------
 # Street circuits
 #
-# Monza is a permanent purpose-built circuit.
+# Madring is a HYBRID circuit using both public roads and purpose-built
+# sections.
+#
+# We deliberately do NOT classify it as a full STREET_GPS member,
+# because Monaco-style street form would be too strong an analogy.
+#
+# The fractional street character is represented using:
+#
+#     is_street = 0.5
+#
+# inside CIRCUIT_EXTRAS.
 # ---------------------------------------------------------------
 
 STREET_GPS = {
@@ -101,136 +135,197 @@ STREET_GPS = {
 
 
 # ---------------------------------------------------------------
-# Long-straight / power-sensitive circuits
+# Long-straight / high-speed / energy-sensitive circuits
 #
-# Monza must be included because straight-line efficiency,
-# energy deployment, drag and tow are fundamental there.
+# Madrid belongs here:
+# - high-speed first sector
+# - significant straight-line sections
+# - speeds approximately 340 km/h
+# - strong energy-deployment demand
 # ---------------------------------------------------------------
 
 LONG_STRAIGHT_GPS = {
-    "Spanish Grand Prix",
+    "Barcelona-Catalunya Grand Prix",
     "Austrian Grand Prix",
     "British Grand Prix",
     "Belgian Grand Prix",
     "Italian Grand Prix",
+
+    # Madring
+    "Spanish Grand Prix",
 }
 
 
 # ---------------------------------------------------------------
 # High-downforce / technical circuits
 #
-# Monza must NOT be included.
+# Madrid also belongs here because it is not purely a straight-line
+# circuit:
+#
+# - 22 corners
+# - medium / low-speed technical second sector
+# - 90-degree corners later in the lap
+# - very high lateral loads
+# - La Monumental banking
+#
+# Therefore Madrid is intentionally represented by TWO archetypes:
+#
+# HIGH_DF_TECHNICAL_GPS + LONG_STRAIGHT_GPS
 # ---------------------------------------------------------------
 
 HIGH_DF_TECHNICAL_GPS = {
     "Monaco Grand Prix",
     "Hungarian Grand Prix",
     "Dutch Grand Prix",
+
+    # Madrid / Madring
+    "Spanish Grand Prix",
 }
 
 
 # -------------------------------------------------------------------
 # Circuit-specific feature priors
-#
-# Normalized values are model priors between 0 and 1.
-#
-# For Monza the most important dimensions are:
-#
-# - very low drag / low downforce
-# - straight-line speed
-# - tow / slipstream
-# - energy deployment
-# - traction
-# - braking stability
-# - rear tyre overheating
-# - power-unit reliability
 # -------------------------------------------------------------------
 
 CIRCUIT_EXTRAS = {
 
-    # ---------------------------------------------------------------
-    # Italian Grand Prix - Monza
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # SPANISH GRAND PRIX - MADRING, MADRID
+    # ===============================================================
 
-    "Italian Grand Prix": {
+    "Spanish Grand Prix": {
 
         # -----------------------------------------------------------
         # Strategy
         # -----------------------------------------------------------
 
-        # Pirelli expects a one-stop race to be the most likely.
+        # First race at the venue means uncertainty is intrinsically
+        # higher than at established circuits.
+        #
+        # C2 / C3 / C4 compounds are available.
+        "expected_stops": 1.7,
+
+        # Long straights and several significant braking zones should
+        # create overtaking opportunities, although the exact raceability
+        # is unknown because F1 has never raced here.
+        "overtake_index": 0.65,
+
+        # Slipstream matters on the faster sections but Madrid is not
+        # as tow-dominated as Monza or Spa.
+        "tow_importance": 0.72,
+
+        # Not a Monza-style low-downforce circuit.
+        "is_low_df": 0,
+
+        # Hybrid public-road / permanent facility.
+        #
+        # Fractional rather than forcing Madrid into the same category
+        # as Monaco.
+        "is_street": 0.50,
+
+        # Significant straight-line component.
+        "long_straight_index": 0.78,
+
+        # Several heavy braking events combined with slower 90-degree
+        # corners.
+        "braking_intensity": 0.72,
+
+        # Very hot race conditions should make basic tyre warm-up easy.
+        #
+        # Low-grip new asphalt still introduces some preparation
+        # uncertainty, so this is not exactly zero.
+        "warmup_penalty": 0.04,
+
+        # High lateral-energy demand + very hot track surface can create
+        # meaningful thermal tyre management.
+        "deg_rate": 0.62,
+
+        # Representative modelling prior for 57 laps.
+        "stint_len_typical": 22,
+
+        # -----------------------------------------------------------
+        # Track / layout characteristics
+        # -----------------------------------------------------------
+
+        # Newly laid surface is officially described as very smooth.
+        "surface_bumpiness": 0.20,
+
+        # Madrid is not as wind-sensitive as Silverstone or Zandvoort,
+        # but the exposed high-speed sectors still matter.
+        "wind_sensitivity": 0.52,
+
+        # First-year track + technical exits + new asphalt create
+        # moderate track-limit / mistake risk.
+        "track_limits_risk": 0.60,
+
+        # F1 explicitly describes significant elevation changes.
+        "elevation_change_index": 0.68,
+
+        # Madrid ranks among the five most demanding circuits in terms
+        # of tyre/vehicle energy according to Pirelli.
+        #
+        # New circuit + high loads justify an above-average reliability
+        # prior, although this is not as PU-dominant as Monza.
+        "mechanical_failure_risk": 0.60,
+
+        # Official Madring layout.
+        "corner_count": 22,
+
+        # Representative model prior.
+        #
+        # Do not treat this as a measured 2026 race average.
+        "avg_speed_kph": 218,
+
+        # -----------------------------------------------------------
+        # Weather
+        #
+        # Official current forecast for Sunday:
+        #
+        # - clear
+        # - approximately 32 C maximum
+        # - approximately 17 C minimum
+        # - track temperature potentially around 53 C
+        # - 0% rain forecast
+        #
+        # Tiny residual values are retained to avoid hard-zero behaviour
+        # in downstream probabilistic modelling.
+        # -----------------------------------------------------------
+
+        "rain_prob_race": 0.01,
+        "wet_lap_fraction": 0.00,
+        "wet_start_prob": 0.00,
+        "mixed_conditions_risk": 0.01,
+    },
+
+
+    # ===============================================================
+    # ITALIAN GRAND PRIX - MONZA
+    # Completed 2026 race retained for recent/archetype form.
+    # ===============================================================
+
+    "Italian Grand Prix": {
+
         "expected_stops": 1.2,
-
-        # Genuine overtaking opportunities exist at Turns 1 and 4,
-        # plus through DRS/tow effects on the long straights.
         "overtake_index": 0.80,
-
-        # Slipstreaming is extremely important at Monza.
         "tow_importance": 0.95,
 
-        # Monza is the calendar's classic low-downforce venue.
         "is_low_df": 1,
-
         "is_street": 0,
-
-        # Among the strongest long-straight profiles of any circuit.
         "long_straight_index": 0.98,
 
-        # Heavy stops into the Rettifilo and Roggia chicanes make
-        # braking stability very important.
         "braking_intensity": 0.84,
-
-        # Current hot weather should make tyre warm-up relatively easy.
         "warmup_penalty": 0.02,
-
-        # Degradation is expected to remain manageable despite high
-        # rear-axle temperatures.
         "deg_rate": 0.38,
-
-        # 53 laps with a likely one-stop strategy.
         "stint_len_typical": 27,
 
-        # -----------------------------------------------------------
-        # Track / layout
-        # -----------------------------------------------------------
-
-        # Circuit was resurfaced in 2024 and is generally smooth,
-        # although Ascari retains some bump sensitivity.
         "surface_bumpiness": 0.30,
-
-        # Wind matters for braking and aero stability but Monza is less
-        # wind-sensitive than Spa, Silverstone or Zandvoort.
         "wind_sensitivity": 0.40,
-
-        # Moderate exposure at chicanes and corner exits.
         "track_limits_risk": 0.50,
-
-        # Very limited elevation variation.
         "elevation_change_index": 0.10,
-
-        # High full-throttle percentage, new-2026 PU energy demands,
-        # traction events and sustained high speed increase reliability
-        # exposure.
         "mechanical_failure_risk": 0.72,
 
-        # Official current circuit configuration.
         "corner_count": 11,
-
-        # Representative circuit-speed feature prior.
         "avg_speed_kph": 250,
-
-        # -----------------------------------------------------------
-        # Current 2026 race-weather priors
-        #
-        # Official forecast:
-        # - hot
-        # - sunny
-        # - approximately 34 C maximum
-        # - essentially dry during race hours
-        #
-        # A low residual probability is retained rather than forcing
-        # exactly zero.
-        # -----------------------------------------------------------
 
         "rain_prob_race": 0.02,
         "wet_lap_fraction": 0.00,
@@ -239,20 +334,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Dutch Grand Prix - Zandvoort
-    #
-    # Retained because the completed 2026 Dutch GP can now contribute
-    # to rolling and current-season form.
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # DUTCH GRAND PRIX - ZANDVOORT
+    # ===============================================================
 
     "Dutch Grand Prix": {
+
         "expected_stops": 1.7,
         "overtake_index": 0.34,
         "tow_importance": 0.42,
+
         "is_low_df": 0,
         "is_street": 0,
         "long_straight_index": 0.38,
+
         "braking_intensity": 0.58,
         "warmup_penalty": 0.10,
         "deg_rate": 0.64,
@@ -263,6 +358,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.58,
         "elevation_change_index": 0.62,
         "mechanical_failure_risk": 0.50,
+
         "corner_count": 14,
         "avg_speed_kph": 215,
 
@@ -273,17 +369,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Hungarian Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # HUNGARIAN GRAND PRIX
+    # ===============================================================
 
     "Hungarian Grand Prix": {
+
         "expected_stops": 1.8,
         "overtake_index": 0.38,
         "tow_importance": 0.46,
+
         "is_low_df": 0,
         "is_street": 0,
         "long_straight_index": 0.40,
+
         "braking_intensity": 0.64,
         "warmup_penalty": 0.03,
         "deg_rate": 0.70,
@@ -294,6 +393,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.52,
         "elevation_change_index": 0.43,
         "mechanical_failure_risk": 0.44,
+
         "corner_count": 14,
         "avg_speed_kph": 198,
 
@@ -304,17 +404,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Belgian Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # BELGIAN GRAND PRIX
+    # ===============================================================
 
     "Belgian Grand Prix": {
+
         "expected_stops": 1.8,
         "overtake_index": 0.76,
         "tow_importance": 0.88,
+
         "is_low_df": 1,
         "is_street": 0,
         "long_straight_index": 0.91,
+
         "braking_intensity": 0.62,
         "warmup_penalty": 0.18,
         "deg_rate": 0.58,
@@ -325,6 +428,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.67,
         "elevation_change_index": 0.96,
         "mechanical_failure_risk": 0.68,
+
         "corner_count": 19,
         "avg_speed_kph": 233,
 
@@ -335,17 +439,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # British Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # BRITISH GRAND PRIX
+    # ===============================================================
 
     "British Grand Prix": {
+
         "expected_stops": 2.0,
         "overtake_index": 0.60,
         "tow_importance": 0.66,
+
         "is_low_df": 0,
         "is_street": 0,
         "long_straight_index": 0.70,
+
         "braking_intensity": 0.52,
         "warmup_penalty": 0.08,
         "deg_rate": 0.72,
@@ -356,6 +463,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.56,
         "elevation_change_index": 0.28,
         "mechanical_failure_risk": 0.52,
+
         "corner_count": 18,
         "avg_speed_kph": 235,
 
@@ -366,17 +474,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Austrian Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # AUSTRIAN GRAND PRIX
+    # ===============================================================
 
     "Austrian Grand Prix": {
+
         "expected_stops": 2.0,
         "overtake_index": 0.68,
         "tow_importance": 0.72,
+
         "is_low_df": 1,
         "is_street": 0,
         "long_straight_index": 0.78,
+
         "braking_intensity": 0.72,
         "warmup_penalty": 0.06,
         "deg_rate": 0.54,
@@ -387,6 +498,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.88,
         "elevation_change_index": 0.70,
         "mechanical_failure_risk": 0.48,
+
         "corner_count": 10,
         "avg_speed_kph": 230,
 
@@ -397,17 +509,25 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Spanish Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # BARCELONA-CATALUNYA GRAND PRIX
+    #
+    # IMPORTANT:
+    # This was previously incorrectly stored as "Spanish Grand Prix".
+    # The 2026 event was renamed Barcelona-Catalunya Grand Prix because
+    # Madrid now holds the Spanish Grand Prix name.
+    # ===============================================================
 
-    "Spanish Grand Prix": {
+    "Barcelona-Catalunya Grand Prix": {
+
         "expected_stops": 2.0,
         "overtake_index": 0.52,
         "tow_importance": 0.58,
+
         "is_low_df": 0,
         "is_street": 0,
         "long_straight_index": 0.62,
+
         "braking_intensity": 0.58,
         "warmup_penalty": 0.08,
         "deg_rate": 0.68,
@@ -418,6 +538,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.62,
         "elevation_change_index": 0.35,
         "mechanical_failure_risk": 0.42,
+
         "corner_count": 14,
         "avg_speed_kph": 215,
 
@@ -428,17 +549,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
-    # Monaco Grand Prix
-    # ---------------------------------------------------------------
+    # ===============================================================
+    # MONACO GRAND PRIX
+    # ===============================================================
 
     "Monaco Grand Prix": {
+
         "expected_stops": 1.4,
         "overtake_index": 0.12,
         "tow_importance": 0.18,
+
         "is_low_df": 0,
         "is_street": 1,
         "long_straight_index": 0.18,
+
         "braking_intensity": 0.78,
         "warmup_penalty": 0.12,
         "deg_rate": 0.32,
@@ -449,6 +573,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.18,
         "elevation_change_index": 0.72,
         "mechanical_failure_risk": 0.60,
+
         "corner_count": 19,
         "avg_speed_kph": 160,
 
@@ -459,17 +584,20 @@ CIRCUIT_EXTRAS = {
     },
 
 
-    # ---------------------------------------------------------------
+    # ===============================================================
     # Generic fallback
-    # ---------------------------------------------------------------
+    # ===============================================================
 
     "_default": {
+
         "expected_stops": 2.0,
         "overtake_index": 0.50,
         "tow_importance": 0.50,
+
         "is_low_df": 0.0,
         "is_street": 0.0,
         "long_straight_index": 0.50,
+
         "braking_intensity": 0.50,
         "warmup_penalty": 0.05,
         "deg_rate": 0.50,
@@ -480,6 +608,7 @@ CIRCUIT_EXTRAS = {
         "track_limits_risk": 0.50,
         "elevation_change_index": 0.30,
         "mechanical_failure_risk": 0.50,
+
         "corner_count": 16,
         "avg_speed_kph": 210,
 

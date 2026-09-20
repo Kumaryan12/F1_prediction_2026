@@ -29,155 +29,185 @@ except Exception:
         "Monaco Grand Prix",
         "Hungarian Grand Prix",
         "Dutch Grand Prix",
+        "Spanish Grand Prix",
     }
 
 
 # -------------------------------------------------------------------
 # Driver / team priors
 #
-# Italian GP / Monza configuration
-#
-# These represent CURRENT PRE-RACE COMPETITIVENESS, not pure immutable
-# driver talent.
-#
-# Evidence:
-# - 2026 championship standings after Zandvoort
-# - Dutch GP race result
-# - Dutch GP Sprint result
-# - recent Hungary / Netherlands trend
-# - current constructor performance
-# - Monza suitability
-#
-# Monza-specific emphasis:
-# - low-drag efficiency
-# - straight-line performance
-# - heavy-braking confidence
-# - traction
-# - racecraft in tow/DRS trains
-# - tyre management
+# 2026 Spanish GP / MADRING configuration
 #
 # IMPORTANT:
-# Do not manually update these using Monza FP1/FP2/FP3/Qualifying.
-# Current-weekend information should enter through:
 #
-# driver_2026_session_strength
-# team_2026_strength
-# grid_pos
+# These are PRE-RACE competitiveness priors.
 #
-# This prevents session information being counted twice.
+# They are frozen using information available THROUGH MONZA and do NOT
+# include Madrid FP1 / FP2 / FP3 / qualifying information.
+#
+# Madrid weekend information should instead enter via:
+#
+#     driver_2026_session_strength
+#     team_2026_strength
+#     grid_pos
+#
+# This avoids manually counting the same weekend evidence twice.
+#
+#
+# Madring characteristics:
+#
+# - brand-new circuit
+# - hybrid street / permanent layout
+# - 22 corners
+# - high-speed first sector
+# - technical medium/low-speed sections
+# - long straights
+# - heavy braking
+# - substantial elevation change
+# - highly banked La Monumental
+# - high lateral-energy demand
+#
+# Because there is NO historical Madring F1 race data, circuit-specific
+# driver priors are intentionally limited.
+#
+# Recent form and underlying team strength remain more important.
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
 
     # ---------------------------------------------------------------
-    # Championship benchmark group
+    # Championship benchmark
     # ---------------------------------------------------------------
 
-    # Championship leader: 242 points.
-    # Zandvoort P2 + Sprint P4.
-    # Mercedes remains benchmark package.
+    # Championship leader: 267 points.
+    #
+    # Monza:
+    # started P19 after PU penalty
+    # finished P1
+    #
+    # One of the strongest individual performances of the season.
     "ANT": 1.00,
 
-    # Championship P2 on countback / tied 183 pts with Hamilton.
-    # Zandvoort Sprint winner + race P3.
-    # Excellent current form.
+    # Championship P2: 201 points.
+    #
+    # Monza:
+    # grid P2
+    # race P2
+    #
+    # Very strong consistency and Mercedes remains the benchmark.
     "RUS": 0.98,
 
-    # 183 pts.
-    # Zandvoort P4 and consistently strong front-running season.
-    # Ferrari should also be well suited to Monza.
-    "HAM": 0.97,
-
     # ---------------------------------------------------------------
-    # Strongest current-form challengers
+    # Leading challengers
     # ---------------------------------------------------------------
 
-    # Back-to-back winner:
-    # Hungary P1
-    # Netherlands P1
+    # Championship P4: 171 points.
     #
-    # This is now too strong a trend to keep Norris below ~0.95.
-    "NOR": 0.98,
+    # Hungary winner
+    # Netherlands winner
+    # Monza P4
+    #
+    # McLaren has become a very consistent front-running package.
+    "NOR": 0.96,
 
-    # Sprint P2 and race P5 at Zandvoort.
-    # Strong recent Ferrari form and good Monza profile.
-    "LEC": 0.96,
+    # Championship P3: 191 points.
+    #
+    # Monza P6.
+    # Strong season overall and previously won Barcelona-Catalunya.
+    #
+    # Madrid's mix of lateral load, braking and technical corners
+    # should not be fundamentally hostile to Ferrari.
+    "HAM": 0.95,
+
+    # Monza P3.
+    #
+    # Zandvoort retirement is not treated as evidence of weak pace.
+    # Recent Hungary P2 + Monza P3 indicate strong current form.
+    "VER": 0.94,
+
+    # Championship P5.
+    #
+    # Monza Lap-1 DNF provides effectively no useful evidence about
+    # underlying race pace, so he is NOT heavily penalized for it.
+    "LEC": 0.94,
 
     # ---------------------------------------------------------------
-    # Front-running group
+    # Front-running / podium-threat group
     # ---------------------------------------------------------------
 
-    # Zandvoort P6 and Sprint P5.
-    # McLaren package is currently very strong.
-    "PIA": 0.91,
+    # Championship P7.
+    #
+    # Monza P5 and strong McLaren package.
+    "PIA": 0.90,
 
-    # Hungary P2 but Zandvoort Lap-1 retirement.
+    # Hadjar remains one of the strongest midfield/front-group drivers
+    # of the year but is NOT expected to race in Madrid because of his
+    # wrist injury.
     #
-    # We do NOT heavily punish the retirement because it provides
-    # little evidence regarding underlying race pace.
-    #
-    # Red Bull itself is weaker than Mercedes/Ferrari/McLaren.
-    "VER": 0.90,
+    # Value retained for historical rows.
+    "HAD": 0.85,
 
     # ---------------------------------------------------------------
     # Upper midfield
     # ---------------------------------------------------------------
 
-    # Zandvoort P7 in Red Bull.
-    # Strong recent progression and is again driving the Red Bull
-    # at Monza while Hadjar recovers.
-    "LAW": 0.85,
+    # Shock Monza pole followed by P7.
+    #
+    # This deserves a meaningful upgrade compared with his older prior.
+    "GAS": 0.83,
 
-    # Historical/current-season value retained even though Hadjar is
-    # not expected to contest Monza.
-    "HAD": 0.84,
+    # Currently substituting for Hadjar at Red Bull.
+    #
+    # Zandvoort P7.
+    # Monza P14.
+    #
+    # Red Bull machinery gives upside but transition uncertainty remains.
+    "LAW": 0.82,
 
-    # Zandvoort P10 and Sprint P8.
-    "GAS": 0.80,
+    # Monza P8 and now 29 championship points.
+    #
+    # Strong rookie season.
+    "LIN": 0.80,
 
-    # Excellent Zandvoort P8.
-    # Audi now has two drivers capable of challenging for points.
-    "HUL": 0.80,
-
-    # Rookie continues to show reasonable midfield consistency.
-    "LIN": 0.77,
-
-    # Bortoleto's Silverstone/Belgium P8s remain meaningful even though
-    # Zandvoort was only P13.
-    "BOR": 0.77,
+    # Monza:
+    # grid P7
+    # race P9
+    #
+    # Strongest recent Colapinto weekend.
+    "COL": 0.79,
 
     # ---------------------------------------------------------------
-    # Midfield
+    # Competitive midfield
     # ---------------------------------------------------------------
 
-    # Zandvoort P9.
-    # Aston Martin remains weak overall, but Alonso continues extracting
-    # substantially more from the package.
-    "ALO": 0.76,
+    # Audi's recent trend remains much stronger than early-season form.
+    "HUL": 0.76,
 
-    "COL": 0.73,
+    "BOR": 0.76,
 
-    # Returning to Racing Bulls in the current lineup.
-    # Zandvoort P11 was respectable given the late substitution.
-    "TSU": 0.72,
+    # P10 at Monza in the substitute Racing Bulls seat.
+    # Continues in Madrid.
+    "TSU": 0.75,
 
-    "BEA": 0.70,
+    "BEA": 0.71,
 
-    # Monza can reward Williams' straight-line efficiency,
-    # but current-season results remain weak.
-    "SAI": 0.70,
+    # Alonso's Monza DNF is not treated as a pure performance signal,
+    # but Aston Martin remains fundamentally weak this season.
+    "ALO": 0.70,
+
+    "SAI": 0.69,
     "ALB": 0.68,
 
-    "OCO": 0.67,
+    "OCO": 0.66,
 
     # ---------------------------------------------------------------
     # Lower current-performance group
     # ---------------------------------------------------------------
 
-    "STR": 0.62,
+    "STR": 0.61,
 
     # Cadillac remains scoreless.
-    "BOT": 0.59,
+    "BOT": 0.58,
     "PER": 0.58,
 }
 
@@ -197,12 +227,12 @@ RETURNEE_DRIVERS = {
 
 
 # -------------------------------------------------------------------
-# Team name normalization
+# Team-name normalization
 # -------------------------------------------------------------------
 
 TEAM_ALIAS = {
 
-    # Audi / historical Sauber names
+    # Audi / historical Sauber identities
     "Audi": "Audi",
     "Audi F1 Team": "Audi",
     "Sauber": "Audi",
@@ -265,70 +295,78 @@ TEAM_ALIAS = {
 
 
 # -------------------------------------------------------------------
-# Team current-performance priors
+# Current team-performance priors
 #
-# Official post-Zandvoort standings:
+# Official standings after Monza:
 #
-# Mercedes          425
-# Ferrari           338
-# McLaren           263
-# Red Bull Racing   186
-# Racing Bulls       66
-# Alpine             63
+# Mercedes          468
+# Ferrari           346
+# McLaren           287
+# Red Bull Racing   204
+# Racing Bulls       75
+# Alpine             62
 # Haas               21
 # Audi               16
 # Williams           11
 # Aston Martin        3
 # Cadillac            0
 #
-# Monza circuit suitability is only a secondary adjustment.
+# Madrid suitability is only a secondary adjustment because no F1 race
+# has previously taken place at Madring.
 # -------------------------------------------------------------------
 
 TEAM_BASELINE_PRIOR = {
 
-    # Championship benchmark.
+    # Dominant constructors' championship leader.
+    #
+    # Monza 1-2 further strengthens the signal.
     "Mercedes": 1.00,
 
-    # Strong season, currently P2.
-    # Monza's braking/traction/efficiency profile should be competitive.
-    "Ferrari": 0.96,
+    # Clear championship P2.
+    #
+    # Monza was poor largely because Leclerc retired on Lap 1.
+    # We should NOT overreact to one abnormal weekend.
+    "Ferrari": 0.95,
 
-    # Very strong recent trajectory:
-    # Hungary win + Zandvoort win
-    # 43-point Zandvoort weekend.
-    "McLaren": 0.94,
+    # Excellent recent trajectory:
+    #
+    # Hungary win
+    # Netherlands win
+    # Monza P4 + P5
+    #
+    # Madrid's mixed aero/technical profile should suit them.
+    "McLaren": 0.93,
 
-    # Clearly behind the leading three constructors.
-    # Zandvoort produced only nine team points.
-    "Red Bull Racing": 0.84,
+    # Verstappen P3 at Monza.
+    #
+    # Still materially behind the top three over the whole season.
+    "Red Bull Racing": 0.86,
 
     # ---------------------------------------------------------------
     # Upper midfield
     # ---------------------------------------------------------------
 
     "Racing Bulls": 0.74,
-    "Alpine": 0.72,
 
-    # Recent Audi trajectory is substantially better than early season.
-    "Audi": 0.68,
+    # Excellent Monza qualifying and both cars scored points.
+    "Alpine": 0.74,
 
     # ---------------------------------------------------------------
     # Lower midfield
     # ---------------------------------------------------------------
 
-    "Haas F1 Team": 0.61,
+    # Audi's recent results are stronger than its early-season baseline.
+    "Audi": 0.66,
 
-    # Monza's power-sensitive layout may help relative to high-DF tracks,
-    # but results remain weak.
-    "Williams": 0.59,
-
-    "Aston Martin": 0.54,
+    "Haas F1 Team": 0.60,
+    "Williams": 0.57,
 
     # ---------------------------------------------------------------
-    # Rear
+    # Rear group
     # ---------------------------------------------------------------
 
-    "Cadillac": 0.45,
+    "Aston Martin": 0.51,
+    "Cadillac": 0.44,
 }
 
 
@@ -379,11 +417,11 @@ def _inverse_minmax_strength(
     series: pd.Series,
 ) -> pd.Series:
     """
-    Convert lower-is-better finishing-position form into
+    Convert lower-is-better recent finishing form into
     higher-is-better normalized strength.
 
-    Better recent finishing average -> closer to 1.
-    Worse recent finishing average -> closer to 0.
+    Better recent finish average -> closer to 1.
+    Worse recent finish average  -> closer to 0.
     """
 
     values = pd.to_numeric(
@@ -417,10 +455,11 @@ def _latest_by_entity(
     value_cols: list[str],
 ) -> pd.DataFrame:
     """
-    Return latest available non-null values for each entity.
+    Return the latest available non-null value for each entity/feature.
 
-    Each feature is resolved independently because an entity's latest
-    low-downforce race may not be its latest race overall.
+    Features are resolved independently because, for example, a driver's
+    latest high-downforce race and latest long-straight race may occur
+    on different weekends.
     """
 
     if entity_col not in df.columns:
@@ -490,10 +529,10 @@ def _fill_from_general_or_median(
     general_col: str | None,
 ) -> None:
     """
-    Fill prediction features in this order:
+    Fill prediction features using:
 
-    1. general recent form
-    2. training median
+    1. corresponding general form
+    2. historical training median
     """
 
     if col not in out.columns:
@@ -531,7 +570,7 @@ def add_driver_skill_prior(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Add current driver competitiveness and status flags.
+    Add current pre-Madrid driver competitiveness and status flags.
     """
 
     out = df.copy()
@@ -577,7 +616,7 @@ def add_team_prior_strength(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Add current constructor competitiveness.
+    Add current constructor competitiveness prior.
     """
 
     out = _normalize_team_names(df)
@@ -601,38 +640,41 @@ def add_team_prior_strength(
 
 
 # -------------------------------------------------------------------
-# Historical + live session strength blending
+# Historical + live-session strength blending
 # -------------------------------------------------------------------
 
 def add_live_strength_adjustments(
     df: pd.DataFrame,
-    hist_team_weight: float = 0.45,
-    live_team_weight: float = 0.55,
-    hist_driver_weight: float = 0.45,
-    live_driver_weight: float = 0.55,
+    hist_team_weight: float = 0.40,
+    live_team_weight: float = 0.60,
+    hist_driver_weight: float = 0.40,
+    live_driver_weight: float = 0.60,
 ) -> pd.DataFrame:
     """
     Create:
 
-    driver_hist_strength
-    team_hist_strength
-    driver_strength_blend_2026
-    team_strength_blend_2026
+        driver_hist_strength
+        team_hist_strength
+        driver_strength_blend_2026
+        team_strength_blend_2026
 
-    Monza is strongly setup-sensitive because of:
+    Madrid is unusual because there is NO direct historical F1 circuit
+    data.
 
-    - drag level
-    - top speed
-    - energy deployment
-    - braking stability
-    - traction
-    - rear tyre temperature
-    - tow effectiveness
+    Therefore current weekend performance is somewhat more informative
+    than it was at an established circuit such as Monza or Zandvoort.
 
-    Weekend data is useful, but live strength remains limited to 55%
-    because practice programmes, fuel loads and tyre programmes differ.
+    Live strength receives 60%, while historical general form retains
+    40%.
 
-    grid_pos independently captures qualifying performance.
+    We still avoid making live session data dominant because:
+
+    - practice fuel loads differ
+    - tyre programmes differ
+    - new-circuit learning curves differ
+    - setup experiments may distort single-lap pace
+
+    Qualifying information is separately captured by grid_pos.
     """
 
     if not np.isclose(
@@ -671,6 +713,7 @@ def add_live_strength_adjustments(
 
         out["driver_hist_strength"] = np.nan
 
+
     # ---------------------------------------------------------------
     # Historical team strength
     # ---------------------------------------------------------------
@@ -692,6 +735,7 @@ def add_live_strength_adjustments(
         out["driver_hist_strength"],
         errors="coerce",
     )
+
 
     # ---------------------------------------------------------------
     # Driver live blend
@@ -733,6 +777,7 @@ def add_live_strength_adjustments(
         out["team_hist_strength"],
         errors="coerce",
     )
+
 
     # ---------------------------------------------------------------
     # Team live blend
@@ -817,6 +862,10 @@ def add_circuit_context_df(
             )
         )
 
+        # Preserve fractional values supplied directly in config.
+        #
+        # Madrid, for example, uses is_street = 0.50 because it is a
+        # hybrid public-road / permanent circuit.
         extras.setdefault(
             "is_low_df",
             float(
@@ -918,8 +967,7 @@ def add_circuit_context_df(
         .reset_index(drop=True)
     )
 
-    # Prevent duplicate circuit columns when context is accidentally
-    # added more than once.
+    # Prevent duplicate circuit-context columns.
     overlapping = [
         col
         for col in context.columns
@@ -1008,10 +1056,10 @@ def add_driver_team_form(
     full_df: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Create general and archetype rolling form.
+    Create general and circuit-archetype rolling form.
 
-    shift(1) is applied before every rolling window, preventing the
-    current race result from predicting itself.
+    shift(1) is applied before every rolling calculation so the current
+    race result cannot predict itself.
     """
 
     required = {
@@ -1113,8 +1161,7 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # General team form
     #
-    # One team observation per race prevents the two drivers being
-    # interpreted as two independent chronological events.
+    # Reduce each constructor to one observation per race first.
     # ---------------------------------------------------------------
 
     team_events = (
@@ -1190,7 +1237,7 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Frozen pre-Monza manual priors
+    # Frozen pre-Madrid manual priors
     # ---------------------------------------------------------------
 
     df["driver_skill_prior"] = (
@@ -1433,7 +1480,9 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # Low-downforce / power-sensitive form
     #
-    # PRIMARY Monza archetype.
+    # Retained for historical consistency.
+    #
+    # Madrid itself is NOT classified as low-downforce.
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1444,10 +1493,12 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Street form
+    # Street-circuit form
     #
-    # Generated for historical consistency but not used as a primary
-    # Monza model feature.
+    # Madrid is hybrid street/permanent.
+    #
+    # We deliberately do NOT add Madrid to STREET_GPS because Monaco
+    # would be an overly strong analogy.
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1458,9 +1509,9 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Long-straight / power-sensitive form
+    # Long-straight / energy-sensitive form
     #
-    # PRIMARY Monza archetype.
+    # PRIMARY Madrid archetype.
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1471,10 +1522,17 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # High-downforce technical form
+    # High-downforce / technical form
     #
-    # Retained for future races / historical feature availability.
-    # It should NOT be included in the Monza FEATS list.
+    # PRIMARY Madrid archetype.
+    #
+    # This captures performance on tracks demanding:
+    #
+    # - aero stability
+    # - high lateral loading
+    # - linked corners
+    # - mechanical grip
+    # - technical balance
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1485,7 +1543,10 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Fallback to general recent form
+    # Archetype fallback
+    #
+    # A driver/team with insufficient archetype history falls back to
+    # its general recent form.
     # ---------------------------------------------------------------
 
     driver_archetype_cols = [
@@ -1540,9 +1601,8 @@ def merge_latest_forms(
     predict_df: pd.DataFrame,
     train_df_with_forms: pd.DataFrame,
 ) -> pd.DataFrame:
-
     """
-    Merge latest general and archetype form into the Italian GP
+    Merge latest general and archetype form into the Madrid Spanish GP
     prediction dataframe.
     """
 
@@ -1837,7 +1897,7 @@ def merge_latest_forms(
 
 
     # ---------------------------------------------------------------
-    # Driver fallback handling
+    # Driver fallbacks
     # ---------------------------------------------------------------
 
     driver_fill_specs = {
@@ -1874,7 +1934,8 @@ def merge_latest_forms(
         )
 
 
-    # Always refresh current priors for target race.
+    # Always refresh current Madrid priors rather than carrying the
+    # previous race's Monza priors into the prediction frame.
     out["driver_skill_prior"] = (
         out["driver"]
         .map(
@@ -1905,7 +1966,7 @@ def merge_latest_forms(
 
 
     # ---------------------------------------------------------------
-    # Team fallback handling
+    # Team fallbacks
     # ---------------------------------------------------------------
 
     team_fill_specs = {
@@ -1972,18 +2033,21 @@ def add_quali_proxy(
     driver_weight: float = 0.70,
 ) -> pd.DataFrame:
     """
-    Fill missing grid positions using recent qualifying performance.
+    Fill missing grid positions from recent qualifying performance.
 
-    proxy =
+    Proxy:
+
         driver_weight * driver recent qualifying
         +
-        (1-driver_weight) * team recent qualifying
+        (1 - driver_weight) * team recent qualifying
 
-    Monza is more overtaking-friendly than Zandvoort or Monaco, so the
-    starting grid is slightly less deterministic, but it remains one of
-    the strongest features in a pre-race model.
+    Madrid is a brand-new circuit, so historical circuit-specific
+    qualifying performance does not exist.
 
-    Once the official grid exists, this proxy MUST NOT be used.
+    Recent qualifying consistency therefore provides the safest proxy.
+
+    Once the official Spanish GP grid is available, ALWAYS use the real
+    grid rather than this proxy.
     """
 
     if not 0.0 <= driver_weight <= 1.0:
@@ -2162,7 +2226,7 @@ def add_quali_proxy(
     # ---------------------------------------------------------------
     # Team qualifying proxy
     #
-    # Approx. two drivers per race -> 2 * window observations.
+    # Approximately two rows per constructor per race.
     # ---------------------------------------------------------------
 
     team_proxy = (

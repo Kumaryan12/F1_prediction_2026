@@ -28,8 +28,8 @@ FEATS = [
     # Sunday starting order
     # ---------------------------------------------------------------
 
-    # Still important at Monza, but overtaking is more realistic than
-    # at Zandvoort / Monaco.
+    # Grid is an ordinary predictor for the absolute finishing-position
+    # target. It is not added to the model output after prediction.
     "grid_pos",
 
     # ---------------------------------------------------------------
@@ -44,6 +44,8 @@ FEATS = [
     "overtake_index",
     "tow_importance",
 
+    # Madrid is not a true low-downforce circuit.
+    # is_street may be fractional in config because Madring is hybrid.
     "is_low_df",
     "is_street",
     "long_straight_index",
@@ -56,12 +58,13 @@ FEATS = [
     # ---------------------------------------------------------------
     # Track / layout characteristics
     #
-    # Monza is dominated by:
-    # - low drag
-    # - long straights
+    # Madring combines:
+    # - long/high-speed sections
+    # - 22 corners
+    # - elevation changes
+    # - technical medium/low-speed sections
     # - heavy braking
-    # - traction out of chicanes
-    # - high power-unit load
+    # - banked high-load corners
     # ---------------------------------------------------------------
 
     "surface_bumpiness",
@@ -99,18 +102,32 @@ FEATS = [
     "team_form3",
 
     # ---------------------------------------------------------------
-    # PRIMARY MONZA ARCHETYPE 1
+    # PRIMARY MADRID ARCHETYPE 1
     #
-    # Low-downforce / power-sensitive performance.
+    # High-downforce / technical performance.
+    #
+    # Useful because Madring contains:
+    # - significant lateral loading
+    # - technical corner sequences
+    # - mechanical-grip requirements
+    # - banking
+    # - aero-sensitive sections
     # ---------------------------------------------------------------
 
-    "lowdf_driver_form3",
-    "lowdf_team_form3",
+    "highdf_driver_form3",
+    "highdf_team_form3",
 
     # ---------------------------------------------------------------
-    # PRIMARY MONZA ARCHETYPE 2
+    # PRIMARY MADRID ARCHETYPE 2
     #
-    # Long-straight / high-speed / tow-sensitive performance.
+    # Long-straight / high-speed / energy-sensitive performance.
+    #
+    # Useful because Madrid also contains:
+    # - long straights
+    # - high top speeds
+    # - strong energy deployment requirements
+    # - tow relevance
+    # - major braking zones
     # ---------------------------------------------------------------
 
     "longstraight_driver_form3",
@@ -125,6 +142,9 @@ FEATS = [
 
     # ---------------------------------------------------------------
     # Current-season / live-session blended strength
+    #
+    # Particularly valuable at a brand-new circuit because there is
+    # no direct Madring historical F1 race data.
     # ---------------------------------------------------------------
 
     "driver_strength_blend_2026",
@@ -140,8 +160,15 @@ FEATS = [
 CAT_COLS = ["team", "driver"]
 NUM_COLS = [c for c in FEATS if c not in CAT_COLS]
 
-# Train on finish_pos - grid_pos
-USE_DELTA_TARGET = True
+# Train directly on absolute finishing position. Grid position remains an
+# input feature, allowing the forest to learn its weight without a fixed
+# one-for-one anchor in the final prediction.
+USE_DELTA_TARGET = False
+
+# Limit the candidate features available at each split. This regularizes the
+# forest's reliance on grid_pos and gives independent pace/form signals more
+# opportunities to determine the tree structure.
+RF_MAX_FEATURES = 0.70
 
 
 # -------------------------------------------------------------------
@@ -214,6 +241,7 @@ def train_model(train_df: pd.DataFrame, save_model: bool = True) -> Pipeline:
         n_estimators=1200,
         min_samples_leaf=8,
         max_depth=None,
+        max_features=RF_MAX_FEATURES,
         random_state=42,
         n_jobs=-1,
         oob_score=True,
