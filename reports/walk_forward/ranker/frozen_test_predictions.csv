@@ -1,0 +1,425 @@
+driver,team,grid_pos,ranker_score,pred_finish_model_ensemble,pred_rank_model_ensemble,grid_rank_component,blend_rank_score,pred_finish,pred_rank,ranking_mode_default,finish_pos,year,gp,date,rank_blend_alpha
+VER,Red Bull Racing,3.0,0.36631155,-0.36631155,1,3,1.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Australian Grand Prix,2025-03-16,0.0
+LEC,Ferrari,7.0,0.19497487,-0.19497487,2,7,2.0,7.0,7,xgboost_rank_grid_blend,8.0,2025,Australian Grand Prix,2025-03-16,0.0
+RUS,Mercedes,4.0,0.16593505,-0.16593505,3,4,3.0,4.0,4,xgboost_rank_grid_blend,3.0,2025,Australian Grand Prix,2025-03-16,0.0
+NOR,McLaren,1.0,-0.06013209,0.06013209,4,1,4.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Australian Grand Prix,2025-03-16,0.0
+PIA,McLaren,2.0,-0.08242874,0.08242874,5,2,5.0,2.0,2,xgboost_rank_grid_blend,9.0,2025,Australian Grand Prix,2025-03-16,0.0
+HAM,Ferrari,8.0,-0.09676056,0.09676056,6,8,6.0,8.0,8,xgboost_rank_grid_blend,10.0,2025,Australian Grand Prix,2025-03-16,0.0
+ANT,Mercedes,16.0,-0.19129968,0.19129968,7,11,7.0,11.0,11,xgboost_rank_grid_blend,4.0,2025,Australian Grand Prix,2025-03-16,0.0
+GAS,Alpine,9.0,-0.5895621,0.5895621,8,9,8.0,9.0,9,xgboost_rank_grid_blend,11.0,2025,Australian Grand Prix,2025-03-16,0.0
+BEA,Haas F1 Team,20.0,-0.6564191,0.6564191,9,14,9.0,14.0,14,xgboost_rank_grid_blend,14.0,2025,Australian Grand Prix,2025-03-16,0.0
+HUL,Audi,17.0,-0.73325795,0.73325795,10,12,10.0,12.0,12,xgboost_rank_grid_blend,7.0,2025,Australian Grand Prix,2025-03-16,0.0
+OCO,Haas F1 Team,19.0,-0.7706357,0.7706357,11,13,11.0,13.0,13,xgboost_rank_grid_blend,13.0,2025,Australian Grand Prix,2025-03-16,0.0
+STR,Aston Martin,13.0,-0.78993094,0.78993094,12,10,12.0,10.0,10,xgboost_rank_grid_blend,6.0,2025,Australian Grand Prix,2025-03-16,0.0
+ALB,Williams,6.0,-0.81440264,0.81440264,13,6,13.0,6.0,6,xgboost_rank_grid_blend,5.0,2025,Australian Grand Prix,2025-03-16,0.0
+TSU,Racing Bulls,5.0,-0.81440264,0.81440264,14,5,14.0,5.0,5,xgboost_rank_grid_blend,12.0,2025,Australian Grand Prix,2025-03-16,0.0
+VER,Red Bull Racing,4.0,0.52903914,-0.52903914,1,4,1.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Chinese Grand Prix,2025-03-23,0.0
+NOR,McLaren,3.0,0.20403345,-0.20403345,2,3,2.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Chinese Grand Prix,2025-03-23,0.0
+ANT,Mercedes,8.0,0.14278151,-0.14278151,3,6,3.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Chinese Grand Prix,2025-03-23,0.0
+RUS,Mercedes,2.0,0.11457293,-0.11457293,4,2,4.0,2.0,2,xgboost_rank_grid_blend,3.0,2025,Chinese Grand Prix,2025-03-23,0.0
+SAI,Williams,15.0,-0.06696933,0.06696933,5,12,5.0,12.0,12,xgboost_rank_grid_blend,10.0,2025,Chinese Grand Prix,2025-03-23,0.0
+LAW,Red Bull Racing,20.0,-0.09940669,0.09940669,6,16,6.0,16.0,16,xgboost_rank_grid_blend,12.0,2025,Chinese Grand Prix,2025-03-23,0.0
+PIA,McLaren,1.0,-0.10438873,0.10438873,7,1,7.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Chinese Grand Prix,2025-03-23,0.0
+BOR,Audi,19.0,-0.54749155,0.54749155,8,15,8.0,15.0,15,xgboost_rank_grid_blend,14.0,2025,Chinese Grand Prix,2025-03-23,0.0
+STR,Aston Martin,14.0,-0.58331037,0.58331037,9,11,9.0,11.0,11,xgboost_rank_grid_blend,9.0,2025,Chinese Grand Prix,2025-03-23,0.0
+HUL,Audi,12.0,-0.589243,0.589243,10,10,10.0,10.0,10,xgboost_rank_grid_blend,15.0,2025,Chinese Grand Prix,2025-03-23,0.0
+DOO,Alpine,18.0,-0.6330179,0.6330179,11,14,11.0,14.0,14,xgboost_rank_grid_blend,13.0,2025,Chinese Grand Prix,2025-03-23,0.0
+HAD,Racing Bulls,7.0,-0.69507045,0.69507045,12,5,12.0,5.0,5,xgboost_rank_grid_blend,11.0,2025,Chinese Grand Prix,2025-03-23,0.0
+ALB,Williams,10.0,-0.71516126,0.71516126,13,8,13.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Chinese Grand Prix,2025-03-23,0.0
+BEA,Haas F1 Team,17.0,-0.773416,0.773416,14,13,14.0,13.0,13,xgboost_rank_grid_blend,8.0,2025,Chinese Grand Prix,2025-03-23,0.0
+OCO,Haas F1 Team,11.0,-0.773416,0.773416,15,9,15.0,9.0,9,xgboost_rank_grid_blend,5.0,2025,Chinese Grand Prix,2025-03-23,0.0
+TSU,Racing Bulls,9.0,-0.773416,0.773416,16,7,16.0,7.0,7,xgboost_rank_grid_blend,16.0,2025,Chinese Grand Prix,2025-03-23,0.0
+NOR,McLaren,2.0,0.5652179,-0.5652179,1,2,1.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Japanese Grand Prix,2025-04-06,0.0
+VER,Red Bull Racing,1.0,0.42408454,-0.42408454,2,1,2.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Japanese Grand Prix,2025-04-06,0.0
+RUS,Mercedes,5.0,0.15674752,-0.15674752,3,5,3.0,5.0,5,xgboost_rank_grid_blend,5.0,2025,Japanese Grand Prix,2025-04-06,0.0
+LEC,Ferrari,4.0,0.077924885,-0.077924885,4,4,4.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Japanese Grand Prix,2025-04-06,0.0
+ANT,Mercedes,6.0,-0.017677043,0.017677043,5,6,5.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Japanese Grand Prix,2025-04-06,0.0
+PIA,McLaren,3.0,-0.058181167,0.058181167,6,3,6.0,3.0,3,xgboost_rank_grid_blend,3.0,2025,Japanese Grand Prix,2025-04-06,0.0
+HAM,Ferrari,8.0,-0.1493222,0.1493222,7,8,7.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Japanese Grand Prix,2025-04-06,0.0
+TSU,Red Bull Racing,14.0,-0.20042942,0.20042942,8,14,8.0,14.0,14,xgboost_rank_grid_blend,12.0,2025,Japanese Grand Prix,2025-04-06,0.0
+SAI,Williams,15.0,-0.56300646,0.56300646,9,15,9.0,15.0,15,xgboost_rank_grid_blend,14.0,2025,Japanese Grand Prix,2025-04-06,0.0
+ALB,Williams,9.0,-0.7613567,0.7613567,10,9,10.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Japanese Grand Prix,2025-04-06,0.0
+ALO,Aston Martin,12.0,-0.7675118,0.7675118,11,12,11.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Japanese Grand Prix,2025-04-06,0.0
+STR,Aston Martin,20.0,-0.8282121,0.8282121,12,20,12.0,20.0,20,xgboost_rank_grid_blend,20.0,2025,Japanese Grand Prix,2025-04-06,0.0
+GAS,Alpine,11.0,-0.92668205,0.92668205,13,11,13.0,11.0,11,xgboost_rank_grid_blend,13.0,2025,Japanese Grand Prix,2025-04-06,0.0
+HUL,Audi,16.0,-0.99164534,0.99164534,14,16,14.0,16.0,16,xgboost_rank_grid_blend,16.0,2025,Japanese Grand Prix,2025-04-06,0.0
+BEA,Haas F1 Team,10.0,-1.0635511,1.0635511,15,10,15.0,10.0,10,xgboost_rank_grid_blend,10.0,2025,Japanese Grand Prix,2025-04-06,0.0
+BOR,Audi,17.0,-1.0635511,1.0635511,16,17,16.0,17.0,17,xgboost_rank_grid_blend,19.0,2025,Japanese Grand Prix,2025-04-06,0.0
+DOO,Alpine,19.0,-1.0635511,1.0635511,17,19,17.0,19.0,19,xgboost_rank_grid_blend,15.0,2025,Japanese Grand Prix,2025-04-06,0.0
+HAD,Racing Bulls,7.0,-1.0635511,1.0635511,18,7,18.0,7.0,7,xgboost_rank_grid_blend,8.0,2025,Japanese Grand Prix,2025-04-06,0.0
+LAW,Racing Bulls,13.0,-1.0635511,1.0635511,19,13,19.0,13.0,13,xgboost_rank_grid_blend,17.0,2025,Japanese Grand Prix,2025-04-06,0.0
+OCO,Haas F1 Team,18.0,-1.0635511,1.0635511,20,18,20.0,18.0,18,xgboost_rank_grid_blend,18.0,2025,Japanese Grand Prix,2025-04-06,0.0
+VER,Red Bull Racing,7.0,1.0739816,-1.0739816,1,7,1.0,7.0,7,xgboost_rank_grid_blend,6.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+NOR,McLaren,6.0,0.6220443,-0.6220443,2,6,2.0,6.0,6,xgboost_rank_grid_blend,3.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+RUS,Mercedes,3.0,0.42406976,-0.42406976,3,3,3.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+PIA,McLaren,1.0,0.16476141,-0.16476141,4,1,4.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+LEC,Ferrari,2.0,0.13786897,-0.13786897,5,2,5.0,2.0,2,xgboost_rank_grid_blend,4.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+ANT,Mercedes,5.0,0.031416602,-0.031416602,6,5,6.0,5.0,5,xgboost_rank_grid_blend,11.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+TSU,Red Bull Racing,10.0,-0.20534062,0.20534062,7,9,7.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+HAM,Ferrari,9.0,-0.23243454,0.23243454,8,8,8.0,8.0,8,xgboost_rank_grid_blend,5.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+ALB,Williams,15.0,-0.88987654,0.88987654,9,14,9.0,14.0,14,xgboost_rank_grid_blend,12.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+ALO,Aston Martin,13.0,-1.0060755,1.0060755,10,12,10.0,12.0,12,xgboost_rank_grid_blend,15.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+HAD,Racing Bulls,12.0,-1.0307825,1.0307825,11,11,11.0,11.0,11,xgboost_rank_grid_blend,13.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+STR,Aston Martin,19.0,-1.0976549,1.0976549,12,17,12.0,17.0,17,xgboost_rank_grid_blend,17.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+BEA,Haas F1 Team,20.0,-1.1164199,1.1164199,13,18,13.0,18.0,18,xgboost_rank_grid_blend,10.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+BOR,Audi,18.0,-1.1164199,1.1164199,14,16,14.0,16.0,16,xgboost_rank_grid_blend,18.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+DOO,Alpine,11.0,-1.1164199,1.1164199,15,10,15.0,10.0,10,xgboost_rank_grid_blend,14.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+GAS,Alpine,4.0,-1.1164199,1.1164199,16,4,16.0,4.0,4,xgboost_rank_grid_blend,7.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+LAW,Racing Bulls,17.0,-1.1164199,1.1164199,17,15,17.0,15.0,15,xgboost_rank_grid_blend,16.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+OCO,Haas F1 Team,14.0,-1.1164199,1.1164199,18,13,18.0,13.0,13,xgboost_rank_grid_blend,8.0,2025,Bahrain Grand Prix,2025-04-13,0.0
+NOR,McLaren,10.0,0.49620238,-0.49620238,1,8,1.0,8.0,8,xgboost_rank_grid_blend,4.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+PIA,McLaren,2.0,0.44531456,-0.44531456,2,2,2.0,2.0,2,xgboost_rank_grid_blend,1.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+VER,Red Bull Racing,1.0,0.27017778,-0.27017778,3,1,3.0,1.0,1,xgboost_rank_grid_blend,2.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+RUS,Mercedes,3.0,0.14756703,-0.14756703,4,3,4.0,3.0,3,xgboost_rank_grid_blend,5.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+LEC,Ferrari,4.0,-0.083415955,0.083415955,5,4,5.0,4.0,4,xgboost_rank_grid_blend,3.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+ANT,Mercedes,5.0,-0.09077175,0.09077175,6,5,6.0,5.0,5,xgboost_rank_grid_blend,6.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+HAM,Ferrari,7.0,-0.12834065,0.12834065,7,7,7.0,7.0,7,xgboost_rank_grid_blend,7.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+BEA,Haas F1 Team,15.0,-0.5421881,0.5421881,8,13,8.0,13.0,13,xgboost_rank_grid_blend,13.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+SAI,Williams,6.0,-0.5531692,0.5531692,9,6,9.0,6.0,6,xgboost_rank_grid_blend,8.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+OCO,Haas F1 Team,19.0,-0.605288,0.605288,10,17,10.0,17.0,17,xgboost_rank_grid_blend,14.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+ALB,Williams,11.0,-0.62577915,0.62577915,11,9,11.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+ALO,Aston Martin,13.0,-0.6937044,0.6937044,12,11,12.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+BOR,Audi,20.0,-0.7080093,0.7080093,13,18,13.0,18.0,18,xgboost_rank_grid_blend,18.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+DOO,Alpine,17.0,-0.7080093,0.7080093,14,15,14.0,15.0,15,xgboost_rank_grid_blend,17.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+HAD,Racing Bulls,14.0,-0.7080093,0.7080093,15,12,15.0,12.0,12,xgboost_rank_grid_blend,10.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+HUL,Audi,18.0,-0.7080093,0.7080093,16,16,16.0,16.0,16,xgboost_rank_grid_blend,15.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+LAW,Racing Bulls,12.0,-0.7080093,0.7080093,17,10,17.0,10.0,10,xgboost_rank_grid_blend,12.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+STR,Aston Martin,16.0,-0.7080093,0.7080093,18,14,18.0,14.0,14,xgboost_rank_grid_blend,16.0,2025,Saudi Arabian Grand Prix,2025-04-20,0.0
+VER,Red Bull Racing,1.0,0.9326402,-0.9326402,1,1,1.0,1.0,1,xgboost_rank_grid_blend,4.0,2025,Miami Grand Prix,2025-05-04,0.0
+PIA,McLaren,4.0,0.71036446,-0.71036446,2,4,2.0,4.0,4,xgboost_rank_grid_blend,1.0,2025,Miami Grand Prix,2025-05-04,0.0
+LEC,Ferrari,8.0,0.46800786,-0.46800786,3,8,3.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Miami Grand Prix,2025-05-04,0.0
+NOR,McLaren,2.0,0.46346554,-0.46346554,4,2,4.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Miami Grand Prix,2025-05-04,0.0
+RUS,Mercedes,5.0,0.37496507,-0.37496507,5,5,5.0,5.0,5,xgboost_rank_grid_blend,3.0,2025,Miami Grand Prix,2025-05-04,0.0
+ANT,Mercedes,3.0,-0.08199198,0.08199198,6,3,6.0,3.0,3,xgboost_rank_grid_blend,6.0,2025,Miami Grand Prix,2025-05-04,0.0
+HAM,Ferrari,12.0,-0.1132282,0.1132282,7,12,7.0,12.0,12,xgboost_rank_grid_blend,8.0,2025,Miami Grand Prix,2025-05-04,0.0
+TSU,Red Bull Racing,10.0,-0.29916576,0.29916576,8,10,8.0,10.0,10,xgboost_rank_grid_blend,10.0,2025,Miami Grand Prix,2025-05-04,0.0
+SAI,Williams,6.0,-0.9739637,0.9739637,9,6,9.0,6.0,6,xgboost_rank_grid_blend,9.0,2025,Miami Grand Prix,2025-05-04,0.0
+ALB,Williams,7.0,-1.088956,1.088956,10,7,10.0,7.0,7,xgboost_rank_grid_blend,5.0,2025,Miami Grand Prix,2025-05-04,0.0
+GAS,Alpine,20.0,-1.090867,1.090867,11,16,11.0,16.0,16,xgboost_rank_grid_blend,13.0,2025,Miami Grand Prix,2025-05-04,0.0
+HAD,Racing Bulls,11.0,-1.1153742,1.1153742,12,11,12.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,Miami Grand Prix,2025-05-04,0.0
+ALO,Aston Martin,17.0,-1.1205751,1.1205751,13,14,13.0,14.0,14,xgboost_rank_grid_blend,15.0,2025,Miami Grand Prix,2025-05-04,0.0
+HUL,Audi,16.0,-1.129076,1.129076,14,13,14.0,13.0,13,xgboost_rank_grid_blend,14.0,2025,Miami Grand Prix,2025-05-04,0.0
+OCO,Haas F1 Team,9.0,-1.129076,1.129076,15,9,15.0,9.0,9,xgboost_rank_grid_blend,12.0,2025,Miami Grand Prix,2025-05-04,0.0
+STR,Aston Martin,18.0,-1.129076,1.129076,16,15,16.0,15.0,15,xgboost_rank_grid_blend,16.0,2025,Miami Grand Prix,2025-05-04,0.0
+PIA,McLaren,1.0,0.99635476,-0.99635476,1,1,1.0,1.0,1,xgboost_rank_grid_blend,3.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+NOR,McLaren,4.0,0.7872899,-0.7872899,2,4,2.0,4.0,4,xgboost_rank_grid_blend,2.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+VER,Red Bull Racing,2.0,0.6382098,-0.6382098,3,2,3.0,2.0,2,xgboost_rank_grid_blend,1.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+RUS,Mercedes,3.0,0.33081758,-0.33081758,4,3,4.0,3.0,3,xgboost_rank_grid_blend,7.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+LEC,Ferrari,11.0,0.09393932,-0.09393932,5,11,5.0,11.0,11,xgboost_rank_grid_blend,6.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+HAM,Ferrari,12.0,-0.31194365,0.31194365,6,12,6.0,12.0,12,xgboost_rank_grid_blend,4.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+TSU,Red Bull Racing,20.0,-0.3635404,0.3635404,7,18,7.0,18.0,18,xgboost_rank_grid_blend,10.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+SAI,Williams,6.0,-1.0337636,1.0337636,8,6,8.0,6.0,6,xgboost_rank_grid_blend,8.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+ALB,Williams,7.0,-1.0591642,1.0591642,9,7,9.0,7.0,7,xgboost_rank_grid_blend,5.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+ALO,Aston Martin,5.0,-1.2580969,1.2580969,10,5,10.0,5.0,5,xgboost_rank_grid_blend,11.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+BEA,Haas F1 Team,19.0,-1.2817788,1.2817788,11,17,11.0,17.0,17,xgboost_rank_grid_blend,17.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+BOR,Audi,14.0,-1.2817788,1.2817788,12,13,12.0,13.0,13,xgboost_rank_grid_blend,18.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+COL,Alpine,16.0,-1.2817788,1.2817788,13,15,13.0,15.0,15,xgboost_rank_grid_blend,16.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+GAS,Alpine,10.0,-1.2817788,1.2817788,14,10,14.0,10.0,10,xgboost_rank_grid_blend,13.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+HAD,Racing Bulls,9.0,-1.2817788,1.2817788,15,9,15.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+HUL,Audi,17.0,-1.2817788,1.2817788,16,16,16.0,16.0,16,xgboost_rank_grid_blend,12.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+LAW,Racing Bulls,15.0,-1.2817788,1.2817788,17,14,17.0,14.0,14,xgboost_rank_grid_blend,14.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+STR,Aston Martin,8.0,-1.2817788,1.2817788,18,8,18.0,8.0,8,xgboost_rank_grid_blend,15.0,2025,Emilia Romagna Grand Prix,2025-05-18,0.0
+VER,Red Bull Racing,4.0,1.0582062,-1.0582062,1,4,1.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Monaco Grand Prix,2025-05-25,0.0
+NOR,McLaren,1.0,0.9006696,-0.9006696,2,1,2.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Monaco Grand Prix,2025-05-25,0.0
+PIA,McLaren,3.0,0.58878636,-0.58878636,3,3,3.0,3.0,3,xgboost_rank_grid_blend,3.0,2025,Monaco Grand Prix,2025-05-25,0.0
+LEC,Ferrari,2.0,0.08149832,-0.08149832,4,2,4.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Monaco Grand Prix,2025-05-25,0.0
+RUS,Mercedes,14.0,-0.056823492,0.056823492,5,13,5.0,13.0,13,xgboost_rank_grid_blend,11.0,2025,Monaco Grand Prix,2025-05-25,0.0
+HAM,Ferrari,7.0,-0.16649812,0.16649812,6,6,6.0,6.0,6,xgboost_rank_grid_blend,5.0,2025,Monaco Grand Prix,2025-05-25,0.0
+ANT,Mercedes,15.0,-0.195829,0.195829,7,14,7.0,14.0,14,xgboost_rank_grid_blend,18.0,2025,Monaco Grand Prix,2025-05-25,0.0
+TSU,Red Bull Racing,12.0,-0.2744369,0.2744369,8,11,8.0,11.0,11,xgboost_rank_grid_blend,17.0,2025,Monaco Grand Prix,2025-05-25,0.0
+SAI,Williams,11.0,-0.93362045,0.93362045,9,10,9.0,10.0,10,xgboost_rank_grid_blend,10.0,2025,Monaco Grand Prix,2025-05-25,0.0
+ALB,Williams,10.0,-0.960844,0.960844,10,9,10.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Monaco Grand Prix,2025-05-25,0.0
+HAD,Racing Bulls,5.0,-1.190691,1.190691,11,5,11.0,5.0,5,xgboost_rank_grid_blend,6.0,2025,Monaco Grand Prix,2025-05-25,0.0
+STR,Aston Martin,19.0,-1.2717981,1.2717981,12,17,12.0,17.0,17,xgboost_rank_grid_blend,15.0,2025,Monaco Grand Prix,2025-05-25,0.0
+BEA,Haas F1 Team,20.0,-1.2857629,1.2857629,13,18,13.0,18.0,18,xgboost_rank_grid_blend,12.0,2025,Monaco Grand Prix,2025-05-25,0.0
+BOR,Audi,16.0,-1.2857629,1.2857629,14,15,14.0,15.0,15,xgboost_rank_grid_blend,14.0,2025,Monaco Grand Prix,2025-05-25,0.0
+COL,Alpine,18.0,-1.2857629,1.2857629,15,16,15.0,16.0,16,xgboost_rank_grid_blend,13.0,2025,Monaco Grand Prix,2025-05-25,0.0
+HUL,Audi,13.0,-1.2857629,1.2857629,16,12,16.0,12.0,12,xgboost_rank_grid_blend,16.0,2025,Monaco Grand Prix,2025-05-25,0.0
+LAW,Racing Bulls,9.0,-1.2857629,1.2857629,17,8,17.0,8.0,8,xgboost_rank_grid_blend,8.0,2025,Monaco Grand Prix,2025-05-25,0.0
+OCO,Haas F1 Team,8.0,-1.2857629,1.2857629,18,7,18.0,7.0,7,xgboost_rank_grid_blend,7.0,2025,Monaco Grand Prix,2025-05-25,0.0
+NOR,McLaren,2.0,1.0724576,-1.0724576,1,2,1.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Spanish Grand Prix,2025-06-01,0.0
+PIA,McLaren,1.0,0.9704412,-0.9704412,2,1,2.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Spanish Grand Prix,2025-06-01,0.0
+VER,Red Bull Racing,3.0,0.52074933,-0.52074933,3,3,3.0,3.0,3,xgboost_rank_grid_blend,10.0,2025,Spanish Grand Prix,2025-06-01,0.0
+LEC,Ferrari,7.0,0.09252698,-0.09252698,4,6,4.0,6.0,6,xgboost_rank_grid_blend,3.0,2025,Spanish Grand Prix,2025-06-01,0.0
+HAM,Ferrari,5.0,-0.20027038,0.20027038,5,5,5.0,5.0,5,xgboost_rank_grid_blend,6.0,2025,Spanish Grand Prix,2025-06-01,0.0
+RUS,Mercedes,4.0,-0.48635808,0.48635808,6,4,6.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Spanish Grand Prix,2025-06-01,0.0
+TSU,Red Bull Racing,19.0,-0.7038318,0.7038318,7,17,7.0,17.0,17,xgboost_rank_grid_blend,13.0,2025,Spanish Grand Prix,2025-06-01,0.0
+SAI,Williams,17.0,-1.0215175,1.0215175,8,15,8.0,15.0,15,xgboost_rank_grid_blend,14.0,2025,Spanish Grand Prix,2025-06-01,0.0
+HAD,Racing Bulls,9.0,-1.0640652,1.0640652,9,8,9.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Spanish Grand Prix,2025-06-01,0.0
+GAS,Alpine,8.0,-1.2356502,1.2356502,10,7,10.0,7.0,7,xgboost_rank_grid_blend,8.0,2025,Spanish Grand Prix,2025-06-01,0.0
+ALO,Aston Martin,10.0,-1.2489288,1.2489288,11,9,11.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Spanish Grand Prix,2025-06-01,0.0
+LAW,Racing Bulls,13.0,-1.2584795,1.2584795,12,11,12.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,Spanish Grand Prix,2025-06-01,0.0
+BEA,Haas F1 Team,14.0,-1.2850034,1.2850034,13,12,13.0,12.0,12,xgboost_rank_grid_blend,17.0,2025,Spanish Grand Prix,2025-06-01,0.0
+BOR,Audi,12.0,-1.2850034,1.2850034,14,10,14.0,10.0,10,xgboost_rank_grid_blend,12.0,2025,Spanish Grand Prix,2025-06-01,0.0
+COL,Alpine,18.0,-1.2850034,1.2850034,15,16,15.0,16.0,16,xgboost_rank_grid_blend,15.0,2025,Spanish Grand Prix,2025-06-01,0.0
+HUL,Audi,15.0,-1.2850034,1.2850034,16,13,16.0,13.0,13,xgboost_rank_grid_blend,5.0,2025,Spanish Grand Prix,2025-06-01,0.0
+OCO,Haas F1 Team,16.0,-1.2850034,1.2850034,17,14,17.0,14.0,14,xgboost_rank_grid_blend,16.0,2025,Spanish Grand Prix,2025-06-01,0.0
+NOR,McLaren,7.0,1.0056438,-1.0056438,1,7,1.0,7.0,7,xgboost_rank_grid_blend,18.0,2025,Canadian Grand Prix,2025-06-15,0.0
+PIA,McLaren,3.0,0.9479202,-0.9479202,2,3,2.0,3.0,3,xgboost_rank_grid_blend,4.0,2025,Canadian Grand Prix,2025-06-15,0.0
+LEC,Ferrari,8.0,0.43473062,-0.43473062,3,8,3.0,8.0,8,xgboost_rank_grid_blend,5.0,2025,Canadian Grand Prix,2025-06-15,0.0
+HAM,Ferrari,5.0,-0.049694315,0.049694315,4,5,4.0,5.0,5,xgboost_rank_grid_blend,6.0,2025,Canadian Grand Prix,2025-06-15,0.0
+VER,Red Bull Racing,2.0,-0.115250155,0.115250155,5,2,5.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Canadian Grand Prix,2025-06-15,0.0
+RUS,Mercedes,1.0,-0.55886215,0.55886215,6,1,6.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Canadian Grand Prix,2025-06-15,0.0
+TSU,Red Bull Racing,18.0,-0.93120056,0.93120056,7,17,7.0,17.0,17,xgboost_rank_grid_blend,12.0,2025,Canadian Grand Prix,2025-06-15,0.0
+ANT,Mercedes,4.0,-0.95098907,0.95098907,8,4,8.0,4.0,4,xgboost_rank_grid_blend,3.0,2025,Canadian Grand Prix,2025-06-15,0.0
+SAI,Williams,16.0,-0.9649778,0.9649778,9,15,9.0,15.0,15,xgboost_rank_grid_blend,10.0,2025,Canadian Grand Prix,2025-06-15,0.0
+HAD,Racing Bulls,12.0,-0.99519867,0.99519867,10,11,10.0,11.0,11,xgboost_rank_grid_blend,16.0,2025,Canadian Grand Prix,2025-06-15,0.0
+GAS,Alpine,20.0,-1.2072995,1.2072995,11,18,11.0,18.0,18,xgboost_rank_grid_blend,15.0,2025,Canadian Grand Prix,2025-06-15,0.0
+ALO,Aston Martin,6.0,-1.2433412,1.2433412,12,6,12.0,6.0,6,xgboost_rank_grid_blend,7.0,2025,Canadian Grand Prix,2025-06-15,0.0
+BEA,Haas F1 Team,13.0,-1.2433412,1.2433412,13,12,13.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Canadian Grand Prix,2025-06-15,0.0
+BOR,Audi,15.0,-1.2433412,1.2433412,14,14,14.0,14.0,14,xgboost_rank_grid_blend,14.0,2025,Canadian Grand Prix,2025-06-15,0.0
+COL,Alpine,10.0,-1.2433412,1.2433412,15,9,15.0,9.0,9,xgboost_rank_grid_blend,13.0,2025,Canadian Grand Prix,2025-06-15,0.0
+HUL,Audi,11.0,-1.2433412,1.2433412,16,10,16.0,10.0,10,xgboost_rank_grid_blend,8.0,2025,Canadian Grand Prix,2025-06-15,0.0
+OCO,Haas F1 Team,14.0,-1.2433412,1.2433412,17,13,17.0,13.0,13,xgboost_rank_grid_blend,9.0,2025,Canadian Grand Prix,2025-06-15,0.0
+STR,Aston Martin,17.0,-1.2433412,1.2433412,18,16,18.0,16.0,16,xgboost_rank_grid_blend,17.0,2025,Canadian Grand Prix,2025-06-15,0.0
+PIA,McLaren,3.0,0.7884217,-0.7884217,1,3,1.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Austrian Grand Prix,2025-06-29,0.0
+LEC,Ferrari,2.0,0.50983816,-0.50983816,2,2,2.0,2.0,2,xgboost_rank_grid_blend,3.0,2025,Austrian Grand Prix,2025-06-29,0.0
+NOR,McLaren,1.0,0.0099417,-0.0099417,3,1,3.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Austrian Grand Prix,2025-06-29,0.0
+HAM,Ferrari,4.0,-0.08160549,0.08160549,4,4,4.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Austrian Grand Prix,2025-06-29,0.0
+RUS,Mercedes,5.0,-0.22633052,0.22633052,5,5,5.0,5.0,5,xgboost_rank_grid_blend,5.0,2025,Austrian Grand Prix,2025-06-29,0.0
+TSU,Red Bull Racing,18.0,-0.78438175,0.78438175,6,15,6.0,15.0,15,xgboost_rank_grid_blend,16.0,2025,Austrian Grand Prix,2025-06-29,0.0
+HAD,Racing Bulls,13.0,-1.0368283,1.0368283,7,10,7.0,10.0,10,xgboost_rank_grid_blend,12.0,2025,Austrian Grand Prix,2025-06-29,0.0
+ALO,Aston Martin,11.0,-1.0838819,1.0838819,8,9,8.0,9.0,9,xgboost_rank_grid_blend,7.0,2025,Austrian Grand Prix,2025-06-29,0.0
+HUL,Audi,20.0,-1.1515187,1.1515187,9,16,9.0,16.0,16,xgboost_rank_grid_blend,9.0,2025,Austrian Grand Prix,2025-06-29,0.0
+OCO,Haas F1 Team,17.0,-1.2136683,1.2136683,10,14,10.0,14.0,14,xgboost_rank_grid_blend,10.0,2025,Austrian Grand Prix,2025-06-29,0.0
+BEA,Haas F1 Team,15.0,-1.2450567,1.2450567,11,12,11.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Austrian Grand Prix,2025-06-29,0.0
+BOR,Audi,8.0,-1.2450567,1.2450567,12,7,12.0,7.0,7,xgboost_rank_grid_blend,8.0,2025,Austrian Grand Prix,2025-06-29,0.0
+COL,Alpine,14.0,-1.2450567,1.2450567,13,11,13.0,11.0,11,xgboost_rank_grid_blend,15.0,2025,Austrian Grand Prix,2025-06-29,0.0
+GAS,Alpine,10.0,-1.2450567,1.2450567,14,8,14.0,8.0,8,xgboost_rank_grid_blend,13.0,2025,Austrian Grand Prix,2025-06-29,0.0
+LAW,Racing Bulls,6.0,-1.2450567,1.2450567,15,6,15.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Austrian Grand Prix,2025-06-29,0.0
+STR,Aston Martin,16.0,-1.2450567,1.2450567,16,13,16.0,13.0,13,xgboost_rank_grid_blend,14.0,2025,Austrian Grand Prix,2025-06-29,0.0
+PIA,McLaren,2.0,0.8958136,-0.8958136,1,2,1.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,British Grand Prix,2025-07-06,0.0
+NOR,McLaren,3.0,0.36488694,-0.36488694,2,3,2.0,3.0,3,xgboost_rank_grid_blend,1.0,2025,British Grand Prix,2025-07-06,0.0
+LEC,Ferrari,6.0,0.3409951,-0.3409951,3,6,3.0,6.0,6,xgboost_rank_grid_blend,14.0,2025,British Grand Prix,2025-07-06,0.0
+RUS,Mercedes,4.0,0.1709981,-0.1709981,4,4,4.0,4.0,4,xgboost_rank_grid_blend,10.0,2025,British Grand Prix,2025-07-06,0.0
+VER,Red Bull Racing,1.0,0.16615382,-0.16615382,5,1,5.0,1.0,1,xgboost_rank_grid_blend,5.0,2025,British Grand Prix,2025-07-06,0.0
+HAM,Ferrari,5.0,-0.053812195,0.053812195,6,5,6.0,5.0,5,xgboost_rank_grid_blend,4.0,2025,British Grand Prix,2025-07-06,0.0
+TSU,Red Bull Racing,11.0,-0.99524206,0.99524206,7,10,7.0,10.0,10,xgboost_rank_grid_blend,15.0,2025,British Grand Prix,2025-07-06,0.0
+ALB,Williams,13.0,-1.0530022,1.0530022,8,11,8.0,11.0,11,xgboost_rank_grid_blend,8.0,2025,British Grand Prix,2025-07-06,0.0
+ALO,Aston Martin,7.0,-1.0873977,1.0873977,9,7,9.0,7.0,7,xgboost_rank_grid_blend,9.0,2025,British Grand Prix,2025-07-06,0.0
+HUL,Audi,19.0,-1.1017486,1.1017486,10,15,10.0,15.0,15,xgboost_rank_grid_blend,3.0,2025,British Grand Prix,2025-07-06,0.0
+SAI,Williams,9.0,-1.1445687,1.1445687,11,9,11.0,9.0,9,xgboost_rank_grid_blend,12.0,2025,British Grand Prix,2025-07-06,0.0
+BEA,Haas F1 Team,18.0,-1.2922288,1.2922288,12,14,12.0,14.0,14,xgboost_rank_grid_blend,11.0,2025,British Grand Prix,2025-07-06,0.0
+GAS,Alpine,8.0,-1.2922288,1.2922288,13,8,13.0,8.0,8,xgboost_rank_grid_blend,6.0,2025,British Grand Prix,2025-07-06,0.0
+OCO,Haas F1 Team,14.0,-1.2922288,1.2922288,14,12,14.0,12.0,12,xgboost_rank_grid_blend,13.0,2025,British Grand Prix,2025-07-06,0.0
+STR,Aston Martin,17.0,-1.2922288,1.2922288,15,13,15.0,13.0,13,xgboost_rank_grid_blend,7.0,2025,British Grand Prix,2025-07-06,0.0
+PIA,McLaren,2.0,0.6535257,-0.6535257,1,2,1.0,2.0,2,xgboost_rank_grid_blend,1.0,2025,Belgian Grand Prix,2025-07-27,0.0
+NOR,McLaren,1.0,0.5444328,-0.5444328,2,1,2.0,1.0,1,xgboost_rank_grid_blend,2.0,2025,Belgian Grand Prix,2025-07-27,0.0
+RUS,Mercedes,6.0,0.076283745,-0.076283745,3,6,3.0,6.0,6,xgboost_rank_grid_blend,5.0,2025,Belgian Grand Prix,2025-07-27,0.0
+VER,Red Bull Racing,4.0,0.046304334,-0.046304334,4,4,4.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Belgian Grand Prix,2025-07-27,0.0
+LEC,Ferrari,3.0,0.038766287,-0.038766287,5,3,5.0,3.0,3,xgboost_rank_grid_blend,3.0,2025,Belgian Grand Prix,2025-07-27,0.0
+HAM,Ferrari,18.0,-0.015575011,0.015575011,6,18,6.0,18.0,18,xgboost_rank_grid_blend,7.0,2025,Belgian Grand Prix,2025-07-27,0.0
+ANT,Mercedes,19.0,-0.46861985,0.46861985,7,19,7.0,19.0,19,xgboost_rank_grid_blend,16.0,2025,Belgian Grand Prix,2025-07-27,0.0
+HUL,Audi,14.0,-0.86301816,0.86301816,8,14,8.0,14.0,14,xgboost_rank_grid_blend,12.0,2025,Belgian Grand Prix,2025-07-27,0.0
+BOR,Audi,10.0,-0.994106,0.994106,9,10,9.0,10.0,10,xgboost_rank_grid_blend,9.0,2025,Belgian Grand Prix,2025-07-27,0.0
+TSU,Red Bull Racing,7.0,-1.0481998,1.0481998,10,7,10.0,7.0,7,xgboost_rank_grid_blend,13.0,2025,Belgian Grand Prix,2025-07-27,0.0
+ALB,Williams,5.0,-1.1093909,1.1093909,11,5,11.0,5.0,5,xgboost_rank_grid_blend,6.0,2025,Belgian Grand Prix,2025-07-27,0.0
+ALO,Aston Martin,20.0,-1.1101544,1.1101544,12,20,12.0,20.0,20,xgboost_rank_grid_blend,17.0,2025,Belgian Grand Prix,2025-07-27,0.0
+STR,Aston Martin,16.0,-1.2248771,1.2248771,13,16,13.0,16.0,16,xgboost_rank_grid_blend,14.0,2025,Belgian Grand Prix,2025-07-27,0.0
+LAW,Racing Bulls,9.0,-1.2263092,1.2263092,14,9,14.0,9.0,9,xgboost_rank_grid_blend,8.0,2025,Belgian Grand Prix,2025-07-27,0.0
+SAI,Williams,17.0,-1.3063322,1.3063322,15,17,15.0,17.0,17,xgboost_rank_grid_blend,18.0,2025,Belgian Grand Prix,2025-07-27,0.0
+GAS,Alpine,13.0,-1.3178413,1.3178413,16,13,16.0,13.0,13,xgboost_rank_grid_blend,10.0,2025,Belgian Grand Prix,2025-07-27,0.0
+HAD,Racing Bulls,8.0,-1.3178413,1.3178413,17,8,17.0,8.0,8,xgboost_rank_grid_blend,20.0,2025,Belgian Grand Prix,2025-07-27,0.0
+BEA,Haas F1 Team,12.0,-1.34546,1.34546,18,12,18.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Belgian Grand Prix,2025-07-27,0.0
+COL,Alpine,15.0,-1.34546,1.34546,19,15,19.0,15.0,15,xgboost_rank_grid_blend,19.0,2025,Belgian Grand Prix,2025-07-27,0.0
+OCO,Haas F1 Team,11.0,-1.34546,1.34546,20,11,20.0,11.0,11,xgboost_rank_grid_blend,15.0,2025,Belgian Grand Prix,2025-07-27,0.0
+PIA,McLaren,2.0,1.0973613,-1.0973613,1,2,1.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+NOR,McLaren,3.0,1.0783671,-1.0783671,2,3,2.0,3.0,3,xgboost_rank_grid_blend,1.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+VER,Red Bull Racing,8.0,0.20570001,-0.20570001,3,8,3.0,8.0,8,xgboost_rank_grid_blend,9.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+LEC,Ferrari,1.0,0.037779972,-0.037779972,4,1,4.0,1.0,1,xgboost_rank_grid_blend,4.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+HAM,Ferrari,12.0,-0.17332442,0.17332442,5,11,5.0,11.0,11,xgboost_rank_grid_blend,12.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+RUS,Mercedes,4.0,-0.47736168,0.47736168,6,4,6.0,4.0,4,xgboost_rank_grid_blend,3.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+TSU,Red Bull Racing,20.0,-0.91950715,0.91950715,7,19,7.0,19.0,19,xgboost_rank_grid_blend,17.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+HUL,Audi,18.0,-0.99196607,0.99196607,8,17,8.0,17.0,17,xgboost_rank_grid_blend,13.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+ALB,Williams,19.0,-1.038979,1.038979,9,18,9.0,18.0,18,xgboost_rank_grid_blend,15.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+BOR,Audi,7.0,-1.0918549,1.0918549,10,7,10.0,7.0,7,xgboost_rank_grid_blend,6.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+ANT,Mercedes,15.0,-1.1033566,1.1033566,11,14,11.0,14.0,14,xgboost_rank_grid_blend,10.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+GAS,Alpine,16.0,-1.1687915,1.1687915,12,15,12.0,15.0,15,xgboost_rank_grid_blend,19.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+HAD,Racing Bulls,10.0,-1.1887368,1.1887368,13,10,13.0,10.0,10,xgboost_rank_grid_blend,11.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+LAW,Racing Bulls,9.0,-1.2032478,1.2032478,14,9,14.0,9.0,9,xgboost_rank_grid_blend,8.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+SAI,Williams,13.0,-1.2803602,1.2803602,15,12,15.0,12.0,12,xgboost_rank_grid_blend,14.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+ALO,Aston Martin,5.0,-1.2940093,1.2940093,16,5,16.0,5.0,5,xgboost_rank_grid_blend,5.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+COL,Alpine,14.0,-1.3149164,1.3149164,17,13,17.0,13.0,13,xgboost_rank_grid_blend,18.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+OCO,Haas F1 Team,17.0,-1.3149164,1.3149164,18,16,18.0,16.0,16,xgboost_rank_grid_blend,16.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+STR,Aston Martin,6.0,-1.3149164,1.3149164,19,6,19.0,6.0,6,xgboost_rank_grid_blend,7.0,2025,Hungarian Grand Prix,2025-08-03,0.0
+NOR,McLaren,2.0,1.1171643,-1.1171643,1,2,1.0,2.0,2,xgboost_rank_grid_blend,18.0,2025,Dutch Grand Prix,2025-08-31,0.0
+PIA,McLaren,1.0,1.042861,-1.042861,2,1,2.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Dutch Grand Prix,2025-08-31,0.0
+VER,Red Bull Racing,3.0,-0.26929274,0.26929274,3,3,3.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Dutch Grand Prix,2025-08-31,0.0
+RUS,Mercedes,5.0,-0.5149822,0.5149822,4,5,4.0,5.0,5,xgboost_rank_grid_blend,4.0,2025,Dutch Grand Prix,2025-08-31,0.0
+ANT,Mercedes,11.0,-1.0050955,1.0050955,5,9,5.0,9.0,9,xgboost_rank_grid_blend,16.0,2025,Dutch Grand Prix,2025-08-31,0.0
+ALO,Aston Martin,10.0,-1.0294707,1.0294707,6,8,6.0,8.0,8,xgboost_rank_grid_blend,8.0,2025,Dutch Grand Prix,2025-08-31,0.0
+HUL,Audi,17.0,-1.0651424,1.0651424,7,15,7.0,15.0,15,xgboost_rank_grid_blend,14.0,2025,Dutch Grand Prix,2025-08-31,0.0
+STR,Aston Martin,19.0,-1.0677414,1.0677414,8,17,8.0,17.0,17,xgboost_rank_grid_blend,7.0,2025,Dutch Grand Prix,2025-08-31,0.0
+BOR,Audi,13.0,-1.0912066,1.0912066,9,11,9.0,11.0,11,xgboost_rank_grid_blend,15.0,2025,Dutch Grand Prix,2025-08-31,0.0
+TSU,Red Bull Racing,12.0,-1.1051561,1.1051561,10,10,10.0,10.0,10,xgboost_rank_grid_blend,9.0,2025,Dutch Grand Prix,2025-08-31,0.0
+LAW,Racing Bulls,8.0,-1.1154723,1.1154723,11,6,11.0,6.0,6,xgboost_rank_grid_blend,12.0,2025,Dutch Grand Prix,2025-08-31,0.0
+HAD,Racing Bulls,4.0,-1.1965283,1.1965283,12,4,12.0,4.0,4,xgboost_rank_grid_blend,3.0,2025,Dutch Grand Prix,2025-08-31,0.0
+ALB,Williams,15.0,-1.2146242,1.2146242,13,13,13.0,13.0,13,xgboost_rank_grid_blend,5.0,2025,Dutch Grand Prix,2025-08-31,0.0
+BEA,Haas F1 Team,20.0,-1.3266551,1.3266551,14,18,14.0,18.0,18,xgboost_rank_grid_blend,6.0,2025,Dutch Grand Prix,2025-08-31,0.0
+COL,Alpine,16.0,-1.3266551,1.3266551,15,14,15.0,14.0,14,xgboost_rank_grid_blend,11.0,2025,Dutch Grand Prix,2025-08-31,0.0
+GAS,Alpine,14.0,-1.3266551,1.3266551,16,12,16.0,12.0,12,xgboost_rank_grid_blend,17.0,2025,Dutch Grand Prix,2025-08-31,0.0
+OCO,Haas F1 Team,18.0,-1.3266551,1.3266551,17,16,17.0,16.0,16,xgboost_rank_grid_blend,10.0,2025,Dutch Grand Prix,2025-08-31,0.0
+SAI,Williams,9.0,-1.3266551,1.3266551,18,7,18.0,7.0,7,xgboost_rank_grid_blend,13.0,2025,Dutch Grand Prix,2025-08-31,0.0
+PIA,McLaren,3.0,0.93044096,-0.93044096,1,3,1.0,3.0,3,xgboost_rank_grid_blend,3.0,2025,Italian Grand Prix,2025-09-07,0.0
+NOR,McLaren,2.0,0.3914223,-0.3914223,2,2,2.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Italian Grand Prix,2025-09-07,0.0
+VER,Red Bull Racing,1.0,0.16202645,-0.16202645,3,1,3.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Italian Grand Prix,2025-09-07,0.0
+RUS,Mercedes,5.0,-0.33245817,0.33245817,4,5,4.0,5.0,5,xgboost_rank_grid_blend,5.0,2025,Italian Grand Prix,2025-09-07,0.0
+LEC,Ferrari,4.0,-0.33921006,0.33921006,5,4,5.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Italian Grand Prix,2025-09-07,0.0
+HAM,Ferrari,10.0,-0.43552142,0.43552142,6,9,6.0,9.0,9,xgboost_rank_grid_blend,6.0,2025,Italian Grand Prix,2025-09-07,0.0
+TSU,Red Bull Racing,9.0,-0.8846019,0.8846019,7,8,7.0,8.0,8,xgboost_rank_grid_blend,13.0,2025,Italian Grand Prix,2025-09-07,0.0
+STR,Aston Martin,16.0,-1.0050281,1.0050281,8,14,8.0,14.0,14,xgboost_rank_grid_blend,18.0,2025,Italian Grand Prix,2025-09-07,0.0
+ALB,Williams,14.0,-1.0727353,1.0727353,9,12,9.0,12.0,12,xgboost_rank_grid_blend,7.0,2025,Italian Grand Prix,2025-09-07,0.0
+ANT,Mercedes,6.0,-1.1351842,1.1351842,10,6,10.0,6.0,6,xgboost_rank_grid_blend,9.0,2025,Italian Grand Prix,2025-09-07,0.0
+BOR,Audi,7.0,-1.165129,1.165129,11,7,11.0,7.0,7,xgboost_rank_grid_blend,8.0,2025,Italian Grand Prix,2025-09-07,0.0
+LAW,Racing Bulls,18.0,-1.1700923,1.1700923,12,16,12.0,16.0,16,xgboost_rank_grid_blend,14.0,2025,Italian Grand Prix,2025-09-07,0.0
+BEA,Haas F1 Team,11.0,-1.2188507,1.2188507,13,10,13.0,10.0,10,xgboost_rank_grid_blend,12.0,2025,Italian Grand Prix,2025-09-07,0.0
+GAS,Alpine,20.0,-1.2828462,1.2828462,14,18,14.0,18.0,18,xgboost_rank_grid_blend,16.0,2025,Italian Grand Prix,2025-09-07,0.0
+COL,Alpine,17.0,-1.3249322,1.3249322,15,15,15.0,15.0,15,xgboost_rank_grid_blend,17.0,2025,Italian Grand Prix,2025-09-07,0.0
+HAD,Racing Bulls,19.0,-1.3364385,1.3364385,16,17,16.0,17.0,17,xgboost_rank_grid_blend,10.0,2025,Italian Grand Prix,2025-09-07,0.0
+OCO,Haas F1 Team,15.0,-1.3431107,1.3431107,17,13,17.0,13.0,13,xgboost_rank_grid_blend,15.0,2025,Italian Grand Prix,2025-09-07,0.0
+SAI,Williams,13.0,-1.3431107,1.3431107,18,11,18.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,Italian Grand Prix,2025-09-07,0.0
+VER,Red Bull Racing,1.0,0.38125515,-0.38125515,1,1,1.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+NOR,McLaren,7.0,0.33914542,-0.33914542,2,7,2.0,7.0,7,xgboost_rank_grid_blend,7.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+LEC,Ferrari,10.0,0.26178217,-0.26178217,3,9,3.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+HAM,Ferrari,12.0,-0.13169287,0.13169287,4,11,4.0,11.0,11,xgboost_rank_grid_blend,8.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+RUS,Mercedes,5.0,-0.21270393,0.21270393,5,5,5.0,5.0,5,xgboost_rank_grid_blend,2.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+TSU,Red Bull Racing,6.0,-0.93638486,0.93638486,6,6,6.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+ALB,Williams,19.0,-0.9788251,0.9788251,7,18,7.0,18.0,18,xgboost_rank_grid_blend,13.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+HAD,Racing Bulls,8.0,-1.0840861,1.0840861,8,8,8.0,8.0,8,xgboost_rank_grid_blend,10.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+ANT,Mercedes,4.0,-1.1421639,1.1421639,9,4,9.0,4.0,4,xgboost_rank_grid_blend,4.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+BEA,Haas F1 Team,15.0,-1.1651059,1.1651059,10,14,10.0,14.0,14,xgboost_rank_grid_blend,12.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+BOR,Audi,13.0,-1.1651059,1.1651059,11,12,11.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+ALO,Aston Martin,11.0,-1.2355164,1.2355164,12,10,12.0,10.0,10,xgboost_rank_grid_blend,15.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+LAW,Racing Bulls,3.0,-1.2528964,1.2528964,13,3,13.0,3.0,3,xgboost_rank_grid_blend,5.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+COL,Alpine,16.0,-1.3158354,1.3158354,14,15,14.0,15.0,15,xgboost_rank_grid_blend,19.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+GAS,Alpine,18.0,-1.3158354,1.3158354,15,17,15.0,17.0,17,xgboost_rank_grid_blend,18.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+HUL,Audi,17.0,-1.3158354,1.3158354,16,16,16.0,16.0,16,xgboost_rank_grid_blend,16.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+OCO,Haas F1 Team,20.0,-1.3158354,1.3158354,17,19,17.0,19.0,19,xgboost_rank_grid_blend,14.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+SAI,Williams,2.0,-1.3158354,1.3158354,18,2,18.0,2.0,2,xgboost_rank_grid_blend,3.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+STR,Aston Martin,14.0,-1.3158354,1.3158354,19,13,19.0,13.0,13,xgboost_rank_grid_blend,17.0,2025,Azerbaijan Grand Prix,2025-09-21,0.0
+VER,Red Bull Racing,2.0,0.9733755,-0.9733755,1,2,1.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Singapore Grand Prix,2025-10-05,0.0
+PIA,McLaren,3.0,0.62983614,-0.62983614,2,3,2.0,3.0,3,xgboost_rank_grid_blend,4.0,2025,Singapore Grand Prix,2025-10-05,0.0
+NOR,McLaren,5.0,0.11647394,-0.11647394,3,5,3.0,5.0,5,xgboost_rank_grid_blend,3.0,2025,Singapore Grand Prix,2025-10-05,0.0
+RUS,Mercedes,1.0,0.057460804,-0.057460804,4,1,4.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Singapore Grand Prix,2025-10-05,0.0
+TSU,Red Bull Racing,13.0,-0.42087045,0.42087045,5,13,5.0,13.0,13,xgboost_rank_grid_blend,12.0,2025,Singapore Grand Prix,2025-10-05,0.0
+LEC,Ferrari,7.0,-0.44217634,0.44217634,6,7,6.0,7.0,7,xgboost_rank_grid_blend,6.0,2025,Singapore Grand Prix,2025-10-05,0.0
+HAM,Ferrari,6.0,-0.71931654,0.71931654,7,6,7.0,6.0,6,xgboost_rank_grid_blend,8.0,2025,Singapore Grand Prix,2025-10-05,0.0
+ANT,Mercedes,4.0,-0.86680406,0.86680406,8,4,8.0,4.0,4,xgboost_rank_grid_blend,5.0,2025,Singapore Grand Prix,2025-10-05,0.0
+ALB,Williams,20.0,-1.0375865,1.0375865,9,20,9.0,20.0,20,xgboost_rank_grid_blend,14.0,2025,Singapore Grand Prix,2025-10-05,0.0
+SAI,Williams,18.0,-1.0837915,1.0837915,10,18,10.0,18.0,18,xgboost_rank_grid_blend,10.0,2025,Singapore Grand Prix,2025-10-05,0.0
+HAD,Racing Bulls,8.0,-1.1272764,1.1272764,11,8,11.0,8.0,8,xgboost_rank_grid_blend,11.0,2025,Singapore Grand Prix,2025-10-05,0.0
+ALO,Aston Martin,10.0,-1.1848027,1.1848027,12,10,12.0,10.0,10,xgboost_rank_grid_blend,7.0,2025,Singapore Grand Prix,2025-10-05,0.0
+LAW,Racing Bulls,12.0,-1.1865851,1.1865851,13,12,13.0,12.0,12,xgboost_rank_grid_blend,15.0,2025,Singapore Grand Prix,2025-10-05,0.0
+BEA,Haas F1 Team,9.0,-1.251698,1.251698,14,9,14.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,Singapore Grand Prix,2025-10-05,0.0
+BOR,Audi,14.0,-1.3374327,1.3374327,15,14,15.0,14.0,14,xgboost_rank_grid_blend,17.0,2025,Singapore Grand Prix,2025-10-05,0.0
+COL,Alpine,16.0,-1.3374327,1.3374327,16,16,16.0,16.0,16,xgboost_rank_grid_blend,16.0,2025,Singapore Grand Prix,2025-10-05,0.0
+GAS,Alpine,19.0,-1.3374327,1.3374327,17,19,17.0,19.0,19,xgboost_rank_grid_blend,19.0,2025,Singapore Grand Prix,2025-10-05,0.0
+HUL,Audi,11.0,-1.3374327,1.3374327,18,11,18.0,11.0,11,xgboost_rank_grid_blend,20.0,2025,Singapore Grand Prix,2025-10-05,0.0
+OCO,Haas F1 Team,17.0,-1.3374327,1.3374327,19,17,19.0,17.0,17,xgboost_rank_grid_blend,18.0,2025,Singapore Grand Prix,2025-10-05,0.0
+STR,Aston Martin,15.0,-1.3374327,1.3374327,20,15,20.0,15.0,15,xgboost_rank_grid_blend,13.0,2025,Singapore Grand Prix,2025-10-05,0.0
+VER,Red Bull Racing,1.0,1.0747368,-1.0747368,1,1,1.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,United States Grand Prix,2025-10-19,0.0
+PIA,McLaren,6.0,0.9338265,-0.9338265,2,6,2.0,6.0,6,xgboost_rank_grid_blend,5.0,2025,United States Grand Prix,2025-10-19,0.0
+RUS,Mercedes,4.0,0.7701662,-0.7701662,3,4,3.0,4.0,4,xgboost_rank_grid_blend,6.0,2025,United States Grand Prix,2025-10-19,0.0
+NOR,McLaren,2.0,0.3782916,-0.3782916,4,2,4.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,United States Grand Prix,2025-10-19,0.0
+ANT,Mercedes,7.0,-0.28635246,0.28635246,5,7,5.0,7.0,7,xgboost_rank_grid_blend,13.0,2025,United States Grand Prix,2025-10-19,0.0
+LEC,Ferrari,3.0,-0.29827598,0.29827598,6,3,6.0,3.0,3,xgboost_rank_grid_blend,3.0,2025,United States Grand Prix,2025-10-19,0.0
+HAM,Ferrari,5.0,-0.31474727,0.31474727,7,5,7.0,5.0,5,xgboost_rank_grid_blend,4.0,2025,United States Grand Prix,2025-10-19,0.0
+TSU,Red Bull Racing,13.0,-0.36355412,0.36355412,8,12,8.0,12.0,12,xgboost_rank_grid_blend,7.0,2025,United States Grand Prix,2025-10-19,0.0
+ALB,Williams,18.0,-1.1272018,1.1272018,9,17,9.0,17.0,17,xgboost_rank_grid_blend,14.0,2025,United States Grand Prix,2025-10-19,0.0
+ALO,Aston Martin,10.0,-1.2254925,1.2254925,10,9,10.0,9.0,9,xgboost_rank_grid_blend,10.0,2025,United States Grand Prix,2025-10-19,0.0
+HAD,Racing Bulls,20.0,-1.2906116,1.2906116,11,19,11.0,19.0,19,xgboost_rank_grid_blend,16.0,2025,United States Grand Prix,2025-10-19,0.0
+BEA,Haas F1 Team,8.0,-1.3182487,1.3182487,12,8,12.0,8.0,8,xgboost_rank_grid_blend,9.0,2025,United States Grand Prix,2025-10-19,0.0
+BOR,Audi,16.0,-1.3182487,1.3182487,13,15,13.0,15.0,15,xgboost_rank_grid_blend,18.0,2025,United States Grand Prix,2025-10-19,0.0
+COL,Alpine,15.0,-1.3182487,1.3182487,14,14,14.0,14.0,14,xgboost_rank_grid_blend,17.0,2025,United States Grand Prix,2025-10-19,0.0
+GAS,Alpine,14.0,-1.3182487,1.3182487,15,13,15.0,13.0,13,xgboost_rank_grid_blend,19.0,2025,United States Grand Prix,2025-10-19,0.0
+HUL,Audi,11.0,-1.3182487,1.3182487,16,10,16.0,10.0,10,xgboost_rank_grid_blend,8.0,2025,United States Grand Prix,2025-10-19,0.0
+LAW,Racing Bulls,12.0,-1.3182487,1.3182487,17,11,17.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,United States Grand Prix,2025-10-19,0.0
+OCO,Haas F1 Team,17.0,-1.3182487,1.3182487,18,16,18.0,16.0,16,xgboost_rank_grid_blend,15.0,2025,United States Grand Prix,2025-10-19,0.0
+STR,Aston Martin,19.0,-1.3182487,1.3182487,19,18,19.0,18.0,18,xgboost_rank_grid_blend,12.0,2025,United States Grand Prix,2025-10-19,0.0
+VER,Red Bull Racing,5.0,1.1232662,-1.1232662,1,5,1.0,5.0,5,xgboost_rank_grid_blend,3.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+PIA,McLaren,7.0,0.6482304,-0.6482304,2,7,2.0,7.0,7,xgboost_rank_grid_blend,5.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+NOR,McLaren,1.0,0.511021,-0.511021,3,1,3.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+RUS,Mercedes,4.0,0.30569848,-0.30569848,4,4,4.0,4.0,4,xgboost_rank_grid_blend,7.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+LEC,Ferrari,2.0,-0.023364257,0.023364257,5,2,5.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+HAM,Ferrari,3.0,-0.21219182,0.21219182,6,3,6.0,3.0,3,xgboost_rank_grid_blend,8.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+TSU,Red Bull Racing,10.0,-0.37231925,0.37231925,7,10,7.0,10.0,10,xgboost_rank_grid_blend,11.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+ANT,Mercedes,6.0,-0.38186982,0.38186982,8,6,8.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+BEA,Haas F1 Team,9.0,-1.2101207,1.2101207,9,9,9.0,9.0,9,xgboost_rank_grid_blend,4.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+SAI,Williams,12.0,-1.2149141,1.2149141,10,12,10.0,12.0,12,xgboost_rank_grid_blend,17.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+ALB,Williams,17.0,-1.2934344,1.2934344,11,14,11.0,14.0,14,xgboost_rank_grid_blend,12.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+BOR,Audi,16.0,-1.3270435,1.3270435,12,13,12.0,13.0,13,xgboost_rank_grid_blend,10.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+COL,Alpine,20.0,-1.3270435,1.3270435,13,17,13.0,17.0,17,xgboost_rank_grid_blend,16.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+GAS,Alpine,18.0,-1.3270435,1.3270435,14,15,14.0,15.0,15,xgboost_rank_grid_blend,15.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+HAD,Racing Bulls,8.0,-1.3270435,1.3270435,15,8,15.0,8.0,8,xgboost_rank_grid_blend,13.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+OCO,Haas F1 Team,11.0,-1.3270435,1.3270435,16,11,16.0,11.0,11,xgboost_rank_grid_blend,9.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+STR,Aston Martin,19.0,-1.3270435,1.3270435,17,16,17.0,16.0,16,xgboost_rank_grid_blend,14.0,2025,Mexico City Grand Prix,2025-10-26,0.0
+VER,Red Bull Racing,19.0,1.049126,-1.049126,1,16,1.0,16.0,16,xgboost_rank_grid_blend,3.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+NOR,McLaren,1.0,0.9053532,-0.9053532,2,1,2.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+PIA,McLaren,4.0,0.3346265,-0.3346265,3,3,3.0,3.0,3,xgboost_rank_grid_blend,5.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+RUS,Mercedes,6.0,0.02488299,-0.02488299,4,5,4.0,5.0,5,xgboost_rank_grid_blend,4.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+TSU,Red Bull Racing,17.0,-0.5011025,0.5011025,5,15,5.0,15.0,15,xgboost_rank_grid_blend,17.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+ANT,Mercedes,2.0,-0.64137834,0.64137834,6,2,6.0,2.0,2,xgboost_rank_grid_blend,2.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+BEA,Haas F1 Team,8.0,-1.0617616,1.0617616,7,7,7.0,7.0,7,xgboost_rank_grid_blend,6.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+SAI,Williams,15.0,-1.2348922,1.2348922,8,13,8.0,13.0,13,xgboost_rank_grid_blend,13.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+ALO,Aston Martin,11.0,-1.3117026,1.3117026,9,10,9.0,10.0,10,xgboost_rank_grid_blend,14.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+OCO,Haas F1 Team,20.0,-1.346186,1.346186,10,17,10.0,17.0,17,xgboost_rank_grid_blend,12.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+ALB,Williams,12.0,-1.3579735,1.3579735,11,11,11.0,11.0,11,xgboost_rank_grid_blend,11.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+COL,Alpine,16.0,-1.3579735,1.3579735,12,14,12.0,14.0,14,xgboost_rank_grid_blend,15.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+GAS,Alpine,9.0,-1.3579735,1.3579735,13,8,13.0,8.0,8,xgboost_rank_grid_blend,10.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+HAD,Racing Bulls,5.0,-1.3579735,1.3579735,14,4,14.0,4.0,4,xgboost_rank_grid_blend,8.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+HUL,Audi,10.0,-1.3579735,1.3579735,15,9,15.0,9.0,9,xgboost_rank_grid_blend,9.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+LAW,Racing Bulls,7.0,-1.3579735,1.3579735,16,6,16.0,6.0,6,xgboost_rank_grid_blend,7.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+STR,Aston Martin,14.0,-1.3579735,1.3579735,17,12,17.0,12.0,12,xgboost_rank_grid_blend,16.0,2025,São Paulo Grand Prix,2025-11-09,0.0
+VER,Red Bull Racing,2.0,0.7122795,-0.7122795,1,1,1.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+LEC,Ferrari,9.0,0.18329783,-0.18329783,2,7,2.0,7.0,7,xgboost_rank_grid_blend,4.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+RUS,Mercedes,4.0,-0.021552362,0.021552362,3,3,3.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+HAM,Ferrari,19.0,-0.37018657,0.37018657,4,14,4.0,14.0,14,xgboost_rank_grid_blend,8.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+ANT,Mercedes,17.0,-0.6266873,0.6266873,5,13,5.0,13.0,13,xgboost_rank_grid_blend,3.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+TSU,Red Bull Racing,20.0,-0.87301147,0.87301147,6,15,6.0,15.0,15,xgboost_rank_grid_blend,12.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+BEA,Haas F1 Team,14.0,-0.9305594,0.9305594,7,11,7.0,11.0,11,xgboost_rank_grid_blend,10.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+OCO,Haas F1 Team,13.0,-1.1406094,1.1406094,8,10,8.0,10.0,10,xgboost_rank_grid_blend,9.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+ALO,Aston Martin,7.0,-1.3314149,1.3314149,9,5,9.0,5.0,5,xgboost_rank_grid_blend,11.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+COL,Alpine,15.0,-1.3789062,1.3789062,10,12,10.0,12.0,12,xgboost_rank_grid_blend,15.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+GAS,Alpine,10.0,-1.3789062,1.3789062,11,8,11.0,8.0,8,xgboost_rank_grid_blend,13.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+HAD,Racing Bulls,8.0,-1.3789062,1.3789062,12,6,12.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+HUL,Audi,11.0,-1.3789062,1.3789062,13,9,13.0,9.0,9,xgboost_rank_grid_blend,7.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+LAW,Racing Bulls,6.0,-1.3789062,1.3789062,14,4,14.0,4.0,4,xgboost_rank_grid_blend,14.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+SAI,Williams,3.0,-1.3789062,1.3789062,15,2,15.0,2.0,2,xgboost_rank_grid_blend,5.0,2025,Las Vegas Grand Prix,2025-11-22,0.0
+NOR,McLaren,2.0,1.0378513,-1.0378513,1,2,1.0,2.0,2,xgboost_rank_grid_blend,4.0,2025,Qatar Grand Prix,2025-11-30,0.0
+VER,Red Bull Racing,3.0,0.7299619,-0.7299619,2,3,2.0,3.0,3,xgboost_rank_grid_blend,1.0,2025,Qatar Grand Prix,2025-11-30,0.0
+PIA,McLaren,1.0,0.3792463,-0.3792463,3,1,3.0,1.0,1,xgboost_rank_grid_blend,2.0,2025,Qatar Grand Prix,2025-11-30,0.0
+RUS,Mercedes,4.0,0.3287183,-0.3287183,4,4,4.0,4.0,4,xgboost_rank_grid_blend,6.0,2025,Qatar Grand Prix,2025-11-30,0.0
+LEC,Ferrari,10.0,0.16554604,-0.16554604,5,10,5.0,10.0,10,xgboost_rank_grid_blend,8.0,2025,Qatar Grand Prix,2025-11-30,0.0
+ANT,Mercedes,5.0,0.09428562,-0.09428562,6,5,6.0,5.0,5,xgboost_rank_grid_blend,5.0,2025,Qatar Grand Prix,2025-11-30,0.0
+HAM,Ferrari,17.0,-0.41874063,0.41874063,7,15,7.0,15.0,15,xgboost_rank_grid_blend,12.0,2025,Qatar Grand Prix,2025-11-30,0.0
+TSU,Red Bull Racing,15.0,-0.89490986,0.89490986,8,13,8.0,13.0,13,xgboost_rank_grid_blend,10.0,2025,Qatar Grand Prix,2025-11-30,0.0
+OCO,Haas F1 Team,16.0,-1.0314763,1.0314763,9,14,9.0,14.0,14,xgboost_rank_grid_blend,15.0,2025,Qatar Grand Prix,2025-11-30,0.0
+HAD,Racing Bulls,6.0,-1.0887331,1.0887331,10,6,10.0,6.0,6,xgboost_rank_grid_blend,18.0,2025,Qatar Grand Prix,2025-11-30,0.0
+LAW,Racing Bulls,12.0,-1.2149806,1.2149806,11,11,11.0,11.0,11,xgboost_rank_grid_blend,9.0,2025,Qatar Grand Prix,2025-11-30,0.0
+BOR,Audi,19.0,-1.2206672,1.2206672,12,17,12.0,17.0,17,xgboost_rank_grid_blend,13.0,2025,Qatar Grand Prix,2025-11-30,0.0
+ALB,Williams,14.0,-1.3790247,1.3790247,13,12,13.0,12.0,12,xgboost_rank_grid_blend,11.0,2025,Qatar Grand Prix,2025-11-30,0.0
+ALO,Aston Martin,8.0,-1.3790247,1.3790247,14,8,14.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Qatar Grand Prix,2025-11-30,0.0
+COL,Alpine,20.0,-1.3790247,1.3790247,15,18,15.0,18.0,18,xgboost_rank_grid_blend,14.0,2025,Qatar Grand Prix,2025-11-30,0.0
+GAS,Alpine,9.0,-1.3790247,1.3790247,16,9,16.0,9.0,9,xgboost_rank_grid_blend,16.0,2025,Qatar Grand Prix,2025-11-30,0.0
+SAI,Williams,7.0,-1.3790247,1.3790247,17,7,17.0,7.0,7,xgboost_rank_grid_blend,3.0,2025,Qatar Grand Prix,2025-11-30,0.0
+STR,Aston Martin,18.0,-1.3790247,1.3790247,18,16,18.0,16.0,16,xgboost_rank_grid_blend,17.0,2025,Qatar Grand Prix,2025-11-30,0.0
+VER,Red Bull Racing,1.0,1.081884,-1.081884,1,1,1.0,1.0,1,xgboost_rank_grid_blend,1.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+NOR,McLaren,2.0,0.9211911,-0.9211911,2,2,2.0,2.0,2,xgboost_rank_grid_blend,3.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+PIA,McLaren,3.0,0.6348015,-0.6348015,3,3,3.0,3.0,3,xgboost_rank_grid_blend,2.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+RUS,Mercedes,4.0,0.358456,-0.358456,4,4,4.0,4.0,4,xgboost_rank_grid_blend,5.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+ANT,Mercedes,14.0,0.1128331,-0.1128331,5,14,5.0,14.0,14,xgboost_rank_grid_blend,15.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+LEC,Ferrari,5.0,-0.17683226,0.17683226,6,5,6.0,5.0,5,xgboost_rank_grid_blend,4.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+TSU,Red Bull Racing,10.0,-0.8126592,0.8126592,7,10,7.0,10.0,10,xgboost_rank_grid_blend,14.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+HAM,Ferrari,16.0,-0.86202663,0.86202663,8,16,8.0,16.0,16,xgboost_rank_grid_blend,8.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+SAI,Williams,12.0,-0.886059,0.886059,9,12,9.0,12.0,12,xgboost_rank_grid_blend,13.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+ALB,Williams,17.0,-1.1015553,1.1015553,10,17,10.0,17.0,17,xgboost_rank_grid_blend,16.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+BEA,Haas F1 Team,11.0,-1.1292233,1.1292233,11,11,11.0,11.0,11,xgboost_rank_grid_blend,12.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+HUL,Audi,18.0,-1.1607587,1.1607587,12,18,12.0,18.0,18,xgboost_rank_grid_blend,9.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+LAW,Racing Bulls,13.0,-1.2505522,1.2505522,13,13,13.0,13.0,13,xgboost_rank_grid_blend,18.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+BOR,Audi,7.0,-1.2791023,1.2791023,14,7,14.0,7.0,7,xgboost_rank_grid_blend,11.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+ALO,Aston Martin,6.0,-1.3259344,1.3259344,15,6,15.0,6.0,6,xgboost_rank_grid_blend,6.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+HAD,Racing Bulls,9.0,-1.3468549,1.3468549,16,9,16.0,9.0,9,xgboost_rank_grid_blend,17.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+STR,Aston Martin,15.0,-1.3691404,1.3691404,17,15,17.0,15.0,15,xgboost_rank_grid_blend,10.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+COL,Alpine,20.0,-1.3850613,1.3850613,18,20,18.0,20.0,20,xgboost_rank_grid_blend,20.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+GAS,Alpine,19.0,-1.3850613,1.3850613,19,19,19.0,19.0,19,xgboost_rank_grid_blend,19.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
+OCO,Haas F1 Team,8.0,-1.3850613,1.3850613,20,8,20.0,8.0,8,xgboost_rank_grid_blend,7.0,2025,Abu Dhabi Grand Prix,2025-12-07,0.0
