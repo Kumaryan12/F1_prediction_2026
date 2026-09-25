@@ -11,6 +11,7 @@ from predictor.data import build_training_min
 from predictor.ensemble import predict_event_with_ensemble, train_ensemble
 from predictor.evaluation.metrics import summarize_metrics
 from predictor.features import add_circuit_context_df, add_driver_team_form
+from predictor.ranker import predict_event_with_ranker, train_ranker
 
 
 def apply_rank_blend(predictions: pd.DataFrame, alpha: float) -> pd.DataFrame:
@@ -60,10 +61,16 @@ def build_walk_forward_predictions(
     min_train_races: int = 12,
     n_estimators: int = 250,
     mc_samples: int = 250,
+    excluded_features: set[str] | None = None,
+    featured_df: pd.DataFrame | None = None,
+    model_kind: str = "ensemble",
 ) -> pd.DataFrame:
     """Generate predictions where every model sees only earlier race dates."""
-    raw = build_training_min(years)
-    featured = add_circuit_context_df(add_driver_team_form(raw))
+    if featured_df is None:
+        raw = build_training_min(years)
+        featured = add_circuit_context_df(add_driver_team_form(raw))
+    else:
+        featured = featured_df.copy()
     featured["date"] = pd.to_datetime(featured["date"], errors="coerce")
 
     events = (
@@ -84,14 +91,28 @@ def build_walk_forward_predictions(
         if train.empty or test.empty:
             continue
 
-        model = train_ensemble(train, n_estimators=n_estimators)
-        forecast = predict_event_with_ensemble(
-            model,
-            test.drop(columns=["finish_pos"], errors="ignore"),
-            grid_alpha=1.0,
-            mc_samples=mc_samples,
-            random_state=42 + int(event_index),
-        )
+        if model_kind == "ranker":
+            model = train_ranker(train, n_estimators=n_estimators)
+            forecast = predict_event_with_ranker(
+                model,
+                test.drop(columns=["finish_pos"], errors="ignore"),
+                model_alpha=1.0,
+            )
+        elif model_kind == "ensemble":
+            model = train_ensemble(
+                train,
+                n_estimators=n_estimators,
+                excluded_features=excluded_features,
+            )
+            forecast = predict_event_with_ensemble(
+                model,
+                test.drop(columns=["finish_pos"], errors="ignore"),
+                grid_alpha=1.0,
+                mc_samples=mc_samples,
+                random_state=42 + int(event_index),
+            )
+        else:
+            raise ValueError(f"Unknown model_kind: {model_kind}")
         actual = test[["driver", "finish_pos"]].drop_duplicates("driver")
         forecast = forecast.merge(actual, on="driver", how="inner")
         forecast["year"] = int(event["year"])

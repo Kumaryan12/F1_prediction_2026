@@ -30,24 +30,13 @@ DEFAULT_PIT_LOSS = 21.0
 #     estimated pit-loss seconds,
 # )
 #
-# IMPORTANT:
-# Madring is a brand-new circuit in 2026.
-#
-# Official historical values are therefore unavailable:
-# - Safety Car probability: N/A
-# - VSC probability: N/A
-# - Pit-loss history: N/A
-#
-# The values below are MODEL PRIORS, not historical statistics.
-# They reflect:
-# - first-year circuit uncertainty
-# - hybrid street/permanent layout
-# - several wall-lined / confined sections
-# - new low-grip asphalt
-# - relatively high incident uncertainty
+# Values are modelling priors used before the 2026 Azerbaijan GP. Baku's
+# walls, narrow Old Town section and heavy-braking zones make interruptions
+# materially more likely than at a conventional permanent circuit.
 # -------------------------------------------------------------------
 
 CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
+    "Azerbaijan Grand Prix": (0.68, 0.40, 20.0),
     "Spanish Grand Prix": (0.55, 0.35, 21.5),
 }
 
@@ -55,10 +44,8 @@ CIRCUIT_VOL: Dict[str, Tuple[float, float, float]] = {
 # -------------------------------------------------------------------
 # Completed 2026 races available for training / recent-form generation
 #
-# Italian GP is now completed and can be included.
-#
-# Spanish GP at Madring is the ACTIVE prediction event and therefore
-# must NOT be included here until the race has actually finished.
+# Spanish GP at Madring is now completed and can be included. Azerbaijan is
+# the active prediction event and must not be listed until its race finishes.
 #
 # IMPORTANT NAMING:
 #
@@ -87,6 +74,7 @@ FALLBACK_EVENTS: Dict[int, list[str]] = {
         "Hungarian Grand Prix",
         "Dutch Grand Prix",
         "Italian Grand Prix",
+        "Spanish Grand Prix",
     ],
 }
 
@@ -110,6 +98,7 @@ LOW_DF_GPS = {
     "Austrian Grand Prix",
     "Belgian Grand Prix",
     "Italian Grand Prix",
+    "Azerbaijan Grand Prix",
 }
 
 
@@ -131,6 +120,7 @@ LOW_DF_GPS = {
 
 STREET_GPS = {
     "Monaco Grand Prix",
+    "Azerbaijan Grand Prix",
 }
 
 
@@ -153,6 +143,14 @@ LONG_STRAIGHT_GPS = {
 
     # Madring
     "Spanish Grand Prix",
+    "Azerbaijan Grand Prix",
+}
+
+
+# Direct same-circuit form is useful at an established, distinctive venue.
+# It remains separate from the broader street and power-track archetypes.
+BAKU_GPS = {
+    "Azerbaijan Grand Prix",
 }
 
 
@@ -188,6 +186,46 @@ HIGH_DF_TECHNICAL_GPS = {
 # -------------------------------------------------------------------
 
 CIRCUIT_EXTRAS = {
+
+    # ===============================================================
+    # AZERBAIJAN GRAND PRIX - BAKU CITY CIRCUIT
+    # ===============================================================
+
+    "Azerbaijan Grand Prix": {
+        # Pirelli expects a one-stop race: the surface is smooth and tyre
+        # degradation was very low in Thursday running.
+        "expected_stops": 1.1,
+        "overtake_index": 0.76,
+        "tow_importance": 0.97,
+
+        # Baku combines Monza-like drag sensitivity with a true street
+        # circuit and a 2.2 km flat-out section.
+        "is_low_df": 1.0,
+        "is_street": 1.0,
+        "long_straight_index": 0.99,
+
+        # Tyres cool on the long straight before the heavy Turn 1 stop.
+        "braking_intensity": 0.90,
+        "warmup_penalty": 0.24,
+        "deg_rate": 0.28,
+        "stint_len_typical": 30,
+
+        "surface_bumpiness": 0.42,
+        "wind_sensitivity": 0.95,
+        "track_limits_risk": 0.38,
+        "elevation_change_index": 0.12,
+        "mechanical_failure_risk": 0.66,
+
+        "corner_count": 20,
+        "avg_speed_kph": 210,
+
+        # Official race-day forecast: dry, 20-26 C, with gusts potentially
+        # reaching 43.2 kph. Wind is represented separately above.
+        "rain_prob_race": 0.00,
+        "wet_lap_fraction": 0.00,
+        "wet_start_prob": 0.00,
+        "mixed_conditions_risk": 0.00,
+    },
 
     # ===============================================================
     # SPANISH GRAND PRIX - MADRING, MADRID

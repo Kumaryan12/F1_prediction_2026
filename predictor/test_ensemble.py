@@ -58,3 +58,9 @@ def test_ensemble_probabilities_form_one_race():
         range(1, len(out) + 1)
     )
     assert (out["ranking_mode_default"] == "ensemble_grid_blend").all()
+
+
+def test_feature_ablation_masks_requested_signal():
+    train = _frame()
+    model = train_ensemble(train, n_estimators=20, excluded_features={"driver_skill_rating"})
+    assert model.excluded_features_ == {"driver_skill_rating"}

@@ -10,6 +10,7 @@ from .config import (
     DEFAULT_PIT_LOSS,
     CIRCUIT_EXTRAS,
     LOW_DF_GPS,
+    BAKU_GPS,
 )
 
 try:
@@ -36,16 +37,16 @@ except Exception:
 # -------------------------------------------------------------------
 # Driver / team priors
 #
-# 2026 Spanish GP / MADRING configuration
+# 2026 Azerbaijan GP / BAKU configuration
 #
 # IMPORTANT:
 #
 # These are PRE-RACE competitiveness priors.
 #
-# They are frozen using information available THROUGH MONZA and do NOT
-# include Madrid FP1 / FP2 / FP3 / qualifying information.
+# They are frozen using information available through MADRID and do NOT
+# include Baku FP1 / FP2 / FP3 / qualifying information.
 #
-# Madrid weekend information should instead enter via:
+# Baku weekend information should instead enter via:
 #
 #     driver_2026_session_strength
 #     team_2026_strength
@@ -54,23 +55,10 @@ except Exception:
 # This avoids manually counting the same weekend evidence twice.
 #
 #
-# Madring characteristics:
-#
-# - brand-new circuit
-# - hybrid street / permanent layout
-# - 22 corners
-# - high-speed first sector
-# - technical medium/low-speed sections
-# - long straights
-# - heavy braking
-# - substantial elevation change
-# - highly banked La Monumental
-# - high lateral-energy demand
-#
-# Because there is NO historical Madring F1 race data, circuit-specific
-# driver priors are intentionally limited.
-#
-# Recent form and underlying team strength remain more important.
+# Baku is an established low-downforce street circuit with a very long
+# full-throttle section, heavy braking, low tyre degradation, strong tow
+# effects and high incident/wind sensitivity. Direct Baku history is modelled
+# separately, rather than being baked into these general skill priors.
 # -------------------------------------------------------------------
 
 DRIVER_SKILL_PRIOR = {
@@ -79,73 +67,40 @@ DRIVER_SKILL_PRIOR = {
     # Championship benchmark
     # ---------------------------------------------------------------
 
-    # Championship leader: 267 points.
-    #
-    # Monza:
-    # started P19 after PU penalty
-    # finished P1
-    #
-    # One of the strongest individual performances of the season.
+    # Championship leader; won both Monza and Madrid.
     "ANT": 1.00,
 
-    # Championship P2: 201 points.
-    #
-    # Monza:
-    # grid P2
-    # race P2
-    #
-    # Very strong consistency and Mercedes remains the benchmark.
-    "RUS": 0.98,
+    # Very strong consistency and Mercedes remains the benchmark; Madrid P5.
+    "RUS": 0.97,
 
     # ---------------------------------------------------------------
     # Leading challengers
     # ---------------------------------------------------------------
 
-    # Championship P4: 171 points.
-    #
-    # Hungary winner
-    # Netherlands winner
-    # Monza P4
-    #
-    # McLaren has become a very consistent front-running package.
+    # Hungary and Netherlands winner; Madrid P3.
     "NOR": 0.96,
 
-    # Championship P3: 191 points.
-    #
-    # Monza P6.
-    # Strong season overall and previously won Barcelona-Catalunya.
-    #
-    # Madrid's mix of lateral load, braking and technical corners
-    # should not be fundamentally hostile to Ferrari.
-    "HAM": 0.95,
+    # Strong season overall and Barcelona-Catalunya winner. Madrid retirement
+    # is treated mainly as reliability rather than lost driver ability.
+    "HAM": 0.93,
 
-    # Monza P3.
-    #
-    # Zandvoort retirement is not treated as evidence of weak pace.
-    # Recent Hungary P2 + Monza P3 indicate strong current form.
-    "VER": 0.94,
+    # Madrid P2 and a two-time Baku winner. Direct Baku history is represented
+    # independently rather than being fully embedded in this general prior.
+    "VER": 0.97,
 
-    # Championship P5.
-    #
-    # Monza Lap-1 DNF provides effectively no useful evidence about
-    # underlying race pace, so he is NOT heavily penalized for it.
-    "LEC": 0.94,
+    # Madrid P4 and four Baku poles. Direct Baku history is represented in
+    # baku_driver_form3.
+    "LEC": 0.95,
 
     # ---------------------------------------------------------------
     # Front-running / podium-threat group
     # ---------------------------------------------------------------
 
-    # Championship P7.
-    #
-    # Monza P5 and strong McLaren package.
-    "PIA": 0.90,
+    # McLaren remains strong, though Madrid P8 tempers recent form.
+    "PIA": 0.89,
 
-    # Hadjar remains one of the strongest midfield/front-group drivers
-    # of the year but is NOT expected to race in Madrid because of his
-    # wrist injury.
-    #
-    # Value retained for historical rows.
-    "HAD": 0.85,
+    # Returns at Baku after recovering from his wrist injury.
+    "HAD": 0.86,
 
     # ---------------------------------------------------------------
     # Upper midfield
@@ -156,12 +111,7 @@ DRIVER_SKILL_PRIOR = {
     # This deserves a meaningful upgrade compared with his older prior.
     "GAS": 0.83,
 
-    # Currently substituting for Hadjar at Red Bull.
-    #
-    # Zandvoort P7.
-    # Monza P14.
-    #
-    # Red Bull machinery gives upside but transition uncertainty remains.
+    # Returns to Racing Bulls after covering for Hadjar; Madrid P6.
     "LAW": 0.82,
 
     # Monza P8 and now 29 championship points.
@@ -297,50 +247,39 @@ TEAM_ALIAS = {
 # -------------------------------------------------------------------
 # Current team-performance priors
 #
-# Official standings after Monza:
+# Competitiveness priors updated after Madrid:
 #
-# Mercedes          468
-# Ferrari           346
-# McLaren           287
-# Red Bull Racing   204
-# Racing Bulls       75
-# Alpine             62
+# Mercedes          503
+# Ferrari           358
+# McLaren           306
+# Red Bull Racing   230
+# Racing Bulls       77
+# Alpine             68
 # Haas               21
-# Audi               16
+# Audi               17
 # Williams           11
 # Aston Martin        3
 # Cadillac            0
 #
-# Madrid suitability is only a secondary adjustment because no F1 race
-# has previously taken place at Madring.
+# Baku suitability is learned through the historical archetype and direct
+# circuit-form features rather than manually folded into team strength.
 # -------------------------------------------------------------------
 
 TEAM_BASELINE_PRIOR = {
 
     # Dominant constructors' championship leader.
     #
-    # Monza 1-2 further strengthens the signal.
+    # Won Madrid and remains the clear season benchmark.
     "Mercedes": 1.00,
 
-    # Clear championship P2.
-    #
-    # Monza was poor largely because Leclerc retired on Lap 1.
-    # We should NOT overreact to one abnormal weekend.
+    # Clear championship P2; Madrid P4 plus Hamilton's retirement.
     "Ferrari": 0.95,
 
-    # Excellent recent trajectory:
-    #
-    # Hungary win
-    # Netherlands win
-    # Monza P4 + P5
-    #
-    # Madrid's mixed aero/technical profile should suit them.
+    # Hungary and Netherlands wins followed by Madrid P3 and P8.
     "McLaren": 0.93,
 
-    # Verstappen P3 at Monza.
-    #
-    # Still materially behind the top three over the whole season.
-    "Red Bull Racing": 0.86,
+    # Madrid P2 and P6 showed a strong current package.
+    "Red Bull Racing": 0.89,
 
     # ---------------------------------------------------------------
     # Upper midfield
@@ -348,7 +287,7 @@ TEAM_BASELINE_PRIOR = {
 
     "Racing Bulls": 0.74,
 
-    # Excellent Monza qualifying and both cars scored points.
+    # Madrid P7 and P12 continued a competitive recent run.
     "Alpine": 0.74,
 
     # ---------------------------------------------------------------
@@ -570,7 +509,7 @@ def add_driver_skill_prior(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Add current pre-Madrid driver competitiveness and status flags.
+    Add current pre-Baku driver competitiveness and status flags.
     """
 
     out = df.copy()
@@ -645,10 +584,10 @@ def add_team_prior_strength(
 
 def add_live_strength_adjustments(
     df: pd.DataFrame,
-    hist_team_weight: float = 0.40,
-    live_team_weight: float = 0.60,
-    hist_driver_weight: float = 0.40,
-    live_driver_weight: float = 0.60,
+    hist_team_weight: float = 0.55,
+    live_team_weight: float = 0.45,
+    hist_driver_weight: float = 0.55,
+    live_driver_weight: float = 0.45,
 ) -> pd.DataFrame:
     """
     Create:
@@ -658,14 +597,9 @@ def add_live_strength_adjustments(
         driver_strength_blend_2026
         team_strength_blend_2026
 
-    Madrid is unusual because there is NO direct historical F1 circuit
-    data.
-
-    Therefore current weekend performance is somewhat more informative
-    than it was at an established circuit such as Monza or Zandvoort.
-
-    Live strength receives 60%, while historical general form retains
-    40%.
+    Baku has useful historical circuit data, so historical form keeps a small
+    majority of the blend. Live performance remains valuable for the current
+    car, wind and tyre preparation.
 
     We still avoid making live session data dominant because:
 
@@ -1237,7 +1171,7 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Frozen pre-Madrid manual priors
+    # Frozen pre-Baku manual priors
     # ---------------------------------------------------------------
 
     df["driver_skill_prior"] = (
@@ -1482,7 +1416,7 @@ def add_driver_team_form(
     #
     # Retained for historical consistency.
     #
-    # Madrid itself is NOT classified as low-downforce.
+    # Baku is classified as low-downforce; Madrid remains excluded.
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1493,12 +1427,7 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
-    # Street-circuit form
-    #
-    # Madrid is hybrid street/permanent.
-    #
-    # We deliberately do NOT add Madrid to STREET_GPS because Monaco
-    # would be an overly strong analogy.
+    # Street-circuit form (Baku is a full member; Madrid remains excluded).
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1511,7 +1440,7 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # Long-straight / energy-sensitive form
     #
-    # PRIMARY Madrid archetype.
+    # PRIMARY Baku archetype.
     # ---------------------------------------------------------------
 
     _add_archetype_forms(
@@ -1524,7 +1453,7 @@ def add_driver_team_form(
     # ---------------------------------------------------------------
     # High-downforce / technical form
     #
-    # PRIMARY Madrid archetype.
+    # Retained for historical rows but not used by the Baku model feature set.
     #
     # This captures performance on tracks demanding:
     #
@@ -1543,6 +1472,21 @@ def add_driver_team_form(
 
 
     # ---------------------------------------------------------------
+    # Direct Baku form
+    #
+    # Baku's combination of low drag, walls, heavy braking and its long
+    # tow section is distinctive enough to retain same-circuit history in
+    # addition to the three broader archetypes.
+    # ---------------------------------------------------------------
+
+    _add_archetype_forms(
+        gps=BAKU_GPS,
+        driver_output_col="baku_driver_form3",
+        team_output_col="baku_team_form3",
+    )
+
+
+    # ---------------------------------------------------------------
     # Archetype fallback
     #
     # A driver/team with insufficient archetype history falls back to
@@ -1554,6 +1498,7 @@ def add_driver_team_form(
         "street_driver_form3",
         "longstraight_driver_form3",
         "highdf_driver_form3",
+        "baku_driver_form3",
     ]
 
 
@@ -1572,6 +1517,7 @@ def add_driver_team_form(
         "street_team_form3",
         "longstraight_team_form3",
         "highdf_team_form3",
+        "baku_team_form3",
     ]
 
 
@@ -1602,8 +1548,8 @@ def merge_latest_forms(
     train_df_with_forms: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Merge latest general and archetype form into the Madrid Spanish GP
-    prediction dataframe.
+    Merge latest general, archetype and direct Baku form into the Azerbaijan
+    GP prediction dataframe.
     """
 
     required_predict = {
@@ -1757,6 +1703,11 @@ def merge_latest_forms(
             HIGH_DF_TECHNICAL_GPS,
             "highdf_driver_form3",
         ),
+
+        (
+            BAKU_GPS,
+            "baku_driver_form3",
+        ),
     ]
 
 
@@ -1855,6 +1806,11 @@ def merge_latest_forms(
             HIGH_DF_TECHNICAL_GPS,
             "highdf_team_form3",
         ),
+
+        (
+            BAKU_GPS,
+            "baku_team_form3",
+        ),
     ]
 
 
@@ -1917,6 +1873,9 @@ def merge_latest_forms(
         "highdf_driver_form3":
             "drv_form3",
 
+        "baku_driver_form3":
+            "drv_form3",
+
         "driver_hist_strength":
             None,
     }
@@ -1934,8 +1893,8 @@ def merge_latest_forms(
         )
 
 
-    # Always refresh current Madrid priors rather than carrying the
-    # previous race's Monza priors into the prediction frame.
+    # Always refresh current Baku priors rather than carrying the previous
+    # race's Madrid priors into the prediction frame.
     out["driver_skill_prior"] = (
         out["driver"]
         .map(
@@ -1984,6 +1943,9 @@ def merge_latest_forms(
             "team_form3",
 
         "highdf_team_form3":
+            "team_form3",
+
+        "baku_team_form3":
             "team_form3",
 
         "team_hist_strength":
@@ -2041,13 +2003,10 @@ def add_quali_proxy(
         +
         (1 - driver_weight) * team recent qualifying
 
-    Madrid is a brand-new circuit, so historical circuit-specific
-    qualifying performance does not exist.
+    Before Baku qualifying is available, recent qualifying consistency is a
+    safer proxy than reusing the previous race's grid.
 
-    Recent qualifying consistency therefore provides the safest proxy.
-
-    Once the official Spanish GP grid is available, ALWAYS use the real
-    grid rather than this proxy.
+    Once the official Azerbaijan GP grid is available, always use it instead.
     """
 
     if not 0.0 <= driver_weight <= 1.0:
