@@ -1,6 +1,7 @@
 import pandas as pd
 
 from predictor.config import BAKU_GPS
+from predictor.data import MANUAL_GRID_GP, MANUAL_STARTING_GRID
 from predictor.features import add_circuit_context_df, add_driver_team_form
 from predictor.model import FEATS
 
@@ -28,6 +29,14 @@ def test_baku_model_features_use_relevant_archetypes():
     }
     assert expected.issubset(FEATS)
     assert "highdf_driver_form3" not in FEATS
+
+
+def test_baku_manual_grid_contains_complete_qualifying_order():
+    assert MANUAL_GRID_GP == "Azerbaijan Grand Prix"
+    assert len(MANUAL_STARTING_GRID) == 22
+    assert sorted(MANUAL_STARTING_GRID.values()) == list(range(1, 23))
+    assert MANUAL_STARTING_GRID["RUS"] == 1
+    assert MANUAL_STARTING_GRID["BOT"] == 22
 
 
 def test_baku_form_is_shifted_before_current_race():

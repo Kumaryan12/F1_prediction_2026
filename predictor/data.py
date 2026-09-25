@@ -19,10 +19,32 @@ GP_NAME_ALIASES = {
 MANUAL_GRID_YEAR = 2026
 MANUAL_GRID_GP = "Azerbaijan Grand Prix"
 
-# Keep this empty until the official Baku grid is known. The normal dynamic
-# path will use qualifying results when available and a qualifying proxy before
-# then, avoiding accidental reuse of Madrid's grid.
-MANUAL_STARTING_GRID: Dict[str, int] = {}
+# 2026 Azerbaijan GP provisional qualifying classification (FIA Doc 43).
+# These are qualifying positions, not a later penalty-adjusted final grid.
+MANUAL_STARTING_GRID: Dict[str, int] = {
+    "RUS": 1,
+    "LEC": 2,
+    "PIA": 3,
+    "HAD": 4,
+    "NOR": 5,
+    "HAM": 6,
+    "GAS": 7,
+    "VER": 8,
+    "SAI": 9,
+    "COL": 10,
+    "BEA": 11,
+    "LAW": 12,
+    "ALB": 13,
+    "OCO": 14,
+    "LIN": 15,
+    "ANT": 16,
+    "BOR": 17,
+    "HUL": 18,
+    "ALO": 19,
+    "PER": 20,
+    "STR": 21,
+    "BOT": 22,
+}
 
 
 def _canonical_gp_name(gp_name: str) -> str:
@@ -168,7 +190,18 @@ def _get_roster_map(year: int, target_gp: str) -> pd.DataFrame:
 
 
 def _build_from_roster(year: int, gp_name: str) -> pd.DataFrame:
-    roster = _get_roster_map(year, gp_name).copy()
+    # Prefer the target weekend's qualifying roster when available. This is
+    # important when driver/team assignments changed after the previous race
+    # (Hadjar returning and Lawson moving back to Racing Bulls at Baku).
+    try:
+        q_res = _load_results_only(year, gp_name, "Q").copy()
+        roster = q_res[["DriverNumber", "Abbreviation", "TeamName"]].rename(
+            columns={"Abbreviation": "driver", "TeamName": "team"}
+        )
+        roster = roster.dropna(subset=["driver"]).drop_duplicates("DriverNumber")
+    except Exception:
+        roster = _get_roster_map(year, gp_name).copy()
+
     roster.loc[:, "grid_pos"] = pd.NA
     return _format_target_driver_frame(roster, year, gp_name)
 
