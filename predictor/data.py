@@ -17,31 +17,12 @@ GP_NAME_ALIASES = {
 
 
 MANUAL_GRID_YEAR = 2026
-MANUAL_GRID_GP = "Spanish Grand Prix"
-MANUAL_STARTING_GRID: Dict[str, int] = {
-    "RUS": 6,
-    "LEC": 5,
-    "HAM": 4,
-    "ANT": 2,
-    "VER": 3,
-    "NOR": 1,
-    "PIA": 7,
-    "HAD": 99,
-    "LAW": 8,
-    "LIN": 10,
-    "GAS": 14,
-    "BOR": 12,
-    "BEA": 21,
-    "HUL": 11,
-    "OCO": 13,
-    "COL": 9,
-    "SAI": 17,
-    "ALB": 16,
-    "PER": 19,
-    "BOT": 20,
-    "ALO": 18,
-    "STR": 22,
-}
+MANUAL_GRID_GP = "Azerbaijan Grand Prix"
+
+# Keep this empty until the official Baku grid is known. The normal dynamic
+# path will use qualifying results when available and a qualifying proxy before
+# then, avoiding accidental reuse of Madrid's grid.
+MANUAL_STARTING_GRID: Dict[str, int] = {}
 
 
 def _canonical_gp_name(gp_name: str) -> str:

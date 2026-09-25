@@ -18,6 +18,14 @@ def load_session_safe(year: int, gp: str, session_code: str):
     try:
         sess = fastf1.get_session(year, gp, session_code)
         sess.load()
+
+        # FastF1 may return a Session object for a future/not-yet-published
+        # session without raising. Treat it as unavailable so FP1/FP2 data can
+        # still be used before FP3 or qualifying has taken place.
+        laps = sess.laps
+        if laps is None or laps.empty:
+            return None
+
         return sess
     except Exception:
         return None

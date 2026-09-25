@@ -553,7 +553,7 @@ def main():
                 "target_context": {"year": target_year, "gp": target_gp},
                 "oob": oob_errors(model, train_df) or {},
                 "model": "RandomForestRegressor",
-                "code_version": "v4_australia_fp_adjustment",
+                "code_version": "v5_baku_features",
             }
             saved_path = _safe_save_model(model, args.save_model, meta)
             print(f"[INFO] Saved model to {saved_path}")
@@ -704,7 +704,7 @@ def main():
         gp=args.gp,
         stage="pre_race",
         model_version="race_ensemble_v1" if args.ensemble else "random_forest_v1",
-        feature_set_version="temporal_safe_v1" if args.ensemble else "f1_features_v1",
+        feature_set_version="baku_temporal_safe_v1" if args.ensemble else "baku_features_v1",
         data_cutoff="manual_current_run",
         predicted_winner=predicted_winner,
         prediction_file_path=str("backend/app/data/predicted_order.csv"),

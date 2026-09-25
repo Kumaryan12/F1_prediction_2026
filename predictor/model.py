@@ -21,7 +21,7 @@ DATA_DIR = Path("/Users/aryansatyendrakumar/Projects/F1_prediction_2026/backend/
 
 
 # -------------------------------------------------------------------
-# Feature list (China-ready, Australia-specific features removed)
+# Feature list for the 2026 Azerbaijan GP at Baku
 # -------------------------------------------------------------------
 FEATS = [
     # ---------------------------------------------------------------
@@ -44,8 +44,7 @@ FEATS = [
     "overtake_index",
     "tow_importance",
 
-    # Madrid is not a true low-downforce circuit.
-    # is_street may be fractional in config because Madring is hybrid.
+    # Baku is both low-downforce and a true street circuit.
     "is_low_df",
     "is_street",
     "long_straight_index",
@@ -57,14 +56,6 @@ FEATS = [
 
     # ---------------------------------------------------------------
     # Track / layout characteristics
-    #
-    # Madring combines:
-    # - long/high-speed sections
-    # - 22 corners
-    # - elevation changes
-    # - technical medium/low-speed sections
-    # - heavy braking
-    # - banked high-load corners
     # ---------------------------------------------------------------
 
     "surface_bumpiness",
@@ -102,36 +93,27 @@ FEATS = [
     "team_form3",
 
     # ---------------------------------------------------------------
-    # PRIMARY MADRID ARCHETYPE 1
-    #
-    # High-downforce / technical performance.
-    #
-    # Useful because Madring contains:
-    # - significant lateral loading
-    # - technical corner sequences
-    # - mechanical-grip requirements
-    # - banking
-    # - aero-sensitive sections
+    # PRIMARY BAKU ARCHETYPE 1: low-downforce / power-sensitive form.
     # ---------------------------------------------------------------
 
-    "highdf_driver_form3",
-    "highdf_team_form3",
+    "lowdf_driver_form3",
+    "lowdf_team_form3",
 
     # ---------------------------------------------------------------
-    # PRIMARY MADRID ARCHETYPE 2
-    #
-    # Long-straight / high-speed / energy-sensitive performance.
-    #
-    # Useful because Madrid also contains:
-    # - long straights
-    # - high top speeds
-    # - strong energy deployment requirements
-    # - tow relevance
-    # - major braking zones
+    # PRIMARY BAKU ARCHETYPE 2: street-circuit performance.
     # ---------------------------------------------------------------
 
+    "street_driver_form3",
+    "street_team_form3",
+
+    # PRIMARY BAKU ARCHETYPE 3: long-straight / tow performance.
     "longstraight_driver_form3",
     "longstraight_team_form3",
+
+    # Direct circuit form lets prior Baku performance matter without
+    # manually inflating a driver's general skill prior.
+    "baku_driver_form3",
+    "baku_team_form3",
 
     # ---------------------------------------------------------------
     # Historical normalized strength
@@ -143,8 +125,7 @@ FEATS = [
     # ---------------------------------------------------------------
     # Current-season / live-session blended strength
     #
-    # Particularly valuable at a brand-new circuit because there is
-    # no direct Madring historical F1 race data.
+    # Current-car pace complements the established Baku history.
     # ---------------------------------------------------------------
 
     "driver_strength_blend_2026",
