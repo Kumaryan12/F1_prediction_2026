@@ -599,6 +599,8 @@ def main():
     # Predict
     # ---------------------------------------------------------------
     print("[INFO] Predicting order…")
+    random_forest_out = None
+
     if args.ensemble:
         print("[INFO] Training diverse race ensemble on temporally safe features…")
         BACKEND_DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -627,6 +629,17 @@ def main():
             grid_alpha=args.ensemble_grid_alpha,
             mc_samples=args.mc,
         )
+
+        # The ensemble remains the authoritative output, but print the
+        # standalone Random Forest result from the same inputs so the two
+        # rankings can be compared in a single run.
+        random_forest_out = predict_event_with_uncertainty(
+            model,
+            pred_df,
+            add_intervals=True,
+            mc_samples=args.mc,
+            save_features=False,
+        )
     else:
         out = predict_event_with_uncertainty(
             model,
@@ -646,6 +659,16 @@ def main():
         use_sessions=(args.use_sessions and not args.preweekend),
         mc_samples=args.mc,
     )
+
+    if random_forest_out is not None:
+        random_forest_out = _apply_live_session_adjustment(
+            out=random_forest_out,
+            pred_df=pred_df,
+            target_year=target_year,
+            target_gp=target_gp,
+            use_sessions=(args.use_sessions and not args.preweekend),
+            mc_samples=args.mc,
+        )
     # ---------------------------------------------------------------
     # Authoritative final ranking
     # ---------------------------------------------------------------
@@ -674,7 +697,27 @@ def main():
     ) if c in out.columns
 ]
 
-    print("\nPredicted Top 10:")
+    if random_forest_out is not None:
+        random_forest_out = (
+            random_forest_out
+            .sort_values("pred_finish", ascending=True)
+            .reset_index(drop=True)
+        )
+        random_forest_out["pred_rank"] = range(1, len(random_forest_out) + 1)
+        random_forest_cols = [
+            c for c in cols_to_print
+            if c in random_forest_out.columns
+        ]
+
+        print("\nRandom Forest Predicted Top 10:")
+        print(
+            random_forest_out[random_forest_cols]
+            .head(10)
+            .to_string(index=False)
+        )
+
+    prediction_label = "Ensemble Predicted Top 10:" if args.ensemble else "Predicted Top 10:"
+    print(f"\n{prediction_label}")
     print(out[cols_to_print].head(10).to_string(index=False))
 
     # ---------------------------------------------------------------
